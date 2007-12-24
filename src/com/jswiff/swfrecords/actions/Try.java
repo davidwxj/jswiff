@@ -2,7 +2,7 @@
  * JSwiff is an open source Java API for Macromedia Flash file generation
  * and manipulation
  *
- * Copyright (C) 2004-2005 Ralf Terdic (contact@jswiff.com)
+ * Copyright (C) 2004-2008 Ralf Terdic (contact@jswiff.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -297,6 +297,7 @@ public final class Try extends Action {
     // Removes the jump to the first action of the finally block.
     // This jump is the last action of the try block when there is a catch block.
     List actions = tryBlock.getActions();
+    boolean jumpRemoved = false;
     if (actions.size() > 0) {
       Action lastAction = (Action) actions.get(actions.size() - 1);
       if (lastAction.getCode() == ActionConstants.JUMP) {

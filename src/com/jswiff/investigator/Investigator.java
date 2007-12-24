@@ -2,7 +2,7 @@
  * JSwiff is an open source Java API for Macromedia Flash file generation
  * and manipulation
  *
- * Copyright (C) 2004-2005 Ralf Terdic (contact@jswiff.com)
+ * Copyright (C) 2004-2008 Ralf Terdic (contact@jswiff.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -821,7 +821,7 @@ public final class Investigator extends JFrame {
           "<br><p>Part of <b>JSwiff</b>, an open source Java framework<br>" +
           "for Macromedia Flash file generation and manipulation.<br>" +
           "More information at http://www.jswiff.com<br><br>" +
-          "&copy;&nbsp; 2004-2005 Ralf Terdic.<br></<html>");
+          "&copy;&nbsp; 2004-2008 Ralf Terdic.<br></<html>");
       infoPane.add(copy);
       JPanel mainPane = new JPanel();
       mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS));

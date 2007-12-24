@@ -2,7 +2,7 @@
  * JSwiff is an open source Java API for Macromedia Flash file generation
  * and manipulation
  *
- * Copyright (C) 2004-2006 Ralf Terdic (contact@jswiff.com)
+ * Copyright (C) 2004-2008 Ralf Terdic (contact@jswiff.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,12 @@
 
 package com.jswiff;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.listeners.SWFListener;
 import com.jswiff.swfrecords.SWFHeader;
@@ -29,14 +35,6 @@ import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.TagHeader;
 import com.jswiff.swfrecords.tags.TagReader;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
  * This class reads an SWF file from a stream, invoking registered listeners to
