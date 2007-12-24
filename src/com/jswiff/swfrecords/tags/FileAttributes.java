@@ -40,6 +40,7 @@ import java.io.IOException;
 public class FileAttributes extends Tag {
   private boolean allowNetworkAccess;
   private boolean hasMetadata;
+  private boolean hasABC;
 
   /**
    * Creates a new FileAttributes instance.
@@ -83,6 +84,14 @@ public class FileAttributes extends Tag {
   public boolean hasMetadata() {
     return hasMetadata;
   }
+  
+  public void setHasABC(boolean hasABC) {
+	  this.hasABC = hasABC;
+  }
+  
+  public boolean hasABC() {
+	  return hasABC;
+  }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
     int flags = 0;
@@ -99,6 +108,7 @@ public class FileAttributes extends Tag {
     InputBitStream inStream = new InputBitStream(data);
     int flags               = inStream.readSI32();
     allowNetworkAccess      = ((flags & 0x01) != 0);
+    hasABC                  = ((flags & 0x8) != 0);
     hasMetadata             = ((flags & 0x10) != 0);
   }
 }

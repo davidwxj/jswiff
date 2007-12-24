@@ -122,6 +122,11 @@ public class SWFWriter {
         TagWriter.writeTag(
           tagStream, new Metadata(metadata), document.getVersion());
       }
+//      if (document.getVersion() >= 9) {
+//        if (document.hasSymbolClass()) {
+//          fileAttributes.setHasMetadata(true);
+//        }
+//      }
     }
     TagWriter.writeTag(
       tagStream, new SetBackgroundColor(document.getBackgroundColor()),

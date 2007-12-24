@@ -51,6 +51,9 @@ public final class TagReader {
     throws IOException {
     Tag tag;
     switch (header.getCode()) {
+    case TagConstants.DEFINE_BINARY_DATA:
+      tag = new DefineBinaryData();
+      break;
       case TagConstants.DEFINE_BITS:
         tag = new DefineBits();
         break;
@@ -135,6 +138,12 @@ public final class TagReader {
       case TagConstants.DEFINE_VIDEO_STREAM:
         tag = new DefineVideoStream();
         break;
+      case TagConstants.DO_ABC:
+        tag = new DoABC();
+        break;
+      case TagConstants.DO_ABC_DEFINE:
+        tag = new DoABCDefine();
+        break;
       case TagConstants.DO_ACTION:
         tag = new DoAction();
         break;
@@ -177,6 +186,9 @@ public final class TagReader {
       case TagConstants.PLACE_OBJECT_3:
         tag = new PlaceObject3();
         break;
+      case TagConstants.PRODUCT_INFO:
+        tag = new ProductInfo();
+        break;
       case TagConstants.PROTECT:
         tag = new Protect();
         break;
@@ -212,6 +224,9 @@ public final class TagReader {
         break;
       case TagConstants.START_SOUND:
         tag = new StartSound();
+        break;
+      case TagConstants.SYMBOL_CLASS:
+        tag = new SymbolClass();
         break;
       case TagConstants.VIDEO_FRAME:
         tag = new VideoFrame();

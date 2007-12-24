@@ -26,6 +26,7 @@ import com.jswiff.swfrecords.actions.*;
 import com.jswiff.swfrecords.tags.*;
 import com.jswiff.swfrecords.tags.ExportAssets.ExportMapping;
 import com.jswiff.swfrecords.tags.ImportAssets.ImportMapping;
+import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.HexUtils;
 
 import java.util.Iterator;
@@ -51,6 +52,9 @@ final class SWFTreeBuilder {
 
   static void addNode(DefaultMutableTreeNode node, Tag tag) {
     switch (tag.getCode()) {
+      case TagConstants.DEFINE_BINARY_DATA:
+        addNode(node, (DefineBinaryData) tag);
+        break;
       case TagConstants.DEFINE_BITS:
         addNode(node, (DefineBits) tag);
         break;
@@ -135,6 +139,12 @@ final class SWFTreeBuilder {
       case TagConstants.DEFINE_VIDEO_STREAM:
         addNode(node, (DefineVideoStream) tag);
         break;
+      case TagConstants.DO_ABC:
+        addNode(node, (DoABC) tag);
+        break;
+      case TagConstants.DO_ABC_DEFINE:
+        addNode(node, (DoABCDefine) tag);
+        break;
       case TagConstants.DO_ACTION:
         addNode(node, (DoAction) tag);
         break;
@@ -175,6 +185,9 @@ final class SWFTreeBuilder {
       case TagConstants.PLACE_OBJECT_3:
         addNode(node, (PlaceObject3) tag);
         break;
+      case TagConstants.PRODUCT_INFO:
+        addNode(node, (ProductInfo) tag);
+        break;
       case TagConstants.PROTECT:
         addNode(node, (Protect) tag);
         break;
@@ -210,6 +223,9 @@ final class SWFTreeBuilder {
         break;
       case TagConstants.START_SOUND:
         addNode(node, (StartSound) tag);
+        break;
+      case TagConstants.SYMBOL_CLASS:
+        addNode(node, (SymbolClass) tag);
         break;
       case TagConstants.VIDEO_FRAME:
         addNode(node, (VideoFrame) tag);
@@ -1533,6 +1549,16 @@ final class SWFTreeBuilder {
         node, formatControlTag("DoAction"));
     addNode(tagNode, "actions: ", tag.getActions());
   }
+  
+  private static void addNode(DefaultMutableTreeNode node, DoABC tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatControlTag("DoABC"));
+  }
+  
+  private static void addNode(DefaultMutableTreeNode node, DoABCDefine tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatControlTag("DoABCDefine"));
+  }
 
   private static void addNode(DefaultMutableTreeNode node, DoInitAction tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
@@ -1580,6 +1606,7 @@ final class SWFTreeBuilder {
         node, formatControlTag("FileAttributes"));
     addLeaf(tagNode, "allowNetworkAccess: " + tag.isAllowNetworkAccess());
     addLeaf(tagNode, "hasMetadata: " + tag.hasMetadata());
+    addLeaf(tagNode, "hasABC: " + tag.hasABC());
   }
 
   private static void addNode(DefaultMutableTreeNode node, FrameLabel tag) {
@@ -2175,6 +2202,18 @@ final class SWFTreeBuilder {
       }
     }
   }
+  
+  private static void addNode(DefaultMutableTreeNode node, SymbolClass tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatControlTag("SymbolClass"));
+    SymbolReference[] references = tag.getReferences();
+    for (int i = 0; i < references.length; i++) {
+      addLeaf(
+        tagNode,
+        "characterId: " + references[i].getCharacterId() + ", symbol name: " +
+        references[i].getName());
+    }
+  }
 
   private static void addNode(DefaultMutableTreeNode node, UnknownTag tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
@@ -2184,6 +2223,21 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "data: " + HexUtils.toHex(data));
   }
 
+  private static void addNode(DefaultMutableTreeNode node, ProductInfo tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatControlTag("ProductInfo"));
+    byte[] data                    = tag.getProductInfo();
+    addLeaf(tagNode, "data: " + HexUtils.toHex(data));
+  }
+  
+  private static void addNode(DefaultMutableTreeNode node, DefineBinaryData tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatControlTag("DefineBinaryData"));
+    byte[] data                    = tag.getBinaryData();
+    addLeaf(tagNode, "characterId: " + tag.getCharacterId());
+    addLeaf(tagNode, "data: " + HexUtils.toHex(data));
+  }
+  
   private static void addNode(DefaultMutableTreeNode node, VideoFrame tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("VideoFrame"));

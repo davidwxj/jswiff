@@ -21,15 +21,18 @@
 
 package com.jswiff;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.jswiff.swfrecords.RGB;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.SWFHeader;
+import com.jswiff.swfrecords.tags.DoABC;
+import com.jswiff.swfrecords.tags.DoABCDefine;
+import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
-
-import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -248,6 +251,25 @@ public class SWFDocument implements Serializable {
    */
   public List getTags() {
     return tags;
+  }
+  
+  public boolean hasSymbolClass() {
+    for (Iterator it = tags.iterator(); it.hasNext();) {
+      if (it.next() instanceof SymbolClass) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public boolean hasABC() {
+    for (Iterator it = tags.iterator(); it.hasNext();) {
+      Object tag = it.next();
+      if (tag instanceof DoABC || tag instanceof DoABCDefine) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

@@ -38,7 +38,7 @@ public abstract class Tag implements Serializable {
 	protected short code;
 	protected int length;
 	private byte[] outData;
-	private short swfVersion = 7;
+	private short swfVersion;
   private boolean shiftJIS;
 
 	/**

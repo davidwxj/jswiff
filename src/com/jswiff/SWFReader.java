@@ -30,7 +30,6 @@ import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.TagHeader;
 import com.jswiff.swfrecords.tags.TagReader;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 

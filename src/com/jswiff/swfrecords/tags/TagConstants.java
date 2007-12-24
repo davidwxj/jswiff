@@ -26,6 +26,8 @@ package com.jswiff.swfrecords.tags;
  */
 public final class TagConstants {
   // Tag types
+  /** Tag code for DefineBinaryData */
+  public static final int DEFINE_BINARY_DATA     = 87;
   /** Tag code for DefineBits */
   public static final int DEFINE_BITS            = 6;
   /** Tag code for DefineBitsJpeg2 */
@@ -56,6 +58,8 @@ public final class TagConstants {
   public static final int DEFINE_FONT_INFO       = 13;
   /** Tag code for DefineFontInfo2 */
   public static final int DEFINE_FONT_INFO_2     = 62;
+  /** Tag code for DefineFontName */
+  public static final int DEFINE_FONT_NAME       = 88;
   /** Tag code for FlashTypeSettings */
   public static final short FLASHTYPE_SETTINGS   = 74;
   /** Tag code for DefineFontInfo3 */
@@ -64,6 +68,8 @@ public final class TagConstants {
   public static final int DEFINE_MORPH_SHAPE     = 46;
   /** Tag code for DefineMorphShape2 */
   public static final int DEFINE_MORPH_SHAPE_2   = 84;
+  /** Tag code for DefineScenesAndLabels */
+  public static final int DEFINE_SCENES_AND_LABELS = 76;
   /** Tag code for DefineShape */
   public static final int DEFINE_SHAPE           = 2;
   /** Tag code for DefineShape2 */
@@ -82,6 +88,10 @@ public final class TagConstants {
   public static final int DEFINE_TEXT_2          = 33;
   /** Tag code for DefineVideoStream */
   public static final int DEFINE_VIDEO_STREAM    = 60;
+  /** Tag code for DoABC */
+  public static final int DO_ABC                 = 72;
+  /** Tag code for DoABCDefine */
+  public static final int DO_ABC_DEFINE          = 82;
   /** Tag code for DoAction */
   public static final int DO_ACTION              = 12;
   /** Tag code for DoInitAction */
@@ -114,6 +124,8 @@ public final class TagConstants {
   public static final int PLACE_OBJECT_2         = 26;
   /** Tag code for PlaceObject3 */
   public static final int PLACE_OBJECT_3         = 70;
+  /** Tag code for ProductInfo */
+  public static final int PRODUCT_INFO           = 41;
   /** Tag code for Protect */
   public static final int PROTECT                = 24;
   /** Tag code for RemoveObject */
@@ -129,7 +141,7 @@ public final class TagConstants {
   /** Tag code for ShowFrame */
   public static final int SHOW_FRAME             = 1;
   /** Tag code for Scale9Grid */
-  public static final short SCALE_9_GRID         = 78;
+  public static final int SCALE_9_GRID         = 78;
   /** Tag code for SoundStreamBlock */
   public static final int SOUND_STREAM_BLOCK     = 19;
   /** Tag code for SoundStreamHead */
@@ -138,6 +150,8 @@ public final class TagConstants {
   public static final int SOUND_STREAM_HEAD_2    = 45;
   /** Tag code for StartSound */
   public static final int START_SOUND            = 15;
+  /** Tag code for SymbolClass */
+  public static final int SYMBOL_CLASS           = 76;
   /** Tag code for VideoFrame */
   public static final int VIDEO_FRAME            = 61;
   /** Tag code for malformed tag */

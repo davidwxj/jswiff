@@ -297,7 +297,6 @@ public final class Try extends Action {
     // Removes the jump to the first action of the finally block.
     // This jump is the last action of the try block when there is a catch block.
     List actions = tryBlock.getActions();
-    boolean jumpRemoved = false;
     if (actions.size() > 0) {
       Action lastAction = (Action) actions.get(actions.size() - 1);
       if (lastAction.getCode() == ActionConstants.JUMP) {
