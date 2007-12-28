@@ -57,7 +57,7 @@ public class AbcConstantPool implements Serializable {
     count = stream.readU30();
     System.out.println("namespace count: " + count);
     pool.namespaces = new AbcNamespace[count == 0 ? 1 : count];
-    pool.namespaces[0] = new AbcNamespace(AbcNamespace.NAMESPACE, 0); //TODO determine correct ns kind for this
+    pool.namespaces[0] = new AbcNamespace(AbcTypes.Namespace.NAMESPACE, 0); //TODO determine correct ns kind for this
     for (int i = 1; i < count; i++) {
       pool.namespaces[i] = AbcNamespace.read(stream);
     }
