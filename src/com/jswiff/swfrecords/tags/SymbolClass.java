@@ -33,7 +33,7 @@ import java.io.Serializable;
  * (symbols) defined with <code>DoABCDefine</code>.
  * </p>
  * 
- * @see DoABCDefine
+ * @see DoAbcDefine
  * @since SWF 9
  */
 public final class SymbolClass extends Tag {

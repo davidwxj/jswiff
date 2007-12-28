@@ -26,7 +26,6 @@ import java.io.IOException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.abc.AbcFile;
-import com.jswiff.util.HexUtils;
 
 
 /**
@@ -34,15 +33,14 @@ import com.jswiff.util.HexUtils;
  *
  * @since SWF 9
  */
-public final class DoABCDefine extends Tag {
-  private String abcName;
+public final class DoAbc extends Tag {
   private AbcFile abcFile;
   
   /**
-   * Creates a new DoABCDefine instance.
+   * Creates a new DoABC instance.
    */
-  public DoABCDefine() {
-    code = TagConstants.DO_ABC_DEFINE;
+  public DoAbc() {
+    code = TagConstants.DO_ABC;
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
@@ -51,8 +49,6 @@ public final class DoABCDefine extends Tag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
-    inStream.readBytes(4);
-    abcName = inStream.readString();
     abcFile = AbcFile.read(inStream);
   }
 }

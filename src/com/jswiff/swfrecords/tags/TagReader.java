@@ -142,10 +142,10 @@ public final class TagReader {
         tag = new DefineVideoStream();
         break;
       case TagConstants.DO_ABC:
-        tag = new DoABC();
+        tag = new DoAbc();
         break;
       case TagConstants.DO_ABC_DEFINE:
-        tag = new DoABCDefine();
+        tag = new DoAbcDefine();
         break;
       case TagConstants.DO_ACTION:
         tag = new DoAction();

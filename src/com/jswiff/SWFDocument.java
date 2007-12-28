@@ -29,8 +29,8 @@ import java.util.List;
 import com.jswiff.swfrecords.RGB;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.SWFHeader;
-import com.jswiff.swfrecords.tags.DoABC;
-import com.jswiff.swfrecords.tags.DoABCDefine;
+import com.jswiff.swfrecords.tags.DoAbc;
+import com.jswiff.swfrecords.tags.DoAbcDefine;
 import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
 
@@ -265,7 +265,7 @@ public class SWFDocument implements Serializable {
   public boolean hasABC() {
     for (Iterator it = tags.iterator(); it.hasNext();) {
       Object tag = it.next();
-      if (tag instanceof DoABC || tag instanceof DoABCDefine) {
+      if (tag instanceof DoAbc || tag instanceof DoAbcDefine) {
         return true;
       }
     }

@@ -144,10 +144,10 @@ final class SWFTreeBuilder {
         addNode(node, (DefineVideoStream) tag);
         break;
       case TagConstants.DO_ABC:
-        addNode(node, (DoABC) tag);
+        addNode(node, (DoAbc) tag);
         break;
       case TagConstants.DO_ABC_DEFINE:
-        addNode(node, (DoABCDefine) tag);
+        addNode(node, (DoAbcDefine) tag);
         break;
       case TagConstants.DO_ACTION:
         addNode(node, (DoAction) tag);
@@ -1554,14 +1554,14 @@ final class SWFTreeBuilder {
     addNode(tagNode, "actions: ", tag.getActions());
   }
   
-  private static void addNode(DefaultMutableTreeNode node, DoABC tag) {
+  private static void addNode(DefaultMutableTreeNode node, DoAbc tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
-        node, formatControlTag("DoABC"));
+        node, formatControlTag("DoAbc"));
   }
   
-  private static void addNode(DefaultMutableTreeNode node, DoABCDefine tag) {
+  private static void addNode(DefaultMutableTreeNode node, DoAbcDefine tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
-        node, formatControlTag("DoABCDefine"));
+        node, formatControlTag("DoAbcDefine"));
   }
 
   private static void addNode(DefaultMutableTreeNode node, DoInitAction tag) {
