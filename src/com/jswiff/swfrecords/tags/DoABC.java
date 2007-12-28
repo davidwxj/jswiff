@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+import com.jswiff.swfrecords.abc.AbcFile;
 
 
 /**
@@ -33,6 +34,7 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 9
  */
 public final class DoABC extends Tag {
+  private AbcFile abcFile;
   
   /**
    * Creates a new DoABC instance.
@@ -47,5 +49,6 @@ public final class DoABC extends Tag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
+    abcFile = AbcFile.read(inStream);
   }
 }

@@ -26,6 +26,8 @@ package com.jswiff.swfrecords.tags;
  */
 public final class TagConstants {
   // Tag types
+	/** Tag code for DefineBinaryData */
+  public static final int DEBUG_ID               = 63;
   /** Tag code for DefineBinaryData */
   public static final int DEFINE_BINARY_DATA     = 87;
   /** Tag code for DefineBits */

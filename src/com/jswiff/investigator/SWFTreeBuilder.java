@@ -31,6 +31,7 @@ import com.jswiff.util.HexUtils;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -52,7 +53,10 @@ final class SWFTreeBuilder {
 
   static void addNode(DefaultMutableTreeNode node, Tag tag) {
     switch (tag.getCode()) {
-      case TagConstants.DEFINE_BINARY_DATA:
+    	case TagConstants.DEBUG_ID:
+        addNode(node, (DebugId) tag);
+        break;
+    	case TagConstants.DEFINE_BINARY_DATA:
         addNode(node, (DefineBinaryData) tag);
         break;
       case TagConstants.DEFINE_BITS:
@@ -2228,6 +2232,12 @@ final class SWFTreeBuilder {
         node, formatControlTag("ProductInfo"));
     byte[] data                    = tag.getProductInfo();
     addLeaf(tagNode, "data: " + HexUtils.toHex(data));
+  }
+  
+  private static void addNode(DefaultMutableTreeNode node, DebugId tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatControlTag("DebugId"));
+    addLeaf(tagNode, "id: " + tag.getId());
   }
   
   private static void addNode(DefaultMutableTreeNode node, DefineBinaryData tag) {

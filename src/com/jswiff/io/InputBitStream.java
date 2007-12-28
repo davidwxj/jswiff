@@ -459,6 +459,35 @@ public final class InputBitStream {
     return result;
   }
 
+  public int readU30() throws IOException {
+    int result = readS32();
+    if (result < 0) {
+      throw new IOException("Negative U30 value read!");
+    }
+    return result;
+  }
+  
+  public int readS32() throws IOException {
+    int result = readUI8();
+    if ((result & 0x00000080) == 0) {
+      return result;
+    }
+    result = (result & 0x0000007f) | readUI8() << 7;
+    if ((result & 0x00004000) == 0) {
+      return result;
+    }
+    result = (result & 0x00003fff) | readUI8() << 14;
+    if ((result & 0x00200000) == 0) {
+      return result;
+    }
+    result = (result & 0x001fffff) | readUI8() << 21;
+    if ((result & 0x10000000) == 0) {
+      return result;
+    }
+    result = (result & 0x0fffffff) | readUI8() << 28;
+    return result;
+  }
+  
   private void endReached() throws IOException {
     throw new IOException("Input data stream ended unexpectedly!");
   }

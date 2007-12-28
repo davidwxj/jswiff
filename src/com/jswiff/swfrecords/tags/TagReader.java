@@ -51,9 +51,12 @@ public final class TagReader {
     throws IOException {
     Tag tag;
     switch (header.getCode()) {
-    case TagConstants.DEFINE_BINARY_DATA:
-      tag = new DefineBinaryData();
-      break;
+    	case TagConstants.DEBUG_ID:
+    		tag = new DebugId();
+    		break;
+	    case TagConstants.DEFINE_BINARY_DATA:
+	      tag = new DefineBinaryData();
+	      break;
       case TagConstants.DEFINE_BITS:
         tag = new DefineBits();
         break;
