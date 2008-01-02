@@ -1,6 +1,6 @@
 package com.jswiff.swfrecords.abc;
 
-public class AbcTypes {
+public class AbcConstantKinds {
   public interface Basic {
     public static final short UNDEFINED = 0x00;
     public static final short STRING = 0x01;
