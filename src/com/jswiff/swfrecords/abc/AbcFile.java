@@ -9,10 +9,12 @@ public class AbcFile implements Serializable {
   private int majorVersion;
   private int minorVersion;
   private AbcConstantPool constantPool;
-  private AbcMethodSignature[] methodSignatures;
+  private AbcMethodSignature[] methods;
   private AbcMetadata[] metadataEntries;
   private AbcInstance[] instances;
   private AbcClass[] classes;
+  private AbcScript[] scripts;
+  private AbcMethodBody[] methodBodies;
   
   public static AbcFile read(InputBitStream stream) throws IOException {
     AbcFile abcFile = new AbcFile();
@@ -23,9 +25,9 @@ public class AbcFile implements Serializable {
     }
     abcFile.constantPool = AbcConstantPool.read(stream);
     int methodCount = stream.readU30();
-    abcFile.methodSignatures = new AbcMethodSignature[methodCount];
+    abcFile.methods = new AbcMethodSignature[methodCount];
     for (int i = 0; i < methodCount; i++) {
-      abcFile.methodSignatures[i] = AbcMethodSignature.read(stream);
+      abcFile.methods[i] = AbcMethodSignature.read(stream);
     }
     int metadataCount = stream.readU30();
     abcFile.metadataEntries = new AbcMetadata[metadataCount];
@@ -40,12 +42,17 @@ public class AbcFile implements Serializable {
     abcFile.classes = new AbcClass[classCount];
     for (int i = 0; i < classCount; i++) {
       abcFile.classes[i] = AbcClass.read(stream);
-      System.out.println("CLASS");
     }
     int scriptCount = stream.readU30();
-    
+    abcFile.scripts = new AbcScript[scriptCount];
+    for (int i = 0; i < scriptCount; i++) {
+      abcFile.scripts[i] = AbcScript.read(stream);
+    }
     int methodBodyCount = stream.readU30();
-    
+    abcFile.methodBodies = new AbcMethodBody[methodBodyCount];
+    for (int i = 0; i < methodBodyCount; i++) {
+      abcFile.methodBodies[i] = AbcMethodBody.read(stream);
+    }
     return abcFile;
   }
 }

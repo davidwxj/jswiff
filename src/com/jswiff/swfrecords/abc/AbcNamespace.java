@@ -16,7 +16,6 @@ public class AbcNamespace implements Serializable {
 
   public static AbcNamespace read(InputBitStream stream) throws IOException {
     AbcNamespace ns = new AbcNamespace(stream.readUI8(), stream.readU30());
-    System.out.println("type: " + ns.type + " name: " + ns.nameIndex);
     return ns;
   }
 }

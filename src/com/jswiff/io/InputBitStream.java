@@ -467,6 +467,13 @@ public final class InputBitStream {
     return result;
   }
   
+  public int readS24() throws IOException {
+    int result = readUI8();
+    result |= readUI8() << 8;
+    result |= readSI8() << 16;
+    return result;
+  }
+  
   public int readS32() throws IOException {
     int result = readUI8();
     if ((result & 0x00000080) == 0) {

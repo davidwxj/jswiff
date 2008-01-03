@@ -6,11 +6,6 @@ import java.io.Serializable;
 import com.jswiff.io.InputBitStream;
 
 public class AbcClass implements Serializable {
-  public static final short SEALED_FLAG = 0x01;
-  public static final short FINAL_FLAG = 0x02;
-  public static final short INTERFACE_FLAG = 0x04;
-  public static final short PROTECTED_NS_FLAG = 0x08;
-  
   private int initializerIndex;
   private AbcTrait[] traits;
   

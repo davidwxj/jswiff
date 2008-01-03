@@ -12,12 +12,9 @@ public class AbcNamespaceSet implements Serializable {
     AbcNamespaceSet set = new AbcNamespaceSet();
     int count = stream.readU30();
     set.namespaceIndices = new int[count];
-    System.out.println("Namespace set");
     for (int i = 0; i < count; i++) {
       set.namespaceIndices[i] = stream.readU30();
-      System.out.print(set.namespaceIndices[i] + " ");
     }
-    System.out.println();
     return set;
   }
 }
