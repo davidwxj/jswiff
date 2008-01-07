@@ -2,6 +2,8 @@ package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jswiff.io.InputBitStream;
 
@@ -17,7 +19,7 @@ public abstract class AbcTrait implements Serializable {
   private static final int OVERRIDE_FLAG = 0x02;
   private static final int METADATA_FLAG = 0x04;
   private int nameIndex;
-  private int[] metadataIndices;
+  private List<Integer> metadataIndices = new ArrayList<Integer>();
   
   public AbcTrait(int nameIndex) {
     this.nameIndex = nameIndex;
@@ -65,9 +67,8 @@ public abstract class AbcTrait implements Serializable {
     }
     if ((flags & METADATA_FLAG) != 0) {
       int metadataCount = stream.readU30();
-      trait.metadataIndices = new int[metadataCount];
       for (int i = 0; i < metadataCount; i++) {
-        trait.metadataIndices[i] = stream.readU30();
+        trait.metadataIndices.add(stream.readU30());
       }
     }
     return trait;

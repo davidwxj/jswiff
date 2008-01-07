@@ -10,12 +10,12 @@ import com.jswiff.io.InputBitStream;
 public class AbcMethodBody implements Serializable {
   private int signatureIndex;
   private int maxStack;
-  private AbcTrait[] traits;
+  private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   private int localCount;
   private int initScopeDepth;
   private int maxScopeDepth;
   private AbcOp code;
-  private AbcException[] exceptions;
+  private List<AbcException> exceptions = new ArrayList<AbcException>();
   
   public static AbcMethodBody read(InputBitStream stream) throws IOException {
     AbcMethodBody method = new AbcMethodBody();
@@ -32,14 +32,12 @@ public class AbcMethodBody implements Serializable {
       operations.add(AbcOp.read(byteCodeStream));
     }
     int exceptionCount = stream.readU30();
-    method.exceptions = new AbcException[exceptionCount];
     for (int i = 0; i < exceptionCount; i++) {
-      method.exceptions[i] = AbcException.read(stream);
+      method.exceptions.add(AbcException.read(stream));
     }
     int traitCount = stream.readU30();
-    method.traits = new AbcTrait[traitCount];
     for (int i = 0; i < traitCount; i++) {
-      method.traits[i] = AbcTrait.read(stream);
+      method.traits.add(AbcTrait.read(stream));
     }
     return method;
   }

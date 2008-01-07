@@ -68,11 +68,11 @@ public abstract class AbcOp implements Serializable {
       case AbcConstants.Opcodes.OPCODE_lookupswitch:
         int defaultOffset = stream.readS24();
         int caseCount = stream.readU30() + 1;
-        int[] caseOffsets = new int[caseCount];
+        AbcOpLookupSwitch switchOp = new AbcOpLookupSwitch(defaultOffset);
         for (int i=0; i < caseCount; i++) {
-          caseOffsets[i] = stream.readS24();
+          switchOp.addCaseOffset(stream.readS24());
         }
-        op = new AbcOpLookupSwitch(defaultOffset, caseOffsets);
+        op = switchOp;
         break;
       case AbcConstants.Opcodes.OPCODE_jump:
       case AbcConstants.Opcodes.OPCODE_iftrue:

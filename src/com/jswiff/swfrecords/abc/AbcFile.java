@@ -2,6 +2,8 @@ package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jswiff.io.InputBitStream;
 
@@ -9,12 +11,12 @@ public class AbcFile implements Serializable {
   private int majorVersion;
   private int minorVersion;
   private AbcConstantPool constantPool;
-  private AbcMethodSignature[] methods;
-  private AbcMetadata[] metadataEntries;
-  private AbcInstance[] instances;
-  private AbcClass[] classes;
-  private AbcScript[] scripts;
-  private AbcMethodBody[] methodBodies;
+  List<AbcMethodSignature> methods = new ArrayList<AbcMethodSignature>();
+  List<AbcMetadata> metadataEntries = new ArrayList<AbcMetadata>();
+  List<AbcInstance> instances = new ArrayList<AbcInstance>();
+  List<AbcClass> classes = new ArrayList<AbcClass>();
+  List<AbcScript> scripts = new ArrayList<AbcScript>();
+  List<AbcMethodBody> methodBodies = new ArrayList<AbcMethodBody>();
   
   public static AbcFile read(InputBitStream stream) throws IOException {
     AbcFile abcFile = new AbcFile();
@@ -25,33 +27,27 @@ public class AbcFile implements Serializable {
     }
     abcFile.constantPool = AbcConstantPool.read(stream);
     int methodCount = stream.readU30();
-    abcFile.methods = new AbcMethodSignature[methodCount];
     for (int i = 0; i < methodCount; i++) {
-      abcFile.methods[i] = AbcMethodSignature.read(stream);
+      abcFile.methods.add(AbcMethodSignature.read(stream));
     }
     int metadataCount = stream.readU30();
-    abcFile.metadataEntries = new AbcMetadata[metadataCount];
     for (int i = 0; i < metadataCount; i++) {
-      abcFile.metadataEntries[i] = AbcMetadata.read(stream);
+      abcFile.metadataEntries.add(AbcMetadata.read(stream));
     }
     int classCount = stream.readU30();
-    abcFile.instances = new AbcInstance[classCount];
     for (int i = 0; i < classCount; i++) {
-      abcFile.instances[i] = AbcInstance.read(stream);
+      abcFile.instances.add(AbcInstance.read(stream));
     }
-    abcFile.classes = new AbcClass[classCount];
     for (int i = 0; i < classCount; i++) {
-      abcFile.classes[i] = AbcClass.read(stream);
+      abcFile.classes.add(AbcClass.read(stream));
     }
     int scriptCount = stream.readU30();
-    abcFile.scripts = new AbcScript[scriptCount];
     for (int i = 0; i < scriptCount; i++) {
-      abcFile.scripts[i] = AbcScript.read(stream);
+      abcFile.scripts.add(AbcScript.read(stream));
     }
     int methodBodyCount = stream.readU30();
-    abcFile.methodBodies = new AbcMethodBody[methodBodyCount];
     for (int i = 0; i < methodBodyCount; i++) {
-      abcFile.methodBodies[i] = AbcMethodBody.read(stream);
+      abcFile.methodBodies.add(AbcMethodBody.read(stream));
     }
     return abcFile;
   }

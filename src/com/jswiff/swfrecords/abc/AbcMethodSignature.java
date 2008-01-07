@@ -2,6 +2,8 @@ package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jswiff.io.InputBitStream;
 
@@ -14,11 +16,11 @@ public class AbcMethodSignature implements Serializable {
   public static final short HAS_PARAM_NAMES_FLAG = 0x80;
   
   private int returnTypeIndex;
-  private int[] parameterTypeIndices;
+  private List<Integer> parameterTypeIndices = new ArrayList<Integer>();
   private int nameIndex;
   private short flags;
-  private AbcDefaultValue[] optionalParameters;
-  private int[] parameterNameIndices;
+  private List<AbcDefaultValue> optionalParameters = new ArrayList<AbcDefaultValue>();
+  private List<Integer> parameterNameIndices = new ArrayList<Integer>();
 
   public boolean isSetFlag(short flag) {
     return ((flags & flag) != 0);
@@ -28,23 +30,20 @@ public class AbcMethodSignature implements Serializable {
     AbcMethodSignature sig = new AbcMethodSignature();
     int parameterCount = stream.readU30();
     sig.returnTypeIndex = stream.readU30();
-    sig.parameterTypeIndices = new int[parameterCount];
     for (int i = 0; i < parameterCount; i++) {
-      sig.parameterTypeIndices[i] = stream.readU30();
+      sig.parameterTypeIndices.add(stream.readU30());
     }
     sig.nameIndex = stream.readU30();
     sig.flags = stream.readUI8();
     if (sig.isSetFlag(HAS_OPTIONAL_FLAG)) {
       int count = stream.readU30();
-      sig.optionalParameters = new AbcDefaultValue[count];
       for (int i = 0; i < count; i++) {
-        sig.optionalParameters[i] = AbcDefaultValue.read(stream);
+        sig.optionalParameters.add(AbcDefaultValue.read(stream));
       }
     }
     if (sig.isSetFlag(HAS_PARAM_NAMES_FLAG)) {
-      sig.parameterNameIndices = new int[parameterCount];
       for (int i = 0; i < parameterCount; i++) {
-        sig.parameterNameIndices[i] = stream.readU30();
+        sig.parameterNameIndices.add(stream.readU30());
       }
     }
     return sig;

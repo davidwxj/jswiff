@@ -2,6 +2,8 @@ package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jswiff.io.InputBitStream;
 
@@ -15,9 +17,9 @@ public class AbcInstance implements Serializable {
   private int supernameIndex;
   private short flags;
   private int protectedNsIndex;
-  private int[] interfaceIndices;
+  private List<Integer> interfaceIndices = new ArrayList<Integer>();
   private int initializerIndex;
-  private AbcTrait[] traits;
+  private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   
   public boolean isSetFlag(short flag) {
     return ((flags & flag) != 0);
@@ -32,15 +34,13 @@ public class AbcInstance implements Serializable {
       inst.protectedNsIndex = stream.readU30();
     }
     int interfaceCount = stream.readU30();
-    inst.interfaceIndices = new int[interfaceCount];
     for (int i = 0; i < interfaceCount; i++) {
-      inst.interfaceIndices[i] = stream.readU30();
+      inst.interfaceIndices.add(stream.readU30());
     }
     inst.initializerIndex = stream.readU30();
     int traitCount = stream.readU30();
-    inst.traits = new AbcTrait[traitCount];
     for (int i = 0; i < traitCount; i++) {
-      inst.traits[i] = AbcTrait.read(stream);
+      inst.traits.add(AbcTrait.read(stream));
     }
     return inst;
   }

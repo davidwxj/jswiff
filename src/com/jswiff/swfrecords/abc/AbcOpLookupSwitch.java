@@ -1,28 +1,35 @@
 package com.jswiff.swfrecords.abc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AbcOpLookupSwitch extends AbcOp {
   private int defaultOffset;
-  private int[] caseOffsets;
+  private List<Integer> caseOffsets = new ArrayList<Integer>();
 
-  public AbcOpLookupSwitch(int defaultOffset, int[] caseOffsets) {
+  public AbcOpLookupSwitch(int defaultOffset) {
     setOpcode(AbcConstants.Opcodes.OPCODE_lookupswitch);
     this.defaultOffset = defaultOffset;
-    this.caseOffsets = caseOffsets;
   }
 
   public int getDefaultOffset() {
     return defaultOffset;
   }
 
-  public int[] getCaseOffsets() {
+  public List<Integer> getCaseOffsets() {
     return caseOffsets;
+  }
+  
+  public void addCaseOffset(int caseOffset) {
+    caseOffsets.add(caseOffset);
   }
 
   public String toString() {
     String result = "lookupswitch defaultOffset = " + defaultOffset + " caseOffsets = [ ";
-    for (int i = 0; i < caseOffsets.length; i++) {
-      result += caseOffsets[i] + " ";
+    for (int i = 0; i < caseOffsets.size(); i++) {
+      result += caseOffsets.get(i) + " ";
     }
+    result += "]";
     return result;
   }
    
