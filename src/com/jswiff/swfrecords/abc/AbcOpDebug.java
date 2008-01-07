@@ -33,5 +33,9 @@ public class AbcOpDebug extends AbcOp {
   public String toString() {
     return "debug registerNameIndex = " + registerNameIndex + " register = " + register + " extra = " + extra;
   }
+
+  public String getOpName() {
+    return "debug";
+  }
   
 }

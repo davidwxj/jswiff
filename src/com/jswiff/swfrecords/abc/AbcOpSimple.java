@@ -6,6 +6,10 @@ public class AbcOpSimple extends AbcOp {
   }
 
   public String toString() {
+    return getOpName();
+  }
+
+  public String getOpName() {
     String opName;
     switch (getOpcode()) {
       case AbcConstants.Opcodes.OPCODE_bkpt:

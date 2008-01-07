@@ -21,4 +21,8 @@ public class AbcOpHasNext2 extends AbcOp {
   public String toString() {
     return "hasnext2 objectRegister = " + objectRegister + " propertyIndexRegister = " + propertyIndexRegister;
   }
+
+  public String getOpName() {
+    return "hasnext2";
+  }
 }

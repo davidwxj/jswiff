@@ -204,6 +204,8 @@ public abstract class AbcOp implements Serializable {
     return op;
   }
 
+  public abstract String getOpName();
+  
   public short getOpcode() {
     return opcode;
   }

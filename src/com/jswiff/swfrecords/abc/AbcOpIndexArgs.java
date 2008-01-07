@@ -19,6 +19,10 @@ public class AbcOpIndexArgs extends AbcOp {
   }
 
   public String toString() {
+    return getOpName() + " index = " + index + " argCount = " + argCount;
+  }
+
+  public String getOpName() {
     String opName;
     switch (getOpcode()) {
       case AbcConstants.Opcodes.OPCODE_constructprop:
@@ -45,6 +49,6 @@ public class AbcOpIndexArgs extends AbcOp {
       default:
         opName = "unknown";
     }
-    return opName + " index = " + index + " argCount = " + argCount;
+    return opName;
   }
 }

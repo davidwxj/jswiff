@@ -32,5 +32,9 @@ public class AbcOpLookupSwitch extends AbcOp {
     result += "]";
     return result;
   }
+
+  public String getOpName() {
+    return "lookupswitch";
+  }
    
 }

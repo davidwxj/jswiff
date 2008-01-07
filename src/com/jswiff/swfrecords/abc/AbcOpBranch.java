@@ -13,6 +13,10 @@ public class AbcOpBranch extends AbcOp {
   }
 
   public String toString() {
+    return getOpName() + " branchOffset = " + branchOffset;
+  }
+
+  public String getOpName() {
     String opName;
     switch (getOpcode()) {
       case AbcConstants.Opcodes.OPCODE_jump:
@@ -63,6 +67,6 @@ public class AbcOpBranch extends AbcOp {
       default:
         opName = "unknown";
     }
-    return opName + " branchOffset = " + branchOffset;
+    return opName;
   }
 }

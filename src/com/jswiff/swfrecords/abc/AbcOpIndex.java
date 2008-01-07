@@ -13,6 +13,10 @@ public class AbcOpIndex extends AbcOp {
   }
 
   public String toString() {
+    return getOpName() + " index = " + index;
+  }
+
+  public String getOpName() {
     String opName;
     switch (getOpcode()) {
       case AbcConstants.Opcodes.OPCODE_getsuper:
@@ -120,6 +124,6 @@ public class AbcOpIndex extends AbcOp {
       default:
         opName = "unknown";
     }
-    return opName + " index = " + index;
+    return opName;
   }
 }

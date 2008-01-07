@@ -13,6 +13,10 @@ public class AbcOpArgs extends AbcOp {
   }
 
   public String toString() {
+    return getOpName() + " argCount = " + argCount;
+  }
+
+  public String getOpName() {
     String opName;
     switch (getOpcode()) {
       case AbcConstants.Opcodes.OPCODE_newobject:
@@ -33,6 +37,6 @@ public class AbcOpArgs extends AbcOp {
       default:
         opName = "unknown";
     }
-    return opName + " argCount = " + argCount;
+    return opName;
   }
 }

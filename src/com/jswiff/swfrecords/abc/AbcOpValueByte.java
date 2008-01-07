@@ -13,6 +13,10 @@ public class AbcOpValueByte extends AbcOp {
   }
   
   public String toString() {
+    return getOpName() + " value = " + value;
+  }
+
+  public String getOpName() {
     String opName;
     switch (getOpcode()) {
       case AbcConstants.Opcodes.OPCODE_pushbyte:
@@ -24,6 +28,6 @@ public class AbcOpValueByte extends AbcOp {
       default:
         opName = "unknown";
     }
-    return opName + " value = " + value;
+    return opName;
   }
 }
