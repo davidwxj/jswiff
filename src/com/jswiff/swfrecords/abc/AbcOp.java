@@ -4,9 +4,17 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 public abstract class AbcOp implements Serializable {
-  private short opcode;
+  protected short opcode;
+  
+  protected AbcOp(short opcode) {
+    this.opcode = opcode;
+  }
+  
+  AbcOp() {
+  }
   
   public static AbcOp read(InputBitStream stream) throws IOException {
     short opcode = stream.readUI8();
@@ -46,15 +54,15 @@ public abstract class AbcOp implements Serializable {
       case AbcConstants.Opcodes.OPCODE_setglobalslot:
       case AbcConstants.Opcodes.OPCODE_setslot:
       case AbcConstants.Opcodes.OPCODE_newcatch:
-        op = new AbcOpIndex(opcode, stream.readU30());
+        op = new AbcOpIndex(stream.readAbcInt());
         break;
       case AbcConstants.Opcodes.OPCODE_debugline:
       case AbcConstants.Opcodes.OPCODE_pushshort:
-        op = new AbcOpValueInt(opcode, stream.readU30());
+        op = new AbcOpValueInt(stream.readAbcInt());
         break;
       case AbcConstants.Opcodes.OPCODE_pushbyte:
       case AbcConstants.Opcodes.OPCODE_getscopeobject:
-        op = new AbcOpValueByte(opcode, stream.readSI8());
+        op = new AbcOpValueByte(stream.readSI8());
         break;
       case AbcConstants.Opcodes.OPCODE_constructprop:
       case AbcConstants.Opcodes.OPCODE_callproperty:
@@ -63,14 +71,14 @@ public abstract class AbcOp implements Serializable {
       case AbcConstants.Opcodes.OPCODE_callsupervoid:
       case AbcConstants.Opcodes.OPCODE_callpropvoid:
       case AbcConstants.Opcodes.OPCODE_callstatic:
-        op = new AbcOpIndexArgs(opcode, stream.readU30(), stream.readU30());
+        op = new AbcOpIndexArgs(stream.readAbcInt(), stream.readAbcInt());
         break;
       case AbcConstants.Opcodes.OPCODE_lookupswitch:
-        int defaultOffset = stream.readS24();
-        int caseCount = stream.readU30() + 1;
+        int defaultOffset = stream.readSI24();
+        int caseCount = stream.readAbcInt() + 1;
         AbcOpLookupSwitch switchOp = new AbcOpLookupSwitch(defaultOffset);
-        for (int i=0; i < caseCount; i++) {
-          switchOp.addCaseOffset(stream.readS24());
+        for (int i = 0; i < caseCount; i++) {
+          switchOp.addCaseOffset(stream.readSI24());
         }
         op = switchOp;
         break;
@@ -89,20 +97,20 @@ public abstract class AbcOp implements Serializable {
       case AbcConstants.Opcodes.OPCODE_ifnlt:
       case AbcConstants.Opcodes.OPCODE_ifstricteq:
       case AbcConstants.Opcodes.OPCODE_ifstrictne:
-        op = new AbcOpBranch(opcode, stream.readS24());
+        op = new AbcOpBranch(stream.readSI24());
         break;
       case AbcConstants.Opcodes.OPCODE_debug:
-        op = new AbcOpDebug(stream.readUI8(), stream.readU30(), stream.readUI8(), stream.readU30());
+        op = new AbcOpDebug(stream.readUI8(), stream.readAbcInt(), stream.readUI8(), stream.readAbcInt());
         break;
       case AbcConstants.Opcodes.OPCODE_newobject:
       case AbcConstants.Opcodes.OPCODE_newarray:
       case AbcConstants.Opcodes.OPCODE_call:
       case AbcConstants.Opcodes.OPCODE_construct:
       case AbcConstants.Opcodes.OPCODE_constructsuper:
-        op = new AbcOpArgs(opcode, stream.readU30());
+        op = new AbcOpArgs(stream.readAbcInt());
         break;
       case AbcConstants.Opcodes.OPCODE_hasnext2:
-        op = new AbcOpHasNext2(stream.readU30(), stream.readU30());
+        op = new AbcOpHasNext2(stream.readAbcInt(), stream.readAbcInt());
         break;
       case AbcConstants.Opcodes.OPCODE_bkpt:
       case AbcConstants.Opcodes.OPCODE_nop:
@@ -196,11 +204,12 @@ public abstract class AbcOp implements Serializable {
       case AbcConstants.Opcodes.OPCODE_bkptline:
       case AbcConstants.Opcodes.OPCODE_checkfilter:
       case AbcConstants.Opcodes.OPCODE_timestamp:
-        op = new AbcOpSimple(opcode);
+        op = new AbcOpSimple();
         break;
       default:
         throw new IOException("Unknown abc byte code operation, opcode = " + opcode);
     }
+    op.opcode = opcode;
     return op;
   }
 
@@ -210,7 +219,5 @@ public abstract class AbcOp implements Serializable {
     return opcode;
   }
 
-  protected void setOpcode(short opcode) {
-    this.opcode = opcode;
-  }
+  public abstract void write(OutputBitStream stream) throws IOException;
 }

@@ -88,22 +88,22 @@ import javax.swing.tree.TreePath;
  * argument, or choose one in the open dialog.
  */
 public final class Investigator extends JFrame {
-  static int threadCounter            = 0;
-  File file;
-  JPanel treePanel;
-  JTree tree;
+  private static int threadCounter            = 0;
+  private File file;
+  private JPanel treePanel;
+  private JTree tree;
   private JToolBar statusBar;
-  JTextField searchTextField;
+  private JTextField searchTextField;
   private JCheckBox caseSenseCheckBox;
   private JCheckBox backwardsCheckBox;
-  JButton expandButton;
+  private JButton expandButton;
   private JButton findButton;
-  JButton refreshButton;
-  JButton openButton;
-  JButton infoButton;
+  private JButton refreshButton;
+  private JButton openButton;
+  private JButton infoButton;
   private JButton copyButton;
-  DefaultMutableTreeNode rootNode;
-  int nodeNumber;
+  private DefaultMutableTreeNode rootNode;
+  private int nodeNumber;
   private Clipboard clipboard         = getToolkit().getSystemClipboard();
 
   /**

@@ -1,10 +1,118 @@
 package com.jswiff.swfrecords.abc;
 
+import java.io.IOException;
+
+import com.jswiff.io.OutputBitStream;
+
 public class AbcOpSimple extends AbcOp {
   public AbcOpSimple(short opcode) {
-    setOpcode(opcode);
+    super(opcode);
+    checkOpcode(opcode);
   }
 
+  private void checkOpcode(short opcode) {
+    switch(opcode) {
+      case AbcConstants.Opcodes.OPCODE_bkpt:
+      case AbcConstants.Opcodes.OPCODE_nop:
+      case AbcConstants.Opcodes.OPCODE_throw:
+      case AbcConstants.Opcodes.OPCODE_dxns:
+      case AbcConstants.Opcodes.OPCODE_dxnslate:
+      case AbcConstants.Opcodes.OPCODE_label:
+      case AbcConstants.Opcodes.OPCODE_pushwith:
+      case AbcConstants.Opcodes.OPCODE_popscope:
+      case AbcConstants.Opcodes.OPCODE_nextname:
+      case AbcConstants.Opcodes.OPCODE_hasnext:
+      case AbcConstants.Opcodes.OPCODE_pushnull:
+      case AbcConstants.Opcodes.OPCODE_pushundefined:
+      case AbcConstants.Opcodes.OPCODE_pushconstant:
+      case AbcConstants.Opcodes.OPCODE_nextvalue:
+      case AbcConstants.Opcodes.OPCODE_pushtrue:
+      case AbcConstants.Opcodes.OPCODE_pushfalse:
+      case AbcConstants.Opcodes.OPCODE_pushnan:
+      case AbcConstants.Opcodes.OPCODE_pop:
+      case AbcConstants.Opcodes.OPCODE_dup:
+      case AbcConstants.Opcodes.OPCODE_swap:
+      case AbcConstants.Opcodes.OPCODE_pushscope:
+      case AbcConstants.Opcodes.OPCODE_callmethod:
+      case AbcConstants.Opcodes.OPCODE_returnvoid:
+      case AbcConstants.Opcodes.OPCODE_returnvalue:
+      case AbcConstants.Opcodes.OPCODE_callsuperid:
+      case AbcConstants.Opcodes.OPCODE_callinterface:
+      case AbcConstants.Opcodes.OPCODE_newactivation:
+      case AbcConstants.Opcodes.OPCODE_getglobalscope:
+      case AbcConstants.Opcodes.OPCODE_getpropertylate:
+      case AbcConstants.Opcodes.OPCODE_setpropertylate:
+      case AbcConstants.Opcodes.OPCODE_deletepropertylate:
+      case AbcConstants.Opcodes.OPCODE_convert_s:
+      case AbcConstants.Opcodes.OPCODE_esc_xelem:
+      case AbcConstants.Opcodes.OPCODE_esc_xattr:
+      case AbcConstants.Opcodes.OPCODE_convert_i:
+      case AbcConstants.Opcodes.OPCODE_convert_u:
+      case AbcConstants.Opcodes.OPCODE_convert_d:
+      case AbcConstants.Opcodes.OPCODE_convert_b:
+      case AbcConstants.Opcodes.OPCODE_convert_o:
+      case AbcConstants.Opcodes.OPCODE_coerce_b:
+      case AbcConstants.Opcodes.OPCODE_coerce_a:
+      case AbcConstants.Opcodes.OPCODE_coerce_i:
+      case AbcConstants.Opcodes.OPCODE_coerce_d:
+      case AbcConstants.Opcodes.OPCODE_coerce_s:
+      case AbcConstants.Opcodes.OPCODE_astypelate:
+      case AbcConstants.Opcodes.OPCODE_coerce_u:
+      case AbcConstants.Opcodes.OPCODE_coerce_o:
+      case AbcConstants.Opcodes.OPCODE_negate:
+      case AbcConstants.Opcodes.OPCODE_increment:
+      case AbcConstants.Opcodes.OPCODE_decrement:
+      case AbcConstants.Opcodes.OPCODE_typeof:
+      case AbcConstants.Opcodes.OPCODE_not:
+      case AbcConstants.Opcodes.OPCODE_bitnot:
+      case AbcConstants.Opcodes.OPCODE_concat:
+      case AbcConstants.Opcodes.OPCODE_add_d:
+      case AbcConstants.Opcodes.OPCODE_add:
+      case AbcConstants.Opcodes.OPCODE_subtract:
+      case AbcConstants.Opcodes.OPCODE_multiply:
+      case AbcConstants.Opcodes.OPCODE_divide:
+      case AbcConstants.Opcodes.OPCODE_modulo:
+      case AbcConstants.Opcodes.OPCODE_lshift:
+      case AbcConstants.Opcodes.OPCODE_rshift:
+      case AbcConstants.Opcodes.OPCODE_urshift:
+      case AbcConstants.Opcodes.OPCODE_bitand:
+      case AbcConstants.Opcodes.OPCODE_bitor:
+      case AbcConstants.Opcodes.OPCODE_bitxor:
+      case AbcConstants.Opcodes.OPCODE_equals:
+      case AbcConstants.Opcodes.OPCODE_strictequals:
+      case AbcConstants.Opcodes.OPCODE_lessthan:
+      case AbcConstants.Opcodes.OPCODE_lessequals:
+      case AbcConstants.Opcodes.OPCODE_greaterthan:
+      case AbcConstants.Opcodes.OPCODE_greaterequals:
+      case AbcConstants.Opcodes.OPCODE_instanceof:
+      case AbcConstants.Opcodes.OPCODE_istypelate:
+      case AbcConstants.Opcodes.OPCODE_in:
+      case AbcConstants.Opcodes.OPCODE_increment_i:
+      case AbcConstants.Opcodes.OPCODE_decrement_i:
+      case AbcConstants.Opcodes.OPCODE_negate_i:
+      case AbcConstants.Opcodes.OPCODE_add_i:
+      case AbcConstants.Opcodes.OPCODE_subtract_i:
+      case AbcConstants.Opcodes.OPCODE_multiply_i:
+      case AbcConstants.Opcodes.OPCODE_getlocal0:
+      case AbcConstants.Opcodes.OPCODE_getlocal1:
+      case AbcConstants.Opcodes.OPCODE_getlocal2:
+      case AbcConstants.Opcodes.OPCODE_getlocal3:
+      case AbcConstants.Opcodes.OPCODE_setlocal0:
+      case AbcConstants.Opcodes.OPCODE_setlocal1:
+      case AbcConstants.Opcodes.OPCODE_setlocal2:
+      case AbcConstants.Opcodes.OPCODE_setlocal3:
+      case AbcConstants.Opcodes.OPCODE_bkptline:
+      case AbcConstants.Opcodes.OPCODE_checkfilter:
+      case AbcConstants.Opcodes.OPCODE_timestamp:
+        break;
+      default:
+        throw new IllegalArgumentException("Illegal opcode for class " + getClass().getName() + ": " + opcode);
+    }
+  }
+
+  AbcOpSimple() {
+  }
+  
   public String toString() {
     return getOpName();
   }
@@ -292,5 +400,9 @@ public class AbcOpSimple extends AbcOp {
         opName = "unknown";
     }
     return opName;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeUI8(opcode);
   }
 }

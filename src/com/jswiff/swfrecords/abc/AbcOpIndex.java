@@ -1,10 +1,61 @@
 package com.jswiff.swfrecords.abc;
 
+import java.io.IOException;
+
+import com.jswiff.io.OutputBitStream;
+
 public class AbcOpIndex extends AbcOp {
   private int index;
 
   public AbcOpIndex(short opcode, int index) {
-    setOpcode(opcode);
+    super(opcode);
+    checkOpcode(opcode);
+    this.index = index;
+  }
+
+  private void checkOpcode(short opcode) {
+    switch(opcode) {
+      case AbcConstants.Opcodes.OPCODE_getsuper:
+      case AbcConstants.Opcodes.OPCODE_setsuper:
+      case AbcConstants.Opcodes.OPCODE_getproperty:
+      case AbcConstants.Opcodes.OPCODE_initproperty:
+      case AbcConstants.Opcodes.OPCODE_setproperty:
+      case AbcConstants.Opcodes.OPCODE_getlex:
+      case AbcConstants.Opcodes.OPCODE_findpropstrict: 
+      case AbcConstants.Opcodes.OPCODE_findproperty:
+      case AbcConstants.Opcodes.OPCODE_finddef:
+      case AbcConstants.Opcodes.OPCODE_deleteproperty: 
+      case AbcConstants.Opcodes.OPCODE_istype:
+      case AbcConstants.Opcodes.OPCODE_coerce:
+      case AbcConstants.Opcodes.OPCODE_astype:
+      case AbcConstants.Opcodes.OPCODE_getdescendants:
+      case AbcConstants.Opcodes.OPCODE_debugfile:
+      case AbcConstants.Opcodes.OPCODE_pushdouble:
+      case AbcConstants.Opcodes.OPCODE_pushint:
+      case AbcConstants.Opcodes.OPCODE_pushnamespace:
+      case AbcConstants.Opcodes.OPCODE_pushstring:
+      case AbcConstants.Opcodes.OPCODE_pushuint:
+      case AbcConstants.Opcodes.OPCODE_newfunction:
+      case AbcConstants.Opcodes.OPCODE_newclass:
+      case AbcConstants.Opcodes.OPCODE_inclocal:
+      case AbcConstants.Opcodes.OPCODE_declocal:
+      case AbcConstants.Opcodes.OPCODE_inclocal_i:
+      case AbcConstants.Opcodes.OPCODE_declocal_i:
+      case AbcConstants.Opcodes.OPCODE_getlocal:
+      case AbcConstants.Opcodes.OPCODE_kill:
+      case AbcConstants.Opcodes.OPCODE_setlocal:
+      case AbcConstants.Opcodes.OPCODE_getglobalslot:
+      case AbcConstants.Opcodes.OPCODE_getslot:
+      case AbcConstants.Opcodes.OPCODE_setglobalslot:
+      case AbcConstants.Opcodes.OPCODE_setslot:
+      case AbcConstants.Opcodes.OPCODE_newcatch:
+        break;
+      default:
+        throw new IllegalArgumentException("Illegal opcode for class " + getClass().getName() + ": " + opcode);
+    }
+  }
+
+  AbcOpIndex(int index) {
     this.index = index;
   }
 
@@ -125,5 +176,10 @@ public class AbcOpIndex extends AbcOp {
         opName = "unknown";
     }
     return opName;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeUI8(opcode);
+    stream.writeAbcInt(index);
   }
 }

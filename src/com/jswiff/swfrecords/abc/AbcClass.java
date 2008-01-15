@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 public class AbcClass implements Serializable {
   private int initializerIndex;
@@ -13,11 +14,15 @@ public class AbcClass implements Serializable {
   
   public static AbcClass read(InputBitStream stream) throws IOException {
     AbcClass cls = new AbcClass();
-    cls.initializerIndex = stream.readU30();
-    int traitCount = stream.readU30();
+    cls.initializerIndex = stream.readAbcInt();
+    int traitCount = stream.readAbcInt();
     for (int i = 0; i < traitCount; i++) {
       cls.traits.add(AbcTrait.read(stream));
     }
     return cls;
+  }
+  
+  public void write(OutputBitStream stream) throws IOException {
+    
   }
 }

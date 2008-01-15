@@ -1,5 +1,9 @@
 package com.jswiff.swfrecords.abc;
 
+import java.io.IOException;
+
+import com.jswiff.io.OutputBitStream;
+
 public class AbcMethodTrait extends AbcTrait {
   private int dispId;
   private int methodIndex;
@@ -19,5 +23,28 @@ public class AbcMethodTrait extends AbcTrait {
     }
     this.isFinal = isFinal;
     this.isOverride = isOverride;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeAbcInt(nameIndex);
+    int metadataCount = metadataIndices.size();
+    int flagsAndKind = metadataCount != 0 ? METADATA_FLAG : 0;
+    if (isFinal) {
+      flagsAndKind |= FINAL_FLAG;
+    }
+    if (isOverride) {
+      flagsAndKind |= OVERRIDE_FLAG;
+    }
+    flagsAndKind <<= 4;
+    if (isGetter) {
+      flagsAndKind |= TYPE_GETTER;
+    } else if (isSetter) {
+      flagsAndKind |= TYPE_SETTER;
+    } else {
+      flagsAndKind |= TYPE_METHOD;
+    }
+    stream.writeUI8((short) flagsAndKind);
+    stream.writeAbcInt(dispId);
+    stream.writeAbcInt(methodIndex);
   }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 public class AbcException implements Serializable {
   private int from;
@@ -14,11 +15,19 @@ public class AbcException implements Serializable {
   
   public static AbcException read(InputBitStream stream) throws IOException {
     AbcException e = new AbcException();
-    e.from = stream.readU30();
-    e.to = stream.readU30();
-    e.target = stream.readU30();
-    e.typeIndex = stream.readU30();
-    e.nameIndex = stream.readU30();
+    e.from = stream.readAbcInt();
+    e.to = stream.readAbcInt();
+    e.target = stream.readAbcInt();
+    e.typeIndex = stream.readAbcInt();
+    e.nameIndex = stream.readAbcInt();
     return e;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeAbcInt(from);
+    stream.writeAbcInt(to);
+    stream.writeAbcInt(target);
+    stream.writeAbcInt(typeIndex);
+    stream.writeAbcInt(nameIndex);
   }
 }

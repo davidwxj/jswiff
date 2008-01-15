@@ -459,39 +459,38 @@ public final class InputBitStream {
     return result;
   }
 
-  public int readU30() throws IOException {
-    int result = readS32();
-    if (result < 0) {
-      throw new IOException("Negative U30 value read!");
+  public int readSI24() throws IOException {
+    fillBitBuffer();
+    int result = bitBuffer;
+    fillBitBuffer();
+    result |= bitBuffer << 8;
+    fillBitBuffer();
+    result |= bitBuffer << 16;
+    if ((bitBuffer & 0x80) != 0) {
+      result |= 0xFF000000;
     }
+    align();
     return result;
   }
   
-  public int readS24() throws IOException {
-    int result = readUI8();
-    result |= readUI8() << 8;
-    result |= readSI8() << 16;
-    return result;
-  }
-  
-  public int readS32() throws IOException {
+  public int readAbcInt() throws IOException {
     int result = readUI8();
     if ((result & 0x00000080) == 0) {
       return result;
     }
-    result = (result & 0x0000007f) | readUI8() << 7;
+    result = (result & 0x0000007f) | (readUI8() << 7);
     if ((result & 0x00004000) == 0) {
       return result;
     }
-    result = (result & 0x00003fff) | readUI8() << 14;
+    result = (result & 0x00003fff) | (readUI8() << 14);
     if ((result & 0x00200000) == 0) {
       return result;
     }
-    result = (result & 0x001fffff) | readUI8() << 21;
+    result = (result & 0x001fffff) | (readUI8() << 21);
     if ((result & 0x10000000) == 0) {
       return result;
     }
-    result = (result & 0x0fffffff) | readUI8() << 28;
+    result = (result & 0x0fffffff) | (readUI8() << 28);
     return result;
   }
   

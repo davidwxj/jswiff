@@ -1,5 +1,8 @@
 package com.jswiff.swfrecords.abc;
 
+import java.io.IOException;
+
+import com.jswiff.io.OutputBitStream;
 
 public class AbcSlotTrait extends AbcTrait {
   private boolean isConst;
@@ -19,6 +22,17 @@ public class AbcSlotTrait extends AbcTrait {
   
   public boolean isConst() {
     return isConst;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeAbcInt(nameIndex);
+    int metadataCount = metadataIndices.size();
+    int flagsAndKind = (metadataCount != 0 ? METADATA_FLAG << 4 : 0) | (isConst ? TYPE_CONST : TYPE_SLOT);
+    stream.writeUI8((short) flagsAndKind);
+    stream.writeAbcInt(slotId);
+    stream.writeAbcInt(typeIndex);
+    stream.writeAbcInt(valueIndex);
+    stream.writeUI8(valueKind);
   }
   
 }

@@ -3,9 +3,11 @@ package com.jswiff.swfrecords.abc;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 public class AbcInstance implements Serializable {
   public static final short SEALED_FLAG = 0x01;
@@ -25,23 +27,49 @@ public class AbcInstance implements Serializable {
     return ((flags & flag) != 0);
   }
   
+  public void setFlag(short flag) {
+    flags |= flag;
+  }
+  
+  public void clearFlags(short flag) {
+    flags = 0;
+  }
+  
   public static AbcInstance read(InputBitStream stream) throws IOException {
     AbcInstance inst = new AbcInstance();
-    inst.nameIndex = stream.readU30();
-    inst.supernameIndex = stream.readU30();
+    inst.nameIndex = stream.readAbcInt();
+    inst.supernameIndex = stream.readAbcInt();
     inst.flags = stream.readUI8();
     if (inst.isSetFlag(PROTECTED_NS_FLAG)) {
-      inst.protectedNsIndex = stream.readU30();
+      inst.protectedNsIndex = stream.readAbcInt();
     }
-    int interfaceCount = stream.readU30();
+    int interfaceCount = stream.readAbcInt();
     for (int i = 0; i < interfaceCount; i++) {
-      inst.interfaceIndices.add(stream.readU30());
+      inst.interfaceIndices.add(stream.readAbcInt());
     }
-    inst.initializerIndex = stream.readU30();
-    int traitCount = stream.readU30();
+    inst.initializerIndex = stream.readAbcInt();
+    int traitCount = stream.readAbcInt();
     for (int i = 0; i < traitCount; i++) {
       inst.traits.add(AbcTrait.read(stream));
     }
     return inst;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeAbcInt(nameIndex);
+    stream.writeAbcInt(supernameIndex);
+    stream.writeUI8(flags);
+    if (isSetFlag(PROTECTED_NS_FLAG)) {
+      stream.writeAbcInt(protectedNsIndex);
+    }
+    stream.writeAbcInt(interfaceIndices.size());
+    for (Iterator<Integer> it = interfaceIndices.iterator(); it.hasNext(); ) {
+      stream.writeAbcInt(it.next());
+    }
+    stream.writeAbcInt(initializerIndex);
+    stream.writeAbcInt(traits.size());
+    for (Iterator<AbcTrait> it = traits.iterator(); it.hasNext(); ) {
+      it.next().write(stream);
+    }
   }
 }

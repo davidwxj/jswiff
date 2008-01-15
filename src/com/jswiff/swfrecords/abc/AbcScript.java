@@ -13,8 +13,8 @@ public class AbcScript implements Serializable {
   
   public static AbcScript read(InputBitStream stream) throws IOException {
     AbcScript script = new AbcScript();
-    script.initializerIndex = stream.readU30();
-    int traitCount = stream.readU30();
+    script.initializerIndex = stream.readAbcInt();
+    int traitCount = stream.readAbcInt();
     for (int i = 0; i < traitCount; i++) {
       script.traits.add(AbcTrait.read(stream));
     }

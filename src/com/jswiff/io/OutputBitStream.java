@@ -388,7 +388,7 @@ public final class OutputBitStream {
     stream.write(value >> 24);
     offset += 4;
   }
-
+  
   /**
    * Writes a signed byte.
    *
@@ -505,6 +505,43 @@ public final class OutputBitStream {
     writeInteger(value, nBits);
   }
 
+  public void writeSI24(int value) throws IOException {
+    align();
+    stream.write(value & 0xFF);
+    stream.write(value >> 8);
+    stream.write(value >> 16);
+    offset += 3;
+  }
+
+  public void writeAbcInt(int value) throws IOException {
+    short b1 = (short) (value & 0x7f);
+    if ((value & 0xFFFFFF80) != 0) {
+      writeUI8((short) (b1 | 0x80));
+      short b2 = (short) ((value & 0x3F80) >> 7);
+      if ((value & 0xFFFFC000) != 0) {
+        writeUI8((short) (b2 | 0x80));
+        short b3 = (short) ((value & 0x1FC000) >> 14);
+        if ((value & 0xFFE00000) != 0) {
+          writeUI8((short) (b3 | 0x80));
+          short b4 = (short) ((value & 0xFE00000) >> 21);
+          if ((value & 0xF0000000) != 0) {
+            writeUI8((short) (b4 | 0x80));
+            short b5 = (short) ((value & 0xF0000000) >> 28);
+            writeUI8(b5);
+          } else {
+            writeUI8(b4);
+          }
+        } else {
+          writeUI8(b3);
+        }
+      } else {
+        writeUI8(b2);
+      }
+    } else {
+      writeUI8(b1);
+    }
+  }
+  
   private void writeInteger(long value, int nBits) throws IOException {
     int bitsLeft = nBits;
     while (bitsLeft > 0) {

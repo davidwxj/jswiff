@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 public class AbcMultiname implements Serializable {
   public static final short Q_NAME = 0x07;
@@ -28,12 +29,12 @@ public class AbcMultiname implements Serializable {
     switch (mn.kind) {
       case Q_NAME:
       case Q_NAME_A:
-        mn.namespaceIndex = stream.readU30();
-        mn.nameIndex = stream.readU30();
+        mn.namespaceIndex = stream.readAbcInt();
+        mn.nameIndex = stream.readAbcInt();
         break;
       case RTQ_NAME:
       case RTQ_NAME_A:
-        mn.nameIndex = stream.readU30();
+        mn.nameIndex = stream.readAbcInt();
         break;
       case RTQ_NAME_L:
       case RTQ_NAME_L_A:
@@ -41,14 +42,42 @@ public class AbcMultiname implements Serializable {
         break;
       case MULTINAME:
       case MULTINAME_A:
-        mn.nameIndex = stream.readU30();
-        mn.namespaceSetIndex = stream.readU30();
+        mn.nameIndex = stream.readAbcInt();
+        mn.namespaceSetIndex = stream.readAbcInt();
         break;
       case MULTINAME_L:
       case MULTINAME_L_A:
-        mn.namespaceSetIndex = stream.readU30();
+        mn.namespaceSetIndex = stream.readAbcInt();
         break;
     }
     return mn;
+  }
+
+  public void write(OutputBitStream stream) throws IOException {
+    stream.writeUI8(kind);
+    switch (kind) {
+    case Q_NAME:
+    case Q_NAME_A:
+      stream.writeAbcInt(namespaceIndex);
+      stream.writeAbcInt(nameIndex);
+      break;
+    case RTQ_NAME:
+    case RTQ_NAME_A:
+      stream.writeAbcInt(nameIndex);
+      break;
+    case RTQ_NAME_L:
+    case RTQ_NAME_L_A:
+      // no data associated
+      break;
+    case MULTINAME:
+    case MULTINAME_A:
+      stream.writeAbcInt(nameIndex);
+      stream.writeAbcInt(namespaceSetIndex);
+      break;
+    case MULTINAME_L:
+    case MULTINAME_L_A:
+      stream.writeAbcInt(namespaceSetIndex);
+      break;
+  }
   }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 public class AbcConstantPool implements Serializable {
   private List<Integer> ints = new ArrayList<Integer>();
@@ -29,41 +30,107 @@ public class AbcConstantPool implements Serializable {
   public static AbcConstantPool read(InputBitStream stream) throws IOException {
     AbcConstantPool pool = new AbcConstantPool();
     // read ints
-    int count = stream.readU30();
+    int count = stream.readAbcInt();
     for (int i = 1; i < count; i++) {
-      pool.ints.add(stream.readS32());
+      pool.ints.add(stream.readAbcInt());
     }
     // read uints
-    count =  stream.readU30();
+    count =  stream.readAbcInt();
     for (int i = 1; i < count; i++) {
-      pool.uints.add(stream.readU30());
+      pool.uints.add(stream.readAbcInt());
     }
     // read doubles
-    count =  stream.readU30();
+    count =  stream.readAbcInt();
     for (int i = 1; i < count; i++) {
       pool.doubles.add(stream.readDouble());
     }
     // read strings
-    count =  stream.readU30();
+    count =  stream.readAbcInt();
     for (int i = 1; i < count; i++) {
-      int length = stream.readU30();
+      int length = stream.readAbcInt();
       pool.strings.add(new String(stream.readBytes(length), "UTF-8"));
     }
     // read namespaces
-    count = stream.readU30();
+    count = stream.readAbcInt();
     for (int i = 1; i < count; i++) {
       pool.namespaces.add(AbcNamespace.read(stream));
     }
     // read namespace sets
-    count = stream.readU30();
+    count = stream.readAbcInt();
     for (int i = 1; i < count; i++) {
       pool.namespaceSets.add(AbcNamespaceSet.read(stream));
     }
     // read multinames
-    count = stream.readU30();
+    count = stream.readAbcInt();
     for (int i = 1; i < count; i++) {
       pool.multinames.add(AbcMultiname.read(stream));
     }
     return pool;
+  }
+  
+  public void write(OutputBitStream stream) throws IOException {
+    int count = ints.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        stream.writeAbcInt(ints.get(i));
+      }
+    }
+    count = uints.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        stream.writeAbcInt(uints.get(i));
+      }
+    }
+    count = doubles.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        stream.writeDouble(doubles.get(i));
+      }
+    }
+    count = strings.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        stream.writeString(strings.get(i));
+      }
+    }
+    count = namespaces.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        namespaces.get(i).write(stream);
+      }
+    }
+    count = namespaceSets.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        namespaceSets.get(i).write(stream);
+      }
+    }
+    count = multinames.size() + 1;
+    if (count < 3) {
+      stream.writeAbcInt(0);
+    } else {
+      stream.writeAbcInt(count);
+      for (int i = 1; i < count; i++) {
+        multinames.get(i).write(stream);
+      }
+    }
   }
 }
