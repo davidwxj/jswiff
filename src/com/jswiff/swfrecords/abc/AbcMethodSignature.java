@@ -67,9 +67,12 @@ public class AbcMethodSignature implements Serializable {
     }
     stream.writeAbcInt(nameIndex);
     stream.writeUI8(flags);
-    stream.writeAbcInt(optionalParameters.size());
-    for (Iterator<AbcDefaultValue> it = optionalParameters.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    int optionalParamCount = optionalParameters.size();
+    if (optionalParamCount > 0) {
+      stream.writeAbcInt(optionalParamCount);
+      for (Iterator<AbcDefaultValue> it = optionalParameters.iterator(); it.hasNext(); ) {
+        it.next().write(stream);
+      }
     }
     for (Iterator<Integer> it = parameterNameIndices.iterator(); it.hasNext(); ) {
       stream.writeAbcInt(it.next());

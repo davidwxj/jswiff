@@ -71,6 +71,13 @@ public class AbcFile implements Serializable {
     for (Iterator<AbcInstance> it = instances.iterator(); it.hasNext(); ) {
       it.next().write(stream);
     }
+    for (Iterator<AbcClass> it = classes.iterator(); it.hasNext(); ) {
+      it.next().write(stream);
+    }
+    stream.writeAbcInt(scripts.size());
+    for (Iterator<AbcScript> it = scripts.iterator(); it.hasNext(); ) {
+      it.next().write(stream);
+    }
     stream.writeAbcInt(methodBodies.size());
     for (Iterator<AbcMethodBody> it = methodBodies.iterator(); it.hasNext(); ) {
       it.next().write(stream);

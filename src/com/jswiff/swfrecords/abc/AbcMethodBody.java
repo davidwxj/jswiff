@@ -51,7 +51,7 @@ public class AbcMethodBody implements Serializable {
     stream.writeAbcInt(maxScopeDepth);
     OutputBitStream byteCodeStream = new OutputBitStream();
     for (Iterator<AbcOp> it = abcCode.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+      it.next().write(byteCodeStream);
     }
     byte[] byteCode = byteCodeStream.getData();
     stream.writeAbcInt(byteCode.length);

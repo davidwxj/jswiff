@@ -98,6 +98,9 @@ public class FileAttributes extends Tag {
     if (allowNetworkAccess) {
       flags |= 0x01;
     }
+    if (hasABC) {
+      flags |= 0x08;
+    }
     if (hasMetadata) {
       flags |= 0x10;
     }
@@ -108,7 +111,7 @@ public class FileAttributes extends Tag {
     InputBitStream inStream = new InputBitStream(data);
     int flags               = inStream.readSI32();
     allowNetworkAccess      = ((flags & 0x01) != 0);
-    hasABC                  = ((flags & 0x8) != 0);
+    hasABC                  = ((flags & 0x08) != 0);
     hasMetadata             = ((flags & 0x10) != 0);
   }
 }

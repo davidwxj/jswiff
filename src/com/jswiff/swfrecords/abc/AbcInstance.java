@@ -50,7 +50,8 @@ public class AbcInstance implements Serializable {
     inst.initializerIndex = stream.readAbcInt();
     int traitCount = stream.readAbcInt();
     for (int i = 0; i < traitCount; i++) {
-      inst.traits.add(AbcTrait.read(stream));
+      AbcTrait trait = AbcTrait.read(stream);
+      inst.traits.add(trait);
     }
     return inst;
   }
@@ -69,7 +70,12 @@ public class AbcInstance implements Serializable {
     stream.writeAbcInt(initializerIndex);
     stream.writeAbcInt(traits.size());
     for (Iterator<AbcTrait> it = traits.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+      AbcTrait trait = it.next();
+      if (trait instanceof AbcMethodTrait) {
+      ((AbcMethodTrait)trait).write(stream);
+      } else {
+        trait.write(stream);
+      }
     }
   }
 }

@@ -48,7 +48,8 @@ public class AbcConstantPool implements Serializable {
     count =  stream.readAbcInt();
     for (int i = 1; i < count; i++) {
       int length = stream.readAbcInt();
-      pool.strings.add(new String(stream.readBytes(length), "UTF-8"));
+      String string = new String(stream.readBytes(length), "UTF-8");
+      pool.strings.add(string);
     }
     // read namespaces
     count = stream.readAbcInt();
@@ -69,8 +70,8 @@ public class AbcConstantPool implements Serializable {
   }
   
   public void write(OutputBitStream stream) throws IOException {
-    int count = ints.size() + 1;
-    if (count < 3) {
+    int count = ints.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);
@@ -78,8 +79,8 @@ public class AbcConstantPool implements Serializable {
         stream.writeAbcInt(ints.get(i));
       }
     }
-    count = uints.size() + 1;
-    if (count < 3) {
+    count = uints.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);
@@ -87,8 +88,8 @@ public class AbcConstantPool implements Serializable {
         stream.writeAbcInt(uints.get(i));
       }
     }
-    count = doubles.size() + 1;
-    if (count < 3) {
+    count = doubles.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);
@@ -96,17 +97,19 @@ public class AbcConstantPool implements Serializable {
         stream.writeDouble(doubles.get(i));
       }
     }
-    count = strings.size() + 1;
-    if (count < 3) {
+    count = strings.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);
       for (int i = 1; i < count; i++) {
-        stream.writeString(strings.get(i));
+        byte[] buffer = strings.get(i).getBytes("UTF-8");
+        stream.writeAbcInt(buffer.length);
+        stream.writeBytes(buffer);
       }
     }
-    count = namespaces.size() + 1;
-    if (count < 3) {
+    count = namespaces.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);
@@ -114,8 +117,8 @@ public class AbcConstantPool implements Serializable {
         namespaces.get(i).write(stream);
       }
     }
-    count = namespaceSets.size() + 1;
-    if (count < 3) {
+    count = namespaceSets.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);
@@ -123,8 +126,8 @@ public class AbcConstantPool implements Serializable {
         namespaceSets.get(i).write(stream);
       }
     }
-    count = multinames.size() + 1;
-    if (count < 3) {
+    count = multinames.size();
+    if (count < 2) {
       stream.writeAbcInt(0);
     } else {
       stream.writeAbcInt(count);

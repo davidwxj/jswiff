@@ -71,8 +71,7 @@ public abstract class AbcTrait implements Serializable {
       for (int i = 0; i < metadataCount; i++) {
         trait.metadataIndices.add(stream.readAbcInt());
       }
-    }
-    return trait;
+    }return trait;
   }
 
   public abstract void write(OutputBitStream stream) throws IOException;

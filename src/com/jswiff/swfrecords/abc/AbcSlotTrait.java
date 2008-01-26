@@ -1,6 +1,7 @@
 package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import com.jswiff.io.OutputBitStream;
 
@@ -32,7 +33,15 @@ public class AbcSlotTrait extends AbcTrait {
     stream.writeAbcInt(slotId);
     stream.writeAbcInt(typeIndex);
     stream.writeAbcInt(valueIndex);
-    stream.writeUI8(valueKind);
+    if (valueIndex != 0 ) {
+      stream.writeUI8(valueKind);
+    }
+    if (metadataCount != 0) {
+      stream.writeAbcInt(metadataCount);
+      for (Iterator<Integer> it = metadataIndices.iterator(); it.hasNext(); ) {
+        stream.writeAbcInt(it.next());
+      }
+    }
   }
   
 }

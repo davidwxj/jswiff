@@ -26,7 +26,6 @@ import java.io.IOException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.abc.AbcFile;
-import com.jswiff.util.HexUtils;
 
 
 /**
@@ -47,6 +46,9 @@ public final class DoAbcDefine extends Tag {
 
   protected void writeData(OutputBitStream outStream) throws IOException {
     forceLongHeader = true;
+    outStream.writeBytes(new byte[] {1, 0, 0, 0});
+    outStream.writeString(abcName);
+    abcFile.write(outStream);
   }
 
   void setData(byte[] data) throws IOException {
