@@ -23,6 +23,46 @@ public class AbcMultiname implements Serializable {
   private int namespaceIndex;
   private int namespaceSetIndex;
 
+  private AbcMultiname() {
+    // empty
+  }
+  
+  public static AbcMultiname createQName(short kind, int namespaceIndex, int nameIndex) {
+    AbcMultiname mn = new AbcMultiname();
+    mn.kind = kind;
+    mn.namespaceIndex = namespaceIndex;
+    mn.nameIndex = nameIndex;
+    return mn;
+  }
+  
+  public static AbcMultiname createRTQName(short kind, int nameIndex) {
+    AbcMultiname mn = new AbcMultiname();
+    mn.kind = kind;
+    mn.nameIndex = nameIndex;
+    return mn;
+  }
+  
+  public static AbcMultiname createRTQNameL(short kind) {
+    AbcMultiname mn = new AbcMultiname();
+    mn.kind = kind;
+    return mn;
+  }
+  
+  public static AbcMultiname createMultiname(short kind, int nameIndex, int namespaceSetIndex) {
+    AbcMultiname mn = new AbcMultiname();
+    mn.kind = kind;
+    mn.nameIndex = nameIndex;
+    mn.namespaceSetIndex = namespaceSetIndex;
+    return mn;
+  }
+  
+  public static AbcMultiname createMultinameL(short kind, int namespaceSetIndex) {
+    AbcMultiname mn = new AbcMultiname();
+    mn.kind = kind;
+    mn.namespaceSetIndex = namespaceSetIndex;
+    return mn;
+  }
+  
   public static AbcMultiname read(InputBitStream stream) throws IOException {
     AbcMultiname mn = new AbcMultiname();
     mn.kind = stream.readUI8();
@@ -79,5 +119,21 @@ public class AbcMultiname implements Serializable {
       stream.writeAbcInt(namespaceSetIndex);
       break;
   }
+  }
+
+  public short getKind() {
+    return kind;
+  }
+
+  public int getNameIndex() {
+    return nameIndex;
+  }
+
+  public int getNamespaceIndex() {
+    return namespaceIndex;
+  }
+
+  public int getNamespaceSetIndex() {
+    return namespaceSetIndex;
   }
 }

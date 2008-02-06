@@ -14,6 +14,7 @@ public abstract class AbcOp implements Serializable {
   }
   
   AbcOp() {
+    // empty
   }
   
   public static AbcOp read(InputBitStream stream) throws IOException {

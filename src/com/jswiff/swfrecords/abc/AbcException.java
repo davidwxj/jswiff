@@ -13,6 +13,18 @@ public class AbcException implements Serializable {
   private int typeIndex;
   private int nameIndex;
   
+  private AbcException() {
+    // empty
+  }
+  
+  public AbcException(int from, int to, int target, int typeIndex, int nameIndex) {
+    this.from = from;
+    this.to = to;
+    this.target = target;
+    this.typeIndex = typeIndex;
+    this.nameIndex = nameIndex;
+  }
+
   public static AbcException read(InputBitStream stream) throws IOException {
     AbcException e = new AbcException();
     e.from = stream.readAbcInt();
@@ -29,5 +41,25 @@ public class AbcException implements Serializable {
     stream.writeAbcInt(target);
     stream.writeAbcInt(typeIndex);
     stream.writeAbcInt(nameIndex);
+  }
+
+  public int getFrom() {
+    return from;
+  }
+
+  public int getTo() {
+    return to;
+  }
+
+  public int getTarget() {
+    return target;
+  }
+
+  public int getTypeIndex() {
+    return typeIndex;
+  }
+
+  public int getNameIndex() {
+    return nameIndex;
   }
 }

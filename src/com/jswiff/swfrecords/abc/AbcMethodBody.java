@@ -19,6 +19,19 @@ public class AbcMethodBody implements Serializable {
   private List<AbcOp> abcCode = new ArrayList<AbcOp>();
   private List<AbcException> exceptions = new ArrayList<AbcException>();
   
+  private AbcMethodBody() {
+    // empty
+  }
+  
+  public AbcMethodBody(int signatureIndex, int maxStack, int localCount,
+      int initScopeDepth, int maxScopeDepth) {
+    this.signatureIndex = signatureIndex;
+    this.maxStack = maxStack;
+    this.localCount = localCount;
+    this.initScopeDepth = initScopeDepth;
+    this.maxScopeDepth = maxScopeDepth;
+  }
+
   public static AbcMethodBody read(InputBitStream stream) throws IOException {
     AbcMethodBody method = new AbcMethodBody();
     method.signatureIndex = stream.readAbcInt();
@@ -64,5 +77,37 @@ public class AbcMethodBody implements Serializable {
     for (Iterator<AbcTrait> it = traits.iterator(); it.hasNext(); ) {
       it.next().write(stream);
     }
+  }
+
+  public int getSignatureIndex() {
+    return signatureIndex;
+  }
+
+  public int getMaxStack() {
+    return maxStack;
+  }
+
+  public List<AbcTrait> getTraits() {
+    return traits;
+  }
+
+  public int getLocalCount() {
+    return localCount;
+  }
+
+  public int getInitScopeDepth() {
+    return initScopeDepth;
+  }
+
+  public int getMaxScopeDepth() {
+    return maxScopeDepth;
+  }
+
+  public List<AbcOp> getAbcCode() {
+    return abcCode;
+  }
+
+  public List<AbcException> getExceptions() {
+    return exceptions;
   }
 }

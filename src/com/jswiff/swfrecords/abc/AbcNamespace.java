@@ -24,4 +24,12 @@ public class AbcNamespace implements Serializable {
     stream.writeUI8(type);
     stream.writeAbcInt(nameIndex);
   }
+
+  public short getType() {
+    return type;
+  }
+
+  public int getNameIndex() {
+    return nameIndex;
+  }
 }

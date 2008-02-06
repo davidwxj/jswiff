@@ -75,4 +75,12 @@ public abstract class AbcTrait implements Serializable {
   }
 
   public abstract void write(OutputBitStream stream) throws IOException;
+
+  public int getNameIndex() {
+    return nameIndex;
+  }
+
+  public List<Integer> getMetadataIndices() {
+    return metadataIndices;
+  }
 }

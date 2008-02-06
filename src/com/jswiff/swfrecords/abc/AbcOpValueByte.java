@@ -23,7 +23,7 @@ public class AbcOpValueByte extends AbcOp {
     }
   }
 
-  AbcOpValueByte(byte value) {
+  public AbcOpValueByte(byte value) {
     this.value = value;
   }
 

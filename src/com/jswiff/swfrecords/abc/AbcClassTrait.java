@@ -29,4 +29,12 @@ public class AbcClassTrait extends AbcTrait {
       }
     }
   }
+
+  public int getSlotId() {
+    return slotId;
+  }
+
+  public int getClassIndex() {
+    return classIndex;
+  }
 }

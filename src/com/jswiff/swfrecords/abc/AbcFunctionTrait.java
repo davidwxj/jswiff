@@ -29,5 +29,13 @@ public class AbcFunctionTrait extends AbcTrait {
       }
     }
   }
+
+  public int getSlotId() {
+    return slotId;
+  }
+
+  public int getFunctionIndex() {
+    return functionIndex;
+  }
   
 }

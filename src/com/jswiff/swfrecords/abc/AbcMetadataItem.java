@@ -10,6 +10,15 @@ public class AbcMetadataItem implements Serializable {
   private int keyIndex;
   private int valueIndex;
   
+  private AbcMetadataItem() {
+    // empty
+  }
+  
+  public AbcMetadataItem(int keyIndex, int valueIndex) {
+    this.keyIndex = keyIndex;
+    this.valueIndex = valueIndex;
+  }
+
   public static AbcMetadataItem read(InputBitStream stream) throws IOException {
     AbcMetadataItem item = new AbcMetadataItem();
     item.keyIndex = stream.readAbcInt();
@@ -20,5 +29,13 @@ public class AbcMetadataItem implements Serializable {
   public void write(OutputBitStream stream) throws IOException {
     stream.writeAbcInt(keyIndex);
     stream.writeAbcInt(valueIndex);
+  }
+
+  public int getKeyIndex() {
+    return keyIndex;
+  }
+
+  public int getValueIndex() {
+    return valueIndex;
   }
 }

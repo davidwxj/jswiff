@@ -29,7 +29,7 @@ import com.jswiff.swfrecords.abc.AbcFile;
 
 
 /**
- * 
+ * Defines ActionScript 3 code in ABC format.
  *
  * @since SWF 9
  */
@@ -41,6 +41,7 @@ public final class DoAbc extends Tag {
    */
   public DoAbc() {
     code = TagConstants.DO_ABC;
+    abcFile = new AbcFile();
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
@@ -54,5 +55,9 @@ public final class DoAbc extends Tag {
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     abcFile = AbcFile.read(inStream);
+  }
+
+  public AbcFile getAbcFile() {
+    return abcFile;
   }
 }

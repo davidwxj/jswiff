@@ -30,7 +30,7 @@ public class AbcOpIndexArgs extends AbcOp {
     }
   }
 
-  AbcOpIndexArgs(int index, int argCount) {
+  public AbcOpIndexArgs(int index, int argCount) {
     this.index = index;
     this.argCount = argCount;
   }

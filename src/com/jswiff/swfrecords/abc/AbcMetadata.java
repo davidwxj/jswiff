@@ -13,6 +13,14 @@ public class AbcMetadata implements Serializable {
   private int nameIndex;
   private List<AbcMetadataItem> items = new ArrayList<AbcMetadataItem>();
   
+  private AbcMetadata() {
+    // empty
+  }
+  
+  public AbcMetadata(int nameIndex) {
+    this.nameIndex = nameIndex;
+  }
+  
   public static AbcMetadata read(InputBitStream stream) throws IOException {
     AbcMetadata metadata = new AbcMetadata();
     metadata.nameIndex = stream.readAbcInt();
@@ -29,5 +37,13 @@ public class AbcMetadata implements Serializable {
     for (Iterator<AbcMetadataItem> it = items.iterator(); it.hasNext(); ) {
       it.next().write(stream);
     }
+  }
+
+  public int getNameIndex() {
+    return nameIndex;
+  }
+
+  public List<AbcMetadataItem> getItems() {
+    return items;
   }
 }

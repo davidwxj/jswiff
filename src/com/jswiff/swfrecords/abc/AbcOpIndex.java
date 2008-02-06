@@ -55,7 +55,7 @@ public class AbcOpIndex extends AbcOp {
     }
   }
 
-  AbcOpIndex(int index) {
+  public AbcOpIndex(int index) {
     this.index = index;
   }
 

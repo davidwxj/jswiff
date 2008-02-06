@@ -136,4 +136,32 @@ public class AbcConstantPool implements Serializable {
       }
     }
   }
+
+  public List<Integer> getInts() {
+    return ints;
+  }
+
+  public List<Integer> getUints() {
+    return uints;
+  }
+
+  public List<Double> getDoubles() {
+    return doubles;
+  }
+
+  public List<String> getStrings() {
+    return strings;
+  }
+
+  public List<AbcNamespace> getNamespaces() {
+    return namespaces;
+  }
+
+  public List<AbcNamespaceSet> getNamespaceSets() {
+    return namespaceSets;
+  }
+
+  public List<AbcMultiname> getMultinames() {
+    return multinames;
+  }
 }

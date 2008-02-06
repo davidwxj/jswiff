@@ -43,5 +43,21 @@ public class AbcSlotTrait extends AbcTrait {
       }
     }
   }
+
+  public int getSlotId() {
+    return slotId;
+  }
+
+  public int getTypeIndex() {
+    return typeIndex;
+  }
+
+  public int getValueIndex() {
+    return valueIndex;
+  }
+
+  public short getValueKind() {
+    return valueKind;
+  }
   
 }

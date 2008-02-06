@@ -24,6 +24,15 @@ public class AbcMethodSignature implements Serializable {
   private List<AbcDefaultValue> optionalParameters = new ArrayList<AbcDefaultValue>();
   private List<Integer> parameterNameIndices = new ArrayList<Integer>();
 
+  private AbcMethodSignature() {
+    // empty
+  }
+  
+  public AbcMethodSignature(int nameIndex, int returnTypeIndex) {
+    this.nameIndex = nameIndex;
+    this.returnTypeIndex = returnTypeIndex;
+  }
+  
   public boolean isSetFlag(short flag) {
     return ((flags & flag) != 0);
   }
@@ -77,5 +86,25 @@ public class AbcMethodSignature implements Serializable {
     for (Iterator<Integer> it = parameterNameIndices.iterator(); it.hasNext(); ) {
       stream.writeAbcInt(it.next());
     }
+  }
+
+  public int getReturnTypeIndex() {
+    return returnTypeIndex;
+  }
+
+  public List<Integer> getParameterTypeIndices() {
+    return parameterTypeIndices;
+  }
+
+  public int getNameIndex() {
+    return nameIndex;
+  }
+
+  public List<AbcDefaultValue> getOptionalParameters() {
+    return optionalParameters;
+  }
+
+  public List<Integer> getParameterNameIndices() {
+    return parameterNameIndices;
   }
 }

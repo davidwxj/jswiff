@@ -13,6 +13,14 @@ public class AbcClass implements Serializable {
   private int initializerIndex;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   
+  private AbcClass() {
+    // empty
+  }
+  
+  public AbcClass(int initializerIndex) {
+    this.initializerIndex = initializerIndex;
+  }
+  
   public static AbcClass read(InputBitStream stream) throws IOException {
     AbcClass cls = new AbcClass();
     cls.initializerIndex = stream.readAbcInt();
@@ -31,5 +39,13 @@ public class AbcClass implements Serializable {
       AbcTrait trait = it.next();
       trait.write(stream);
     }
+  }
+
+  public int getInitializerIndex() {
+    return initializerIndex;
+  }
+
+  public List<AbcTrait> getTraits() {
+    return traits;
   }
 }

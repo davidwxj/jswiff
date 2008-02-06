@@ -54,4 +54,28 @@ public class AbcMethodTrait extends AbcTrait {
       }
     }
   }
+
+  public int getDispId() {
+    return dispId;
+  }
+
+  public int getMethodIndex() {
+    return methodIndex;
+  }
+
+  public boolean isSetter() {
+    return isSetter;
+  }
+
+  public boolean isGetter() {
+    return isGetter;
+  }
+
+  public boolean isFinal() {
+    return isFinal;
+  }
+
+  public boolean isOverride() {
+    return isOverride;
+  }
 }

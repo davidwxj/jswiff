@@ -27,4 +27,8 @@ public class AbcNamespaceSet implements Serializable {
       stream.writeAbcInt(it.next());
     }
   }
+
+  public List<Integer> getNamespaceIndices() {
+    return namespaceIndices;
+  }
 }

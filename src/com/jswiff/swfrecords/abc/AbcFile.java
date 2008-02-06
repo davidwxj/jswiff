@@ -20,6 +20,12 @@ public class AbcFile implements Serializable {
   private List<AbcScript> scripts = new ArrayList<AbcScript>();
   private List<AbcMethodBody> methodBodies = new ArrayList<AbcMethodBody>();
   
+  public AbcFile() {
+    majorVersion = 46;
+    minorVersion = 16;
+    constantPool = new AbcConstantPool();
+  }
+  
   public static AbcFile read(InputBitStream stream) throws IOException {
     AbcFile abcFile = new AbcFile();
     abcFile.minorVersion = stream.readUI16();
@@ -82,5 +88,41 @@ public class AbcFile implements Serializable {
     for (Iterator<AbcMethodBody> it = methodBodies.iterator(); it.hasNext(); ) {
       it.next().write(stream);
     }
+  }
+
+  public int getMajorVersion() {
+    return majorVersion;
+  }
+
+  public int getMinorVersion() {
+    return minorVersion;
+  }
+
+  public AbcConstantPool getConstantPool() {
+    return constantPool;
+  }
+
+  public List<AbcMethodSignature> getMethods() {
+    return methods;
+  }
+
+  public List<AbcMetadata> getMetadataEntries() {
+    return metadataEntries;
+  }
+
+  public List<AbcInstance> getInstances() {
+    return instances;
+  }
+
+  public List<AbcClass> getClasses() {
+    return classes;
+  }
+
+  public List<AbcScript> getScripts() {
+    return scripts;
+  }
+
+  public List<AbcMethodBody> getMethodBodies() {
+    return methodBodies;
   }
 }

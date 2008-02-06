@@ -26,7 +26,7 @@ public class AbcOpArgs extends AbcOp {
     }
   }
 
-  AbcOpArgs(int argCount) {
+  public AbcOpArgs(int argCount) {
     this.argCount = argCount;
   }
 

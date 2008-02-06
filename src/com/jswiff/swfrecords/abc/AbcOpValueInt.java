@@ -23,7 +23,7 @@ public class AbcOpValueInt extends AbcOp {
     }
   }
 
-  AbcOpValueInt(int value) {
+  public AbcOpValueInt(int value) {
     this.value = value;
   }
 

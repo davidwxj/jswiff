@@ -23,6 +23,16 @@ public class AbcInstance implements Serializable {
   private int initializerIndex;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   
+  private AbcInstance() {
+    // empty
+  }
+  
+  public AbcInstance(int nameIndex, int supernameIndex, int initializerIndex) {
+    this.nameIndex = nameIndex;
+    this.supernameIndex = supernameIndex;
+    this.initializerIndex = initializerIndex;
+  }
+  
   public boolean isSetFlag(short flag) {
     return ((flags & flag) != 0);
   }
@@ -77,5 +87,34 @@ public class AbcInstance implements Serializable {
         trait.write(stream);
       }
     }
+  }
+
+  public int getProtectedNsIndex() {
+    return protectedNsIndex;
+  }
+
+  public void setProtectedNsIndex(int protectedNsIndex) {
+    this.protectedNsIndex = protectedNsIndex;
+    setFlag(PROTECTED_NS_FLAG);
+  }
+
+  public int getNameIndex() {
+    return nameIndex;
+  }
+
+  public int getSupernameIndex() {
+    return supernameIndex;
+  }
+
+  public List<Integer> getInterfaceIndices() {
+    return interfaceIndices;
+  }
+
+  public int getInitializerIndex() {
+    return initializerIndex;
+  }
+
+  public List<AbcTrait> getTraits() {
+    return traits;
   }
 }
