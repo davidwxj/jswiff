@@ -7,11 +7,11 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcNamespace implements Serializable {
-  private short type; // one of the constants in AbcTypes.Namespace
+  private short kind; // one of the constants in AbcConstants.NamespaceKinds
   private int nameIndex; // points to string constant
 
-  public AbcNamespace(short type, int nameIndex) {
-    this.type = type;
+  public AbcNamespace(short kind, int nameIndex) {
+    this.kind = kind;
     this.nameIndex = nameIndex;
   }
 
@@ -21,12 +21,12 @@ public class AbcNamespace implements Serializable {
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(type);
+    stream.writeUI8(kind);
     stream.writeAbcInt(nameIndex);
   }
 
-  public short getType() {
-    return type;
+  public short getKind() {
+    return kind;
   }
 
   public int getNameIndex() {

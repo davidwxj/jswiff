@@ -35,6 +35,7 @@ import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.ShapeWithStyle;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.ZlibBitmapData;
+import com.jswiff.swfrecords.tags.DebugId;
 import com.jswiff.swfrecords.tags.DefineBits;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG3;
@@ -51,6 +52,7 @@ import com.jswiff.swfrecords.tags.DefineFont3;
 import com.jswiff.swfrecords.tags.DefineFontAlignment;
 import com.jswiff.swfrecords.tags.DefineFontInfo;
 import com.jswiff.swfrecords.tags.DefineFontInfo2;
+import com.jswiff.swfrecords.tags.DefineFontName;
 import com.jswiff.swfrecords.tags.DefineMorphShape;
 import com.jswiff.swfrecords.tags.DefineMorphShape2;
 import com.jswiff.swfrecords.tags.DefineShape;
@@ -99,12 +101,16 @@ import org.dom4j.Element;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 
 class TagXMLReader {
   static Tag readTag(Element tagElement, int tagCode) {
     Tag tag;
     switch (tagCode) {
+      case TagConstants.DEBUG_ID:
+        tag = readDebugId(tagElement);
+        break;
       case TagConstants.DEFINE_BITS:
         tag = readDefineBits(tagElement);
         break;
@@ -152,6 +158,9 @@ class TagXMLReader {
         break;
       case TagConstants.DEFINE_FONT_ALIGNMENT:
         tag = readDefineFontAlignment(tagElement);
+        break;
+      case TagConstants.DEFINE_FONT_NAME:
+        tag = readDefineFontName(tagElement);
         break;
       case TagConstants.DEFINE_MORPH_SHAPE:
         tag = readDefineMorphShape(tagElement);
@@ -343,6 +352,11 @@ class TagXMLReader {
     }
   }
 
+  private static Tag readDebugId(Element tagElement) {
+    String id = RecordXMLReader.getStringAttribute("id", tagElement);
+    return new DebugId(UUID.fromString(id));
+  }
+  
   private static Tag readDefineBits(Element tagElement) {
     int characterId = RecordXMLReader.getCharacterId(tagElement);
     byte[] jpegData = RecordXMLReader.getDataElement("jpegdata", tagElement);
@@ -770,6 +784,14 @@ class TagXMLReader {
     AlignmentZone[] alignmentZones = RecordXMLReader.readAlignmentZones(tagElement);
     DefineFontAlignment defineFontAlignment = new DefineFontAlignment(fontId, thickness, alignmentZones);
     return defineFontAlignment;
+  }
+  
+  private static Tag readDefineFontName(Element tagElement) {
+    int fontId         = RecordXMLReader.getIntAttribute("fontid", tagElement);
+    String fontName    = RecordXMLReader.getStringAttributeWithBase64Check("fontname", tagElement);
+    String fontLicense = RecordXMLReader.getStringAttributeWithBase64Check("fontlicense", tagElement);
+    DefineFontName defineFontName = new DefineFontName(fontId, fontName, fontLicense);
+    return defineFontName;
   }
   
   private static Tag readDefineMorphShape(Element tagElement) {

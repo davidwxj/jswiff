@@ -22,6 +22,12 @@
 package com.jswiff.investigator;
 
 import com.jswiff.swfrecords.*;
+import com.jswiff.swfrecords.abc.AbcConstantPool;
+import com.jswiff.swfrecords.abc.AbcConstants;
+import com.jswiff.swfrecords.abc.AbcFile;
+import com.jswiff.swfrecords.abc.AbcMultiname;
+import com.jswiff.swfrecords.abc.AbcNamespace;
+import com.jswiff.swfrecords.abc.AbcNamespaceSet;
 import com.jswiff.swfrecords.actions.*;
 import com.jswiff.swfrecords.tags.*;
 import com.jswiff.swfrecords.tags.ExportAssets.ExportMapping;
@@ -103,6 +109,9 @@ final class SWFTreeBuilder {
         break;
       case TagConstants.DEFINE_FONT_INFO_2:
         addNode(node, (DefineFontInfo2) tag);
+        break;
+      case TagConstants.DEFINE_FONT_NAME:
+        addNode(node, (DefineFontName) tag);
         break;
       case TagConstants.FLASHTYPE_SETTINGS:
         addNode(node, (FlashTypeSettings) tag);
@@ -904,6 +913,14 @@ final class SWFTreeBuilder {
       addLeaf(codeTableNode, "code " + i + ": " + table[i]);
     }
   }
+  
+  private static void addNode(DefaultMutableTreeNode node, DefineFontName tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatDefTag("DefineFontName"));
+    addLeaf(tagNode, "fontId: " + tag.getFontId());
+    addLeaf(tagNode, "fontName: " + tag.getFontName());
+    addLeaf(tagNode, "fontLicense: " + tag.getFontLicense());
+  }
 
   private static void addNode(
     DefaultMutableTreeNode node, FlashTypeSettings tag) {
@@ -1557,11 +1574,14 @@ final class SWFTreeBuilder {
   private static void addNode(DefaultMutableTreeNode node, DoAbc tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("DoAbc"));
+    addNode(tagNode, tag.getAbcFile());
   }
   
   private static void addNode(DefaultMutableTreeNode node, DoAbcDefine tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("DoAbcDefine"));
+    addLeaf(tagNode, "abcName: " + tag.getAbcName());
+    addNode(tagNode, tag.getAbcFile());
   }
 
   private static void addNode(DefaultMutableTreeNode node, DoInitAction tag) {
@@ -1921,7 +1941,7 @@ final class SWFTreeBuilder {
       addNode(newNode, (Action) actionRecords.get(i));
     }
   }
-
+  
   private static void addNode(DefaultMutableTreeNode node, Action action) {
     String actionDescription = "<html>";
     if (action.getLabel() != null) {
@@ -1995,6 +2015,100 @@ final class SWFTreeBuilder {
     }
   }
 
+  private static void addNode(
+    DefaultMutableTreeNode node, AbcFile abcFile) {
+    DefaultMutableTreeNode abcFileNode = addParentNode(node, "abc block: AbcFile");
+    addLeaf(abcFileNode, "Version: " + abcFile.getMajorVersion() + "." + abcFile.getMinorVersion());
+    AbcConstantPool constantPool = abcFile.getConstantPool();
+    addNode(abcFileNode, constantPool);
+    DefaultMutableTreeNode methodsNode = addParentNode(abcFileNode, "Methods");
+    DefaultMutableTreeNode metadataNode = addParentNode(abcFileNode, "Metadata Entries");
+    DefaultMutableTreeNode instancesNode = addParentNode(abcFileNode, "Instances");
+    DefaultMutableTreeNode classesNode = addParentNode(abcFileNode, "Classes");
+    DefaultMutableTreeNode scriptsNode = addParentNode(abcFileNode, "Scripts");
+    DefaultMutableTreeNode methodBodiesNode = addParentNode(abcFileNode, "Method Bodies");
+  }
+  
+  private static void addNode(DefaultMutableTreeNode node, AbcConstantPool constantPool) {
+    DefaultMutableTreeNode constantPoolNode = addParentNode(node, "Constant pool");
+    DefaultMutableTreeNode intsNode = addParentNode(constantPoolNode, "Integer values");
+    List<Integer> ints = constantPool.getInts();
+    for (int i = 0; i < ints.size(); i++) {
+      addLeaf(intsNode, i + ": " + ints.get(i));
+    }
+    DefaultMutableTreeNode uintsNode = addParentNode(constantPoolNode, "Unsigned integer values");
+    List<Integer> uints = constantPool.getUints();
+    for (int i = 0; i < uints.size(); i++) {
+      addLeaf(uintsNode, i + ": " + uints.get(i));
+    }
+    DefaultMutableTreeNode doublesNode = addParentNode(constantPoolNode, "Double values");
+    List<Double> doubles = constantPool.getDoubles();
+    for (int i = 0; i < doubles.size(); i++) {
+      addLeaf(doublesNode, i + ": " + doubles.get(i));
+    }
+    DefaultMutableTreeNode stringsNode = addParentNode(constantPoolNode, "Strings");
+    List<String> strings = constantPool.getStrings();
+    for (int i = 0; i < strings.size(); i++) {
+      addLeaf(stringsNode, i + ": \"" + strings.get(i) + "\"");
+    }
+    DefaultMutableTreeNode namespacesNode = addParentNode(constantPoolNode, "Namespaces");
+    List<AbcNamespace> namespaces = constantPool.getNamespaces();
+    for (int i = 0; i < namespaces.size(); i++) {
+      AbcNamespace ns = namespaces.get(i);
+      String nsDescription = getNamespaceDescription(strings, ns);
+      addLeaf(namespacesNode, i + " : " + nsDescription);
+    }
+    DefaultMutableTreeNode namespaceSetsNode = addParentNode(constantPoolNode, "Namespace sets");
+    List<AbcNamespaceSet> namespaceSets = constantPool.getNamespaceSets();
+    for (int i = 0; i < namespaceSets.size(); i++) {
+      AbcNamespaceSet namespaceSet = namespaceSets.get(i);
+      DefaultMutableTreeNode nsSetNode = addParentNode(namespaceSetsNode, "Set " + i);
+      if (namespaceSet == null) {
+        continue;
+      }
+      List<Integer> namespaceIndices = namespaceSet.getNamespaceIndices();
+      for (int j = 0; j < namespaceIndices.size(); j++) {
+        int namespaceIndex = namespaceIndices.get(j);
+        addLeaf(nsSetNode, "namespaces[" + namespaceIndex + "]: " + getNamespaceDescription(strings, namespaces.get(namespaceIndex)));
+      }
+    }
+    DefaultMutableTreeNode multinamesNode = addParentNode(constantPoolNode, "Multinames");
+    List<AbcMultiname> multinames = constantPool.getMultinames();
+  }
+
+  private static String getNamespaceDescription(List<String> strings, AbcNamespace ns) {
+    int nameIndex = ns.getNameIndex();
+    String kind;
+    switch (ns.getKind()) {
+      case AbcConstants.NamespaceKinds.EXPLICIT_NAMESPACE:
+        kind = "explicit";
+        break;
+      case AbcConstants.NamespaceKinds.NAMESPACE:
+        kind = "namespace";
+        break;
+      case AbcConstants.NamespaceKinds.PACKAGE_INTERNAL_NAMESPACE:
+        kind = "package internal";
+        break;
+      case AbcConstants.NamespaceKinds.PACKAGE_NAMESPACE:
+        kind = "package";
+        break;
+      case AbcConstants.NamespaceKinds.PRIVATE_NAMESPACE:
+        kind = "private";
+        break;
+      case AbcConstants.NamespaceKinds.PROTECTED_NAMESPACE:
+        kind = "protected";
+        break;
+      case AbcConstants.NamespaceKinds.STATIC_PROTECTED_NAMESPACE:
+        kind = "static protected";
+        break;
+      default:
+        kind = "unknown";
+        break;
+    }
+    String nsDescription = "Namespace kind: " + kind + " name: strings[" + nameIndex + "]=\"" + strings.get(nameIndex) + "\"";
+    return nsDescription;
+  }
+  
   private static void addNode(
     DefaultMutableTreeNode node, DefineFunction defineFunction) {
     String[] parameters = defineFunction.getParameters();

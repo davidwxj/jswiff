@@ -102,6 +102,9 @@ public final class TagReader {
       case TagConstants.DEFINE_FONT_INFO_2:
         tag = new DefineFontInfo2();
         break;
+      case TagConstants.DEFINE_FONT_NAME:
+        tag = new DefineFontName();
+        break;
       case TagConstants.FLASHTYPE_SETTINGS:
         tag = new FlashTypeSettings();
         break;

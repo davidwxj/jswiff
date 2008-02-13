@@ -31,6 +31,7 @@ import com.jswiff.swfrecords.MorphFillStyles;
 import com.jswiff.swfrecords.MorphLineStyles;
 import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.TextRecord;
+import com.jswiff.swfrecords.tags.DebugId;
 import com.jswiff.swfrecords.tags.DefineBits;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG3;
@@ -47,6 +48,7 @@ import com.jswiff.swfrecords.tags.DefineFont3;
 import com.jswiff.swfrecords.tags.DefineFontAlignment;
 import com.jswiff.swfrecords.tags.DefineFontInfo;
 import com.jswiff.swfrecords.tags.DefineFontInfo2;
+import com.jswiff.swfrecords.tags.DefineFontName;
 import com.jswiff.swfrecords.tags.DefineMorphShape;
 import com.jswiff.swfrecords.tags.DefineMorphShape2;
 import com.jswiff.swfrecords.tags.DefineShape;
@@ -103,6 +105,9 @@ class TagXMLWriter {
   static void writeTag(Element parentElement, Tag tag) {
     int tagCode = tag.getCode();
     switch (tagCode) {
+      case TagConstants.DEBUG_ID:
+        writeDebugId(parentElement, (DebugId) tag);
+        break;
       case TagConstants.DEFINE_BITS:
         writeDefineBits(parentElement, (DefineBits) tag);
         break;
@@ -150,6 +155,9 @@ class TagXMLWriter {
         break;
       case TagConstants.DEFINE_FONT_ALIGNMENT:
         writeDefineFontAlignment(parentElement, (DefineFontAlignment) tag);
+        break;
+      case TagConstants.DEFINE_FONT_NAME:
+        writeDefineFontName(parentElement, (DefineFontName) tag);
         break;
       case TagConstants.FLASHTYPE_SETTINGS:
         writeFlashTypeSettings(parentElement, (FlashTypeSettings) tag);
@@ -302,6 +310,11 @@ class TagXMLWriter {
     }
   }
 
+  private static void writeDebugId(Element parentElement, DebugId tag) {
+    Element element = parentElement.addElement("debugId");
+    element.addAttribute("id", tag.getId().toString());
+  }
+  
   private static void writeDefineBits(Element parentElement, DefineBits tag) {
     Element element = parentElement.addElement("definebits");
     element.addAttribute("charid", Integer.toString(tag.getCharacterId()));
@@ -705,6 +718,13 @@ class TagXMLWriter {
     for (int i = 0; i < codeTable.length; i++) {
       RecordXMLWriter.addCharAsTextNode(element.addElement("char"), codeTable[i]);
     }
+  }
+  
+  private static void writeDefineFontName(Element parentElement, DefineFontName tag) {
+    Element element = parentElement.addElement("definefontname");
+    element.addAttribute("fontid", Integer.toString(tag.getFontId()));
+    element.addAttribute("fontname", tag.getFontName());
+    element.addAttribute("fontlicense", tag.getFontLicense());
   }
 
   private static void writeDefineMorphShape(

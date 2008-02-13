@@ -67,8 +67,9 @@ public final class ClipActionRecord implements Serializable {
       keyCode = stream.readUI8();
       actionRecordSize--;
     }
+    // some SWFs try to fool us by writing wrong actionRecordSize
     InputBitStream actionStream = new InputBitStream(
-        stream.readBytes(actionRecordSize));
+        stream.readBytes(Math.min(actionRecordSize, stream.available() - (swfVersion <= 5 ? 2 : 4))));
     actionStream.setANSI(stream.isANSI());
     actionStream.setShiftJIS(stream.isShiftJIS());
     actions = new ActionBlock(actionStream);

@@ -496,7 +496,7 @@ class ActionXMLWriter {
   private static Element writeGoToLabel(
     Element parentElement, GoToLabel goToLabel) {
     Element element = parentElement.addElement("gotolabel");
-    RecordXMLWriter.addAttributeWithCharCheck(element, "frameLabel", goToLabel.getFrameLabel());
+    RecordXMLWriter.addAttributeWithCharCheck(element, "framelabel", goToLabel.getFrameLabel());
     return element;
   }
 

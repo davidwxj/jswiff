@@ -43,13 +43,13 @@ import com.jswiff.swfrecords.tags.Tag;
  */
 public class SWFDocument implements Serializable {
   /** The version of the JSwiff library */
-  public static final String JSWIFF_VERSION       = "8.0-svn";
+  public static final String JSWIFF_VERSION       = "9-svn";
   /**
    * The default value for the compression flag. By default, compression is on
    */
   public static final boolean DEFAULT_COMPRESSION = true;
-  /** The default SWF version (8) */
-  public static final short DEFAULT_SWF_VERSION   = 8;
+  /** The default SWF version (9) */
+  public static final short DEFAULT_SWF_VERSION   = 9;
   /**
    * The default frame size (based on the authoring tool from Macromedia: 11000
    * x 8000 twips)

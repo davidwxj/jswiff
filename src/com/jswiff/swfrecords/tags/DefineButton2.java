@@ -221,7 +221,7 @@ public final class DefineButton2 extends DefinitionTag {
     do {
       condActionSize = inStream.readUI16();
       buttonCondActions.add(new ButtonCondAction(inStream));
-    } while (condActionSize != 0);
+    } while (condActionSize != 0 && inStream.available() != 0);
     actions = new ButtonCondAction[buttonCondActions.size()];
     buttonCondActions.copyInto(actions);
   }
