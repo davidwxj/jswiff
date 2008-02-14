@@ -1773,6 +1773,12 @@ final class SWFTreeBuilder {
       addLeaf(tagNode, "clipDepth: " + tag.getClipDepth());
     }
     addLeaf(tagNode, "cacheAsBitmap: " + tag.isCacheAsBitmap());
+    addLeaf(tagNode, "hasImage: " + tag.hasImage());
+    addLeaf(tagNode, "hasClassName: " + tag.hasClassName());
+    String className = tag.getClassName();
+    if (className != null) {
+      addLeaf(tagNode, "className: " + tag.getClassName());
+    }
     if (tag.hasFilters()) {
       List filters                       = tag.getFilters();
       int count                          = filters.size();
@@ -2156,6 +2162,7 @@ final class SWFTreeBuilder {
     DefaultMutableTreeNode node, String var, ClipEventFlags clipEventFlags) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "ClipEventFlags");
+    if (clipEventFlags == null) return;
     addLeaf(newNode, "keyUp: " + clipEventFlags.isKeyUp());
     addLeaf(newNode, "keyDown: " + clipEventFlags.isKeyDown());
     addLeaf(newNode, "mouseUp: " + clipEventFlags.isMouseUp());

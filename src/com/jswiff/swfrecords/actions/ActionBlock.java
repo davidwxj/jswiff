@@ -87,10 +87,7 @@ public final class ActionBlock implements Serializable {
         actions.add(record);
       } else {
         hasEndAction = true;
-        // some SWFs try to fool us by starting with an END action
-        if (actions.size() > 0) {
-          break;
-        }
+        break;
       }
     }
     if (actions.size() == 0) {

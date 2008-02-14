@@ -1114,6 +1114,16 @@ class TagXMLWriter {
     if (tag.hasName()) {
       RecordXMLWriter.addAttributeWithCharCheck(element, "name", tag.getName());
     }
+    if (tag.hasImage()) {
+      element.addAttribute("hasimage", "true");
+    }
+    if (tag.hasClassName()) {
+      element.addAttribute("hasclassname", "true");
+    }
+    String className = tag.getClassName();
+    if (className != null) {
+      RecordXMLWriter.addAttributeWithCharCheck(element, "classname", className);
+    }
     if (tag.isMove()) {
       element.addAttribute("move", "true");
     }

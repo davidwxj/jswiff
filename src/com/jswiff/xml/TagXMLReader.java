@@ -1186,6 +1186,9 @@ class TagXMLReader {
       placeObject3.setCharacterId(Integer.parseInt(characterId.getValue()));
     }
     placeObject3.setName(RecordXMLReader.getOptionalStringAttributeWithBase64Check("name", tagElement));
+    placeObject3.setHasImage(RecordXMLReader.getBooleanAttribute("hasimage", tagElement));
+    placeObject3.setHasClassName(RecordXMLReader.getBooleanAttribute("hasclassname", tagElement));
+    placeObject3.setClassName(RecordXMLReader.getOptionalStringAttributeWithBase64Check("classname", tagElement));
     if (RecordXMLReader.getBooleanAttribute("move", tagElement)) {
       placeObject3.setMove();
     }

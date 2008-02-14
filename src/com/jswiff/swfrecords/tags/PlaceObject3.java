@@ -59,6 +59,9 @@ public final class PlaceObject3 extends Tag {
   private boolean cacheAsBitmap;
   private boolean hasBlendMode;
   private boolean hasFilters;
+  private boolean hasImage;
+  private boolean hasClassName;
+  private String className;
 
   /**
    * Creates a new PlaceObject3 tag.
@@ -446,6 +449,30 @@ public final class PlaceObject3 extends Tag {
     return hasRatio;
   }
 
+  public void setHasImage(boolean hasImage) {
+    this.hasImage = hasImage;
+  }
+  
+  public boolean hasImage() {
+    return hasImage;
+  }
+  
+  public void setHasClassName(boolean hasClassName) {
+    this.hasClassName = hasClassName;
+  }
+  
+  public boolean hasClassName() {
+    return hasClassName;
+  }
+  
+  public String getClassName() {
+    return className;
+  }
+  
+  public void setClassName(String className) {
+    this.className = className;
+  }
+  
   protected void writeData(OutputBitStream outStream) throws IOException {
     outStream.writeBooleanBit(hasClipActions);
     outStream.writeBooleanBit(hasClipDepth);
@@ -455,11 +482,16 @@ public final class PlaceObject3 extends Tag {
     outStream.writeBooleanBit(hasMatrix);
     outStream.writeBooleanBit(hasCharacter);
     outStream.writeBooleanBit(move);
-    outStream.writeUnsignedBits(0, 5);
+    outStream.writeUnsignedBits(0, 3);
+    outStream.writeBooleanBit(hasImage);
+    outStream.writeBooleanBit(hasClassName);
     outStream.writeBooleanBit(cacheAsBitmap);
     outStream.writeBooleanBit(hasBlendMode);
     outStream.writeBooleanBit(hasFilters);
     outStream.writeUI16(depth);
+    if ((hasClassName || hasImage && hasCharacter) && className != null) {
+      outStream.writeString(className);
+    }
     if (hasCharacter) {
       outStream.writeUI16(characterId);
     }
@@ -484,6 +516,9 @@ public final class PlaceObject3 extends Tag {
     if (hasBlendMode) {
       outStream.writeUI8(blendMode);
     }
+    if (cacheAsBitmap) {
+      outStream.writeUI8((short) 1);
+    }
     if (hasClipActions) {
       clipActions.write(outStream, getSWFVersion());
     }
@@ -499,11 +534,16 @@ public final class PlaceObject3 extends Tag {
     hasMatrix           = inStream.readBooleanBit();
     hasCharacter        = inStream.readBooleanBit();
     move                = inStream.readBooleanBit();
-    inStream.readUnsignedBits(5);
+    inStream.readUnsignedBits(3);
+    hasImage        = inStream.readBooleanBit();
+    hasClassName    = inStream.readBooleanBit();
     cacheAsBitmap   = inStream.readBooleanBit();
     hasBlendMode    = inStream.readBooleanBit();
     hasFilters      = inStream.readBooleanBit();
     depth           = inStream.readUI16();
+    if (hasClassName || hasImage && hasCharacter) {
+      className = inStream.readString();
+    }
     if (hasCharacter) {
       characterId = inStream.readUI16();
     }
@@ -531,6 +571,9 @@ public final class PlaceObject3 extends Tag {
       if (blendMode == 0) {
         blendMode = BlendMode.NORMAL;
       }
+    }
+    if (cacheAsBitmap) {
+      inStream.readUI8(); // always 1
     }
     if (hasClipActions) {
       clipActions = new ClipActions(inStream, getSWFVersion());
