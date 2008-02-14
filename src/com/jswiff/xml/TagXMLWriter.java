@@ -311,7 +311,7 @@ class TagXMLWriter {
   }
 
   private static void writeDebugId(Element parentElement, DebugId tag) {
-    Element element = parentElement.addElement("debugId");
+    Element element = parentElement.addElement("debugid");
     element.addAttribute("id", tag.getId().toString());
   }
   

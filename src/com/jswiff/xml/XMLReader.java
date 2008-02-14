@@ -85,6 +85,8 @@ public class XMLReader {
     HeaderHandler headerHandler = new HeaderHandler();
     saxReader.addHandler("/swfdocument/header", headerHandler);
     saxReader.addHandler(
+        "/swfdocument/debugid", new TagHandler(TagConstants.DEBUG_ID));
+    saxReader.addHandler(
       "/swfdocument/definebits", new TagHandler(TagConstants.DEFINE_BITS));
     saxReader.addHandler(
       "/swfdocument/definebitsjpeg2",
@@ -122,11 +124,17 @@ public class XMLReader {
       "/swfdocument/definefontinfo",
       new TagHandler(TagConstants.DEFINE_FONT_INFO));
     saxReader.addHandler(
+      "/swfdocument/definefontinfo2",
+      new TagHandler(TagConstants.DEFINE_FONT_INFO_2));
+    saxReader.addHandler(
       "/swfdocument/definefontalignment",
       new TagHandler(TagConstants.DEFINE_FONT_ALIGNMENT));
     saxReader.addHandler(
-      "/swfdocument/definefontinfo2",
-      new TagHandler(TagConstants.DEFINE_FONT_INFO_2));
+      "/swfdocument/definefontname",
+      new TagHandler(TagConstants.DEFINE_FONT_NAME));
+    saxReader.addHandler(
+      "/swfdocument/flashtypesettings",
+      new TagHandler(TagConstants.FLASHTYPE_SETTINGS));
     saxReader.addHandler(
       "/swfdocument/definemorphshape",
       new TagHandler(TagConstants.DEFINE_MORPH_SHAPE));
@@ -164,9 +172,6 @@ public class XMLReader {
       new TagHandler(TagConstants.ENABLE_DEBUGGER_2));
     saxReader.addHandler(
       "/swfdocument/exportassets", new TagHandler(TagConstants.EXPORT_ASSETS));
-    saxReader.addHandler(
-      "/swfdocument/flashtypesettings",
-      new TagHandler(TagConstants.FLASHTYPE_SETTINGS));
     saxReader.addHandler(
       "/swfdocument/framelabel", new TagHandler(TagConstants.FRAME_LABEL));
     saxReader.addHandler(
