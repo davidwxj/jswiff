@@ -29,7 +29,7 @@ import com.jswiff.swfrecords.abc.AbcFile;
 
 
 /**
- * Defines ActionScript 3 code in ABC format.
+ * Defines ActionScript 3 code in ABC (ActionScript byte code) format.
  *
  * @since SWF 9
  */

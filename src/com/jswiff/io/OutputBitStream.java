@@ -389,6 +389,21 @@ public final class OutputBitStream {
     offset += 4;
   }
   
+  public void writeSI64(long value) throws IOException {
+    align();
+    int lowerBits = (int) value;
+    int higherBits = (int) (value >> 32);
+    stream.write(lowerBits);
+    stream.write(lowerBits >> 8);
+    stream.write(lowerBits >> 16);
+    stream.write(lowerBits >> 24);
+    stream.write(higherBits);
+    stream.write(higherBits >> 8);
+    stream.write(higherBits >> 16);
+    stream.write(higherBits >> 24);
+    offset += 8;
+  }
+  
   /**
    * Writes a signed byte.
    *

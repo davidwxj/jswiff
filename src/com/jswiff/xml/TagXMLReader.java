@@ -36,6 +36,7 @@ import com.jswiff.swfrecords.ShapeWithStyle;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.ZlibBitmapData;
 import com.jswiff.swfrecords.tags.DebugId;
+import com.jswiff.swfrecords.tags.DefineBinaryData;
 import com.jswiff.swfrecords.tags.DefineBits;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG3;
@@ -64,6 +65,8 @@ import com.jswiff.swfrecords.tags.DefineSprite;
 import com.jswiff.swfrecords.tags.DefineText;
 import com.jswiff.swfrecords.tags.DefineText2;
 import com.jswiff.swfrecords.tags.DefineVideoStream;
+import com.jswiff.swfrecords.tags.DoAbc;
+import com.jswiff.swfrecords.tags.DoAbcDefine;
 import com.jswiff.swfrecords.tags.DoAction;
 import com.jswiff.swfrecords.tags.DoInitAction;
 import com.jswiff.swfrecords.tags.EnableDebugger;
@@ -79,6 +82,7 @@ import com.jswiff.swfrecords.tags.Metadata;
 import com.jswiff.swfrecords.tags.PlaceObject;
 import com.jswiff.swfrecords.tags.PlaceObject2;
 import com.jswiff.swfrecords.tags.PlaceObject3;
+import com.jswiff.swfrecords.tags.ProductInfo;
 import com.jswiff.swfrecords.tags.Protect;
 import com.jswiff.swfrecords.tags.RemoveObject;
 import com.jswiff.swfrecords.tags.RemoveObject2;
@@ -90,15 +94,20 @@ import com.jswiff.swfrecords.tags.SoundStreamBlock;
 import com.jswiff.swfrecords.tags.SoundStreamHead;
 import com.jswiff.swfrecords.tags.SoundStreamHead2;
 import com.jswiff.swfrecords.tags.StartSound;
+import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.UnknownTag;
 import com.jswiff.swfrecords.tags.VideoFrame;
+import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.Base64;
+import com.jswiff.util.StringUtilities;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -110,6 +119,9 @@ class TagXMLReader {
     switch (tagCode) {
       case TagConstants.DEBUG_ID:
         tag = readDebugId(tagElement);
+        break;
+      case TagConstants.DEFINE_BINARY_DATA:
+        tag = readDefineBinaryData(tagElement);
         break;
       case TagConstants.DEFINE_BITS:
         tag = readDefineBits(tagElement);
@@ -195,6 +207,12 @@ class TagXMLReader {
       case TagConstants.DEFINE_VIDEO_STREAM:
         tag = readDefineVideoStream(tagElement);
         break;
+      case TagConstants.DO_ABC:
+        tag = readDoAbc(tagElement);
+        break;
+      case TagConstants.DO_ABC_DEFINE:
+        tag = readDoAbcDefine(tagElement);
+        break;
       case TagConstants.DO_ACTION:
         tag = readDoAction(tagElement);
         break;
@@ -243,6 +261,9 @@ class TagXMLReader {
       case TagConstants.PLACE_OBJECT_3:
         tag = readPlaceObject3(tagElement);
         break;
+      case TagConstants.PRODUCT_INFO:
+        tag = readProductInfo(tagElement);
+        break;
       case TagConstants.PROTECT:
         tag = readProtect(tagElement);
         break;
@@ -275,6 +296,9 @@ class TagXMLReader {
         break;
       case TagConstants.START_SOUND:
         tag = readStartSound(tagElement);
+        break;
+      case TagConstants.SYMBOL_CLASS:
+        tag = readSymbolClass(tagElement);
         break;
       case TagConstants.VIDEO_FRAME:
         tag = readVideoFrame(tagElement);
@@ -355,6 +379,12 @@ class TagXMLReader {
   private static Tag readDebugId(Element tagElement) {
     String id = RecordXMLReader.getStringAttribute("id", tagElement);
     return new DebugId(UUID.fromString(id));
+  }
+  
+  private static Tag readDefineBinaryData(Element tagElement) {
+    int characterId = RecordXMLReader.getCharacterId(tagElement);
+    byte[] binaryData = RecordXMLReader.getDataElement("data", tagElement);
+    return new DefineBinaryData(characterId, binaryData);
   }
   
   private static Tag readDefineBits(Element tagElement) {
@@ -995,6 +1025,18 @@ class TagXMLReader {
       characterId, numFrames, width, height, deblocking, smoothing, codecId);
   }
 
+  private static Tag readDoAbc(Element tagElement) {
+    DoAbc doAbc = new DoAbc();
+    RecordXMLReader.readAbcFile(doAbc.getAbcFile(), tagElement);
+    return doAbc;
+  }
+  
+  private static Tag readDoAbcDefine(Element tagElement) {
+    DoAbcDefine doAbcDefine = new DoAbcDefine(RecordXMLReader.getStringAttributeWithBase64Check("abcname", tagElement));
+    RecordXMLReader.readAbcFile(doAbcDefine.getAbcFile(), tagElement);
+    return doAbcDefine;
+  }
+  
   private static Tag readDoAction(Element tagElement) {
     DoAction doAction = new DoAction();
     RecordXMLReader.readActionBlock(doAction.getActions(), tagElement);
@@ -1226,6 +1268,22 @@ class TagXMLReader {
     }
     return placeObject3;
   }
+  
+  private static Tag readProductInfo(Element tagElement) {
+    int productId = RecordXMLReader.getIntAttribute("productid", tagElement);
+    int edition = RecordXMLReader.getIntAttribute("edition", tagElement);
+    short majorVersion =  RecordXMLReader.getShortAttribute("majorversion", tagElement);
+    short minorVersion = RecordXMLReader.getShortAttribute("minorversion", tagElement);
+    long buildNumber = RecordXMLReader.getLongAttribute("buildnumber", tagElement);
+    String dateString = RecordXMLReader.getStringAttribute("builddate", tagElement);
+    Date buildDate;
+    try {
+      buildDate = StringUtilities.parseDate(dateString);
+    } catch (ParseException e) {
+      throw new IllegalArgumentException("Cannot parse date from '" + dateString + "'!");
+    }
+    return new ProductInfo(productId, edition, majorVersion, minorVersion, buildNumber, buildDate);
+  }
 
   private static Tag readProtect(Element tagElement) {
     Attribute password = tagElement.attribute("password");
@@ -1326,6 +1384,19 @@ class TagXMLReader {
     return new StartSound(
       RecordXMLReader.getIntAttribute("soundid", tagElement),
       RecordXMLReader.readSoundInfo(tagElement));
+  }
+  
+  private static Tag readSymbolClass(Element tagElement) {
+    SymbolClass symbolClass = new SymbolClass();
+    List<SymbolReference> references = symbolClass.getReferences();
+    for(Iterator it = tagElement.elementIterator("symbolreference"); it.hasNext(); ) {
+      Element refElement = (Element) it.next();
+      references.add(
+          new SymbolReference(
+              RecordXMLReader.getCharacterId(refElement),
+              RecordXMLReader.getStringAttributeWithBase64Check("name", refElement)));
+    }
+    return symbolClass;
   }
 
   private static Tag readVideoFrame(Element tagElement) {

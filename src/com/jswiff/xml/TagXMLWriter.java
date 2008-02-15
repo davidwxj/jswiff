@@ -32,6 +32,7 @@ import com.jswiff.swfrecords.MorphLineStyles;
 import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.tags.DebugId;
+import com.jswiff.swfrecords.tags.DefineBinaryData;
 import com.jswiff.swfrecords.tags.DefineBits;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG3;
@@ -60,6 +61,8 @@ import com.jswiff.swfrecords.tags.DefineSprite;
 import com.jswiff.swfrecords.tags.DefineText;
 import com.jswiff.swfrecords.tags.DefineText2;
 import com.jswiff.swfrecords.tags.DefineVideoStream;
+import com.jswiff.swfrecords.tags.DoAbc;
+import com.jswiff.swfrecords.tags.DoAbcDefine;
 import com.jswiff.swfrecords.tags.DoAction;
 import com.jswiff.swfrecords.tags.DoInitAction;
 import com.jswiff.swfrecords.tags.EnableDebugger;
@@ -75,6 +78,7 @@ import com.jswiff.swfrecords.tags.MalformedTag;
 import com.jswiff.swfrecords.tags.PlaceObject;
 import com.jswiff.swfrecords.tags.PlaceObject2;
 import com.jswiff.swfrecords.tags.PlaceObject3;
+import com.jswiff.swfrecords.tags.ProductInfo;
 import com.jswiff.swfrecords.tags.Protect;
 import com.jswiff.swfrecords.tags.RemoveObject;
 import com.jswiff.swfrecords.tags.RemoveObject2;
@@ -86,16 +90,23 @@ import com.jswiff.swfrecords.tags.SoundStreamBlock;
 import com.jswiff.swfrecords.tags.SoundStreamHead;
 import com.jswiff.swfrecords.tags.SoundStreamHead2;
 import com.jswiff.swfrecords.tags.StartSound;
+import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.UnknownTag;
 import com.jswiff.swfrecords.tags.VideoFrame;
+import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
 
 import org.dom4j.Element;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 
 /*
@@ -107,6 +118,9 @@ class TagXMLWriter {
     switch (tagCode) {
       case TagConstants.DEBUG_ID:
         writeDebugId(parentElement, (DebugId) tag);
+        break;
+      case TagConstants.DEFINE_BINARY_DATA:
+        writeDefineBinaryData(parentElement, (DefineBinaryData) tag);
         break;
       case TagConstants.DEFINE_BITS:
         writeDefineBits(parentElement, (DefineBits) tag);
@@ -195,6 +209,12 @@ class TagXMLWriter {
       case TagConstants.DEFINE_VIDEO_STREAM:
         writeDefineVideoStream(parentElement, (DefineVideoStream) tag);
         break;
+      case TagConstants.DO_ABC:
+        writeDoAbc(parentElement, (DoAbc) tag);
+        break;
+      case TagConstants.DO_ABC_DEFINE:
+        writeDoAbcDefine(parentElement, (DoAbcDefine) tag);
+        break;
       case TagConstants.DO_ACTION:
         writeDoAction(parentElement, (DoAction) tag);
         break;
@@ -237,6 +257,9 @@ class TagXMLWriter {
       case TagConstants.PLACE_OBJECT_3:
         writePlaceObject3(parentElement, (PlaceObject3) tag);
         break;
+      case TagConstants.PRODUCT_INFO:
+        writeProductInfo(parentElement, (ProductInfo) tag);
+        break;
       case TagConstants.PROTECT:
         writeProtect(parentElement, (Protect) tag);
         break;
@@ -269,6 +292,9 @@ class TagXMLWriter {
         break;
       case TagConstants.START_SOUND:
         writeStartSound(parentElement, (StartSound) tag);
+        break;
+      case TagConstants.SYMBOL_CLASS:
+        writeSymbolClass(parentElement, (SymbolClass) tag);
         break;
       case TagConstants.VIDEO_FRAME:
         writeVideoFrame(parentElement, (VideoFrame) tag);
@@ -313,6 +339,13 @@ class TagXMLWriter {
   private static void writeDebugId(Element parentElement, DebugId tag) {
     Element element = parentElement.addElement("debugid");
     element.addAttribute("id", tag.getId().toString());
+  }
+  
+  private static void writeDefineBinaryData(Element parentElement, DefineBinaryData tag) {
+    Element element = parentElement.addElement("definebinarydata");
+    element.addAttribute("charid", Integer.toString(tag.getCharacterId()));
+    String data = XMLWriter.isOmitBinaryData() ? "" : Base64.encode(tag.getBinaryData());
+    element.addElement("data").addText(data);
   }
   
   private static void writeDefineBits(Element parentElement, DefineBits tag) {
@@ -909,6 +942,17 @@ class TagXMLWriter {
     }
   }
 
+  private static void writeDoAbc(Element parentElement, DoAbc tag) {
+    Element element = parentElement.addElement("doabc");
+    RecordXMLWriter.writeAbcFile(element, tag.getAbcFile());
+  }
+  
+  private static void writeDoAbcDefine(Element parentElement, DoAbcDefine tag) {
+    Element element = parentElement.addElement("doabcdefine");
+    RecordXMLWriter.addAttributeWithCharCheck(element, "abcname", tag.getAbcName());
+    RecordXMLWriter.writeAbcFile(element, tag.getAbcFile());
+  }
+  
   private static void writeDoAction(Element parentElement, DoAction tag) {
     Element element = parentElement.addElement("doaction");
     RecordXMLWriter.writeActionBlock(element, tag.getActions());
@@ -1154,6 +1198,16 @@ class TagXMLWriter {
     }
   }
 
+  private static void writeProductInfo(Element parentElement, ProductInfo tag) {
+    Element element = parentElement.addElement("productinfo");
+    element.addAttribute("productid", Integer.toString(tag.getProductId()));
+    element.addAttribute("edition", Integer.toString(tag.getEdition()));
+    element.addAttribute("majorversion", Short.toString(tag.getMajorVersion()));
+    element.addAttribute("minorversion", Short.toString(tag.getMinorVersion()));
+    element.addAttribute("buildnumber", Long.toString(tag.getBuildNumber()));
+    element.addAttribute("builddate", StringUtilities.dateToString(tag.getBuildDate()));
+  }
+  
   private static void writeProtect(Element parentElement, Protect tag) {
     Element element = parentElement.addElement("protect");
     String password = tag.getPassword();
@@ -1259,6 +1313,18 @@ class TagXMLWriter {
     Element element = parentElement.addElement("startsound");
     element.addAttribute("soundid", Integer.toString(tag.getSoundId()));
     RecordXMLWriter.writeSoundInfo(element, tag.getSoundInfo());
+  }
+
+  private static void writeSymbolClass(
+    Element parentElement, SymbolClass tag) {
+    Element element = parentElement.addElement("symbolclass");
+    List<SymbolReference> references = tag.getReferences();
+    for (Iterator<SymbolReference> it = references.iterator(); it.hasNext(); ) {
+      SymbolReference symbolReference = it.next();
+      Element referenceElement = element.addElement("symbolreference");
+      referenceElement.addAttribute("charid", Integer.toString(symbolReference.getCharacterId()));
+      RecordXMLWriter.addAttributeWithCharCheck(referenceElement, "name", symbolReference.getName());
+    }
   }
 
   private static void writeUnknownTag(Element parentElement, UnknownTag tag) {

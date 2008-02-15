@@ -21,7 +21,9 @@
 package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
+import java.util.Date;
 
+import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 /**
@@ -32,37 +34,70 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 3
  */
 public final class ProductInfo extends DefinitionTag {
-  private byte[] productInfo;
+  private int productId;
+  private int edition;
+  private short majorVersion;
+  private short minorVersion;
+  private long buildNumber;
+  private Date buildDate;
 
-  /**
-   * Creates a new ProductInfo tag.
-   * 
-   * @param productInfo
-   *            binary data storing product information
-   */
-  public ProductInfo(byte[] productInfo) {
-    code             = TagConstants.PRODUCT_INFO;
-    this.productInfo = productInfo;
+  public ProductInfo(int productId, int edition, short majorVersion,
+      short minorVersion, long buildNumber, Date buildDate) {
+    this.productId = productId;
+    this.edition = edition;
+    this.majorVersion = majorVersion;
+    this.minorVersion = minorVersion;
+    this.buildNumber = buildNumber;
+    this.buildDate = buildDate;
+    code = TagConstants.PRODUCT_INFO;
   }
 
   ProductInfo() {
     // empty
   }
 
-  /**
-   * Returns the data contained in the tag.
-   * 
-   * @return tag data
-   */
-  public byte[] getProductInfo() {
-    return productInfo;
-  }
-
   protected void writeData(OutputBitStream outStream) throws IOException {
-    outStream.writeBytes(productInfo);
+    outStream.writeSI32(productId);
+    outStream.writeSI32(edition);
+    outStream.writeUI8(majorVersion);
+    outStream.writeUI8(minorVersion);
+    outStream.writeSI64(buildNumber);
+    long buildTime = buildDate.getTime();
+    outStream.writeUI32(buildTime & 0xFFFFFFFFL);
+    outStream.writeUI32(buildTime >> 32);
   }
 
-  void setData(byte[] data) {
-    productInfo = data;
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    productId = inStream.readSI32();
+    edition = inStream.readSI32();
+    majorVersion = inStream.readUI8();
+    minorVersion = inStream.readUI8();
+    buildNumber = inStream.readSI64();
+    buildDate = new Date(inStream.readUI32() + (inStream.readUI32() << 32));
+  }
+
+  public int getProductId() {
+    return productId;
+  }
+
+  public int getEdition() {
+    return edition;
+  }
+
+  public short getMajorVersion() {
+    return majorVersion;
+  }
+
+  public short getMinorVersion() {
+    return minorVersion;
+  }
+
+  public long getBuildNumber() {
+    return buildNumber;
+  }
+
+  public Date getBuildDate() {
+    return buildDate;
   }
 }

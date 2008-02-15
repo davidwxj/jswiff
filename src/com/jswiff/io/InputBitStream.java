@@ -412,6 +412,27 @@ public final class InputBitStream {
     align();
     return result;
   }
+  
+  public long readSI64() throws IOException {
+    fillBitBuffer();
+    long result = bitBuffer;
+    fillBitBuffer();
+    result |= (bitBuffer << 8);
+    fillBitBuffer();
+    result |= (bitBuffer << 16);
+    fillBitBuffer();
+    result |= (bitBuffer << 24);
+    fillBitBuffer();
+    result |= (bitBuffer << 32);
+    fillBitBuffer();
+    result |= (bitBuffer << 40);
+    fillBitBuffer();
+    result |= (bitBuffer << 48);
+    fillBitBuffer();
+    result |= (bitBuffer << 56);
+    align();
+    return result;
+  }
 
   /**
    * Reads an unsigned byte value

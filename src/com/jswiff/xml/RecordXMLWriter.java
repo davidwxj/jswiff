@@ -21,6 +21,11 @@
 
 package com.jswiff.xml;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.dom4j.Element;
+
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.AlphaColorMapData;
@@ -78,15 +83,11 @@ import com.jswiff.swfrecords.StraightEdgeRecord;
 import com.jswiff.swfrecords.StyleChangeRecord;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.ZlibBitmapData;
+import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
-
-import org.dom4j.Element;
-
-import java.util.Iterator;
-import java.util.List;
 
 
 /*
@@ -115,6 +116,10 @@ class RecordXMLWriter {
     } else {
       parentElement.addText(Character.toString(value));
     }
+  }
+  
+  static void writeAbcFile(Element parentElement, AbcFile abcFile) {
+    
   }
   
   static void writeActionBlock(Element parentElement, ActionBlock actionBlock) {

@@ -85,7 +85,9 @@ public class XMLReader {
     HeaderHandler headerHandler = new HeaderHandler();
     saxReader.addHandler("/swfdocument/header", headerHandler);
     saxReader.addHandler(
-        "/swfdocument/debugid", new TagHandler(TagConstants.DEBUG_ID));
+      "/swfdocument/debugid", new TagHandler(TagConstants.DEBUG_ID));
+    saxReader.addHandler(
+      "/swfdocument/definebinarydata", new TagHandler(TagConstants.DEFINE_BINARY_DATA));
     saxReader.addHandler(
       "/swfdocument/definebits", new TagHandler(TagConstants.DEFINE_BITS));
     saxReader.addHandler(
@@ -161,6 +163,10 @@ public class XMLReader {
       "/swfdocument/definevideostream",
       new TagHandler(TagConstants.DEFINE_VIDEO_STREAM));
     saxReader.addHandler(
+      "/swfdocument/doabc", new TagHandler(TagConstants.DO_ABC));
+    saxReader.addHandler(
+      "/swfdocument/doabcdefine", new TagHandler(TagConstants.DO_ABC_DEFINE));
+    saxReader.addHandler(
       "/swfdocument/doaction", new TagHandler(TagConstants.DO_ACTION));
     saxReader.addHandler(
       "/swfdocument/doinitaction", new TagHandler(TagConstants.DO_INIT_ACTION));
@@ -194,6 +200,8 @@ public class XMLReader {
     saxReader.addHandler(
       "/swfdocument/placeobject3", new TagHandler(TagConstants.PLACE_OBJECT_3));
     saxReader.addHandler(
+      "/swfdocument/productinfo", new TagHandler(TagConstants.PRODUCT_INFO));
+    saxReader.addHandler(
       "/swfdocument/protect", new TagHandler(TagConstants.PROTECT));
     saxReader.addHandler(
       "/swfdocument/removeobject", new TagHandler(TagConstants.REMOVE_OBJECT));
@@ -219,6 +227,8 @@ public class XMLReader {
       new TagHandler(TagConstants.SOUND_STREAM_HEAD_2));
     saxReader.addHandler(
       "/swfdocument/startsound", new TagHandler(TagConstants.START_SOUND));
+    saxReader.addHandler(
+      "/swfdocument/symbolclass", new TagHandler(TagConstants.SYMBOL_CLASS));
     saxReader.addHandler(
       "/swfdocument/videoframe", new TagHandler(TagConstants.VIDEO_FRAME));
     saxReader.addHandler("/swfdocument/unknowntag", new UnknownTagHandler());

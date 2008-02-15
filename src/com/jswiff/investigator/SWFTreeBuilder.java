@@ -2331,12 +2331,13 @@ final class SWFTreeBuilder {
   private static void addNode(DefaultMutableTreeNode node, SymbolClass tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("SymbolClass"));
-    SymbolReference[] references = tag.getReferences();
-    for (int i = 0; i < references.length; i++) {
+    List<SymbolReference> references = tag.getReferences();
+    for (Iterator<SymbolReference> it = references.iterator(); it.hasNext(); ) {
+      SymbolReference symbolReference = it.next();
       addLeaf(
         tagNode,
-        "characterId: " + references[i].getCharacterId() + ", symbol name: " +
-        references[i].getName());
+        "characterId: " + symbolReference.getCharacterId() + ", symbol name: " +
+        symbolReference.getName());
     }
   }
 
@@ -2351,8 +2352,12 @@ final class SWFTreeBuilder {
   private static void addNode(DefaultMutableTreeNode node, ProductInfo tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("ProductInfo"));
-    byte[] data                    = tag.getProductInfo();
-    addLeaf(tagNode, "data: " + HexUtils.toHex(data));
+    addLeaf(tagNode, "productId: " + tag.getProductId());
+    addLeaf(tagNode, "edition: " + tag.getEdition());
+    addLeaf(tagNode, "major version: " + tag.getMajorVersion());
+    addLeaf(tagNode, "minor version: " + tag.getMinorVersion());
+    addLeaf(tagNode, "build number: " + tag.getBuildNumber());
+    addLeaf(tagNode, "build date: " + tag.getBuildDate());
   }
   
   private static void addNode(DefaultMutableTreeNode node, DebugId tag) {

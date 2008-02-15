@@ -25,6 +25,8 @@ import com.jswiff.io.OutputBitStream;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,7 +39,7 @@ import java.io.Serializable;
  * @since SWF 9
  */
 public final class SymbolClass extends Tag {
-    private SymbolReference[] references;
+    private List<SymbolReference> references = new ArrayList<SymbolReference>();
 
     /**
      * Creates a new SymbolClass instance. Supply an array of export mappings
@@ -45,22 +47,8 @@ public final class SymbolClass extends Tag {
      *
      * @param references character export mappings
      */
-    public SymbolClass(SymbolReference[] references) {
+    public SymbolClass() {
         code            = TagConstants.SYMBOL_CLASS;
-        this.references = references;
-    }
-
-    SymbolClass() {
-        // empty
-    }
-
-    /**
-     * Sets the symbol references defined in this tag.
-     *
-     * @param references symbol references
-     */
-    public void setReferences(SymbolReference[] references) {
-        this.references = references;
     }
 
     /**
@@ -68,27 +56,26 @@ public final class SymbolClass extends Tag {
      *
      * @return character symbol references
      */
-    public SymbolReference[] getReferences() {
+    public List<SymbolReference> getReferences() {
         return references;
     }
 
     protected void writeData(OutputBitStream outStream)
         throws IOException {
-        int count = references.length;
+        int count = references.size();
         outStream.writeUI16(count);
         for (int i = 0; i < count; i++) {
-            outStream.writeUI16(references[i].getCharacterId());
-            outStream.writeString(references[i].getName());
+            SymbolReference symbolReference = references.get(i);
+            outStream.writeUI16(symbolReference.getCharacterId());
+            outStream.writeString(symbolReference.getName());
         }
     }
 
     void setData(byte[] data) throws IOException {
         InputBitStream inStream = new InputBitStream(data);
         int count               = inStream.readUI16();
-        references          = new SymbolReference[count];
         for (int i = 0; i < count; i++) {
-            references[i] = new SymbolReference(
-                    inStream.readUI16(), inStream.readString());
+            references.add(new SymbolReference(inStream.readUI16(), inStream.readString()));
         }
     }
 

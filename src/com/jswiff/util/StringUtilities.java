@@ -21,8 +21,11 @@
 
 package com.jswiff.util;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -33,6 +36,7 @@ public class StringUtilities {
   /** Default rounding precision (digits after decimal point) */
   public static final int DEFAULT_ROUND_PRECISION = 16;
   private static DecimalFormat df;
+  private static DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
   static {
     Locale.setDefault(Locale.US);
@@ -87,44 +91,15 @@ public class StringUtilities {
   public static String doubleToString(double d) {
     return doubleToString(d, DEFAULT_ROUND_PRECISION);
   }
-
-  /**
-   * Cleans strings of illegal characters with respect to the XML
-   * specification.
-   *
-   * @param text string to be cleaned
-   *
-   * @return the cleaned string
-   */
-  public static String purgeString(String text) {
-    char[] block        = null;
-    StringBuffer buffer = new StringBuffer();
-    int i;
-    int last            = 0;
-    int size            = text.length();
-    for (i = 0; i < size; i++) {
-      char c = text.charAt(i);
-      if (isIllegal(c)) {
-        // remove character
-        if (block == null) {
-          block = text.toCharArray();
-        }
-        buffer.append(block, last, i - last);
-        last = i + 1;
-      }
-    }
-    if (last == 0) {
-      return text;
-    }
-    if (last < size) {
-      if (block == null) {
-        block = text.toCharArray();
-      }
-      buffer.append(block, last, i - last);
-    }
-    return buffer.toString();
+  
+  public static String dateToString(Date date) {
+    return dateFormat.format(date);
   }
   
+  public static Date parseDate(String str) throws ParseException {
+    return dateFormat.parse(str);
+  }
+
   /**
    * Checks if the character is illegal with respect to the XML
    * specification.

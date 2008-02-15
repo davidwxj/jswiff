@@ -84,6 +84,7 @@ import com.jswiff.swfrecords.StraightEdgeRecord;
 import com.jswiff.swfrecords.StyleChangeRecord;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.ZlibBitmapData;
+import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
 import com.jswiff.util.Base64;
@@ -183,6 +184,10 @@ class RecordXMLReader {
       return element.getText().charAt(0);
     }
     return (char)Short.parseShort(charCodeAttribute.getValue());
+  }
+  
+  static void readAbcFile(AbcFile abcFile, Element parentElement) {
+    // TODO
   }
   
   static void readActionBlock(ActionBlock actionBlock, Element parentElement) {
