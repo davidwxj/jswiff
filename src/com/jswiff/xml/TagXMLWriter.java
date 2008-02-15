@@ -1212,7 +1212,7 @@ class TagXMLWriter {
     Element element = parentElement.addElement("protect");
     String password = tag.getPassword();
     if (password != null) {
-      element.addElement("password", tag.getPassword());
+      element.addAttribute("password", tag.getPassword());
     }
   }
 
