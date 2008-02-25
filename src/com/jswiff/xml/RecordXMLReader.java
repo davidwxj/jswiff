@@ -151,6 +151,9 @@ class RecordXMLReader {
     Attribute attribute = parentElement.attribute(attributeName);
     if (attribute == null) {
       attribute = parentElement.attribute(attributeName + "-b64");
+      if (attribute != null ) {
+        return Base64.decodeString(attribute.getValue());
+      }
     }
     if (attribute == null) {
       throw new MissingAttributeException(
@@ -163,6 +166,9 @@ class RecordXMLReader {
     Attribute attribute = parentElement.attribute(attributeName);
     if (attribute == null) {
       attribute = parentElement.attribute(attributeName + "-b64");
+      if (attribute != null ) {
+        return Base64.decodeString(attribute.getValue());
+      }
     }
     if (attribute == null) {
       return null;

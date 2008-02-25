@@ -25,10 +25,12 @@ import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.CXform;
+import com.jswiff.swfrecords.FrameData;
 import com.jswiff.swfrecords.KerningRecord;
 import com.jswiff.swfrecords.LangCode;
 import com.jswiff.swfrecords.MorphFillStyles;
 import com.jswiff.swfrecords.MorphLineStyles;
+import com.jswiff.swfrecords.SceneData;
 import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.tags.DebugId;
@@ -52,6 +54,7 @@ import com.jswiff.swfrecords.tags.DefineFontInfo2;
 import com.jswiff.swfrecords.tags.DefineFontName;
 import com.jswiff.swfrecords.tags.DefineMorphShape;
 import com.jswiff.swfrecords.tags.DefineMorphShape2;
+import com.jswiff.swfrecords.tags.DefineSceneFrameData;
 import com.jswiff.swfrecords.tags.DefineShape;
 import com.jswiff.swfrecords.tags.DefineShape2;
 import com.jswiff.swfrecords.tags.DefineShape3;
@@ -181,6 +184,9 @@ class TagXMLWriter {
         break;
       case TagConstants.DEFINE_MORPH_SHAPE_2:
         writeDefineMorphShape2(parentElement, (DefineMorphShape2) tag);
+        break;
+      case TagConstants.DEFINE_SCENE_FRAME_DATA:
+        writeDefineSceneFrameData(parentElement, (DefineSceneFrameData) tag);
         break;
       case TagConstants.DEFINE_SHAPE:
         writeDefineShape(parentElement, (DefineShape) tag);
@@ -810,7 +816,27 @@ class TagXMLWriter {
       RecordXMLWriter.writeMorphFillStyles(element, morphFillStyles);
     }
   }
-
+  
+  private static void writeDefineSceneFrameData(Element parentElement, DefineSceneFrameData tag) {
+    Element element = parentElement.addElement("definesceneframedata");
+    List<SceneData> sceneEntries = tag.getSceneEntries();
+    Element sceneEntriesElement = element.addElement("sceneentries");
+    for (Iterator<SceneData> it = sceneEntries.iterator(); it.hasNext(); ) {
+      SceneData sceneData = it.next();
+      Element sceneDataElement = sceneEntriesElement.addElement("scenedata");
+      sceneDataElement.addAttribute("frameoffset", Integer.toString(sceneData.getFrameOffset()));
+      sceneDataElement.addAttribute("scenename", sceneData.getSceneName());
+    }
+    List<FrameData> frameEntries = tag.getFrameEntries();
+    Element frameEntriesElement = element.addElement("frameentries");
+    for (Iterator<FrameData> it = frameEntries.iterator(); it.hasNext(); ) {
+      FrameData frameData = it.next();
+      Element frameDataElement = frameEntriesElement.addElement("framedata");
+      frameDataElement.addAttribute("framenumber", Integer.toString(frameData.getFrameNumber()));
+      frameDataElement.addAttribute("framelabel", frameData.getFrameLabel());
+    }
+  }
+  
   private static void writeDefineShape(Element parentElement, DefineShape tag) {
     Element element = parentElement.addElement("defineshape");
     element.addAttribute("charid", Integer.toString(tag.getCharacterId()));

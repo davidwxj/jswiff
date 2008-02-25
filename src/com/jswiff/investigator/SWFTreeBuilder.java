@@ -125,6 +125,9 @@ final class SWFTreeBuilder {
       case TagConstants.DEFINE_MORPH_SHAPE_2:
         addNode(node, (DefineMorphShape2) tag);
         break;
+      case TagConstants.DEFINE_SCENE_FRAME_DATA:
+        addNode(node, (DefineSceneFrameData) tag);
+        break;
       case TagConstants.DEFINE_SHAPE:
         addNode(node, (DefineShape) tag);
         break;
@@ -1015,6 +1018,26 @@ final class SWFTreeBuilder {
     }
   }
 
+  private static void addNode(
+      DefaultMutableTreeNode node, DefineSceneFrameData tag) {
+    DefaultMutableTreeNode tagNode = addParentNode(
+        node, formatDefTag("DefineSceneFrameData"));
+    DefaultMutableTreeNode sceneEntriesElement = addParentNode(
+        node, formatDefTag("scene data"));
+    List<SceneData> sceneEntries = tag.getSceneEntries();
+    for (Iterator<SceneData> it = sceneEntries.iterator(); it.hasNext(); ) {
+      SceneData sceneData = it.next();
+      addLeaf(sceneEntriesElement, "frame offset: " + sceneData.getFrameOffset() + ", scene name: " + sceneData.getSceneName());
+    }
+    DefaultMutableTreeNode frameDataElement = addParentNode(
+        node, formatDefTag("frame data"));
+    List<FrameData> frameEntries = tag.getFrameEntries();
+    for (Iterator<FrameData> it = frameEntries.iterator(); it.hasNext(); ) {
+      FrameData frameData = it.next();
+      addLeaf(frameDataElement, "frame number: " + frameData.getFrameNumber() + ", frame label: " + frameData.getFrameLabel());
+    }
+  }
+  
   private static void addNode(
     DefaultMutableTreeNode node, String var, Shape shape) {
     DefaultMutableTreeNode newNode = addParentNode(node, var + "Shape");

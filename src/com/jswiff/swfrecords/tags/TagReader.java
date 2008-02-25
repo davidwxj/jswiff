@@ -117,6 +117,9 @@ public final class TagReader {
       case TagConstants.DEFINE_MORPH_SHAPE_2:
         tag = new DefineMorphShape2();
         break;
+      case TagConstants.DEFINE_SCENE_FRAME_DATA:
+        tag = new DefineSceneFrameData();
+        break;
       case TagConstants.DEFINE_SHAPE:
         tag = new DefineShape();
         break;

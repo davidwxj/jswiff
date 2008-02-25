@@ -94,6 +94,13 @@ public class ImageUtilities {
         int r       = ((rgb & 0xff0000) >> 16) & 0xff;
         int g       = ((rgb & 0xff00) >> 8) & 0xff;
         int b       = rgb & 0xff;
+        if(a != 255) {
+          // thx to Tom Rathbone for this fix
+          float alpha = a / 255f;
+          r *= alpha;
+          g *= alpha;
+          b *= alpha;
+        }
         values[i++] = new RGBA(r, g, b, a);
       }
     }

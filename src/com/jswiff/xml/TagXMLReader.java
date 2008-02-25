@@ -25,12 +25,14 @@ import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.CXform;
+import com.jswiff.swfrecords.FrameData;
 import com.jswiff.swfrecords.KerningRecord;
 import com.jswiff.swfrecords.LangCode;
 import com.jswiff.swfrecords.Matrix;
 import com.jswiff.swfrecords.MorphFillStyles;
 import com.jswiff.swfrecords.MorphLineStyles;
 import com.jswiff.swfrecords.Rect;
+import com.jswiff.swfrecords.SceneData;
 import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.ShapeWithStyle;
 import com.jswiff.swfrecords.TextRecord;
@@ -56,6 +58,7 @@ import com.jswiff.swfrecords.tags.DefineFontInfo2;
 import com.jswiff.swfrecords.tags.DefineFontName;
 import com.jswiff.swfrecords.tags.DefineMorphShape;
 import com.jswiff.swfrecords.tags.DefineMorphShape2;
+import com.jswiff.swfrecords.tags.DefineSceneFrameData;
 import com.jswiff.swfrecords.tags.DefineShape;
 import com.jswiff.swfrecords.tags.DefineShape2;
 import com.jswiff.swfrecords.tags.DefineShape3;
@@ -179,6 +182,9 @@ class TagXMLReader {
         break;
       case TagConstants.DEFINE_MORPH_SHAPE_2:
         tag = readDefineMorphShape2(tagElement);
+        break;
+      case TagConstants.DEFINE_SCENE_FRAME_DATA:
+        tag = readDefineSceneFrameData(tagElement);
         break;
       case TagConstants.DEFINE_SHAPE:
         tag = readDefineShape(tagElement);
@@ -886,6 +892,29 @@ class TagXMLReader {
       startShape, endShape);
   }
 
+  private static Tag readDefineSceneFrameData(Element tagElement) {
+    DefineSceneFrameData tag = new DefineSceneFrameData();
+    List<SceneData> sceneEntries = tag.getSceneEntries();
+    Element sceneEntriesElement = RecordXMLReader.getElement("sceneentries", tagElement);
+    List sceneDataElements = sceneEntriesElement.elements("scenedata");
+    for (Iterator it = sceneDataElements.iterator(); it.hasNext(); ) {
+      Element sceneDataElement = (Element) it.next();
+      sceneEntries.add(new SceneData(
+          RecordXMLReader.getIntAttribute("frameoffset", sceneDataElement),
+          RecordXMLReader.getStringAttributeWithBase64Check("scenename", sceneDataElement)));
+    }
+    List<FrameData> frameEntries = tag.getFrameEntries();
+    Element frameEntriesElement = RecordXMLReader.getElement("frameentries", tagElement);
+    List frameDataElements = frameEntriesElement.elements("framedata");
+    for (Iterator it = frameDataElements.iterator(); it.hasNext(); ) {
+      Element frameDataElement = (Element) it.next();
+      frameEntries.add(new FrameData(
+          RecordXMLReader.getIntAttribute("framenumber", frameDataElement),
+          RecordXMLReader.getStringAttributeWithBase64Check("framelabel", frameDataElement)));
+    }
+    return tag;
+  }
+  
   private static Tag readDefineShape(Element tagElement) {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(

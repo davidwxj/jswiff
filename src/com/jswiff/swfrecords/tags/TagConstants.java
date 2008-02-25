@@ -70,8 +70,8 @@ public final class TagConstants {
   public static final int DEFINE_MORPH_SHAPE     = 46;
   /** Tag code for DefineMorphShape2 */
   public static final int DEFINE_MORPH_SHAPE_2   = 84;
-  /** Tag code for DefineScenesAndLabels */
-  public static final int DEFINE_SCENES_AND_LABELS = 76;
+  /** Tag code for DefineSceneFrameData */
+  public static final int DEFINE_SCENE_FRAME_DATA = 86;
   /** Tag code for DefineShape */
   public static final int DEFINE_SHAPE           = 2;
   /** Tag code for DefineShape2 */

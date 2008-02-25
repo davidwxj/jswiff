@@ -144,6 +144,8 @@ public class XMLReader {
       "/swfdocument/definemorphshape2",
       new TagHandler(TagConstants.DEFINE_MORPH_SHAPE_2));
     saxReader.addHandler(
+        "/swfdocument/definesceneframedata", new TagHandler(TagConstants.DEFINE_SCENE_FRAME_DATA));
+    saxReader.addHandler(
       "/swfdocument/defineshape", new TagHandler(TagConstants.DEFINE_SHAPE));
     saxReader.addHandler(
       "/swfdocument/defineshape2", new TagHandler(TagConstants.DEFINE_SHAPE_2));
