@@ -1005,10 +1005,10 @@ class RecordXMLWriter {
           lineStyle2.getStartCapStyle(), lineStyle2.getEndCapStyle(),
           lineStyle2.getMiterLimit(), lineStyle2.getScaleStroke());
         if (lineStyle2.isClose()) {
-          parentElement.addAttribute("close", "true");
+          lineStyle2Element.addAttribute("close", "true");
         }
         if (lineStyle2.isPixelHinting()) {
-          parentElement.addAttribute("pixelhinting", "true");
+          lineStyle2Element.addAttribute("pixelhinting", "true");
         }
         FillStyle fillStyle = lineStyle2.getFillStyle();
         if (fillStyle == null) {
