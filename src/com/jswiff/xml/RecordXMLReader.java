@@ -34,6 +34,7 @@ import com.jswiff.swfrecords.AlphaColorMapData;
 import com.jswiff.swfrecords.BevelFilter;
 import com.jswiff.swfrecords.BitmapData;
 import com.jswiff.swfrecords.BitmapPixelData;
+import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.BlurFilter;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
@@ -281,7 +282,7 @@ class RecordXMLReader {
 
   static ButtonRecord[] readButtonRecords(Element parentElement) {
     Element charsElement   = getElement("chars", parentElement);
-    List recordElements    = charsElement.elements();
+    List recordElements    = charsElement.elements("buttonrecord");
     int arrayLength        = recordElements.size();
     ButtonRecord[] records = new ButtonRecord[arrayLength];
     for (int i = 0; i < arrayLength; i++) {
@@ -299,6 +300,15 @@ class RecordXMLReader {
       Element colorTransform = recordElement.element("cxformwithalpha");
       if (colorTransform != null) {
         record.setColorTransform(readCXformWithAlpha(colorTransform));
+      }
+      Attribute blendMode = recordElement.attribute("blendmode");
+      if (blendMode != null) {
+        record.setBlendMode(
+          BlendMode.getFromDescription(blendMode.getValue()));
+      }
+      Element filters = recordElement.element("filters");
+      if (filters != null) {
+        record.setFilters(RecordXMLReader.readFilters(filters));
       }
       records[i] = record;
     }
