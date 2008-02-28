@@ -1,7 +1,5 @@
 package com.jswiff;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -84,7 +82,7 @@ public class SWFCompressor {
       throws IOException {
     outStream.writeBytes(new byte[] { (byte) (isCompressed ? 0x43 : 0x46), 0x57, 0x53 });
     outStream.writeUI8(header.getVersion());
-    outStream.writeUI32(header.getFileLength());// placeholder for file size
+    outStream.writeUI32(header.getFileLength());
     if (isCompressed) {
       outStream.enableCompression();
     }
@@ -92,10 +90,5 @@ public class SWFCompressor {
     outStream.writeUI8((short) 0);
     outStream.writeUI8(header.getFrameRate());
     outStream.writeUI16(header.getFrameCount());
-  }
-  
-  public static void main(String[] args) throws IOException {
-    decompressSWF(new FileInputStream("/mnt/public/Testdaten/SWF/second_movie.swf"), new FileOutputStream("/mnt/public/Testdaten/SWF/second_movie-unzip.swf"));
-    compressSWF(new FileInputStream("/mnt/public/Testdaten/SWF/second_movie-unzip.swf"), new FileOutputStream("/mnt/public/Testdaten/SWF/second_movie-zip.swf"));
   }
 }
