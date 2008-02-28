@@ -515,6 +515,10 @@ public final class InputBitStream {
     return result;
   }
   
+  public InputStream getBaseStream() {
+    return stream;
+  }
+  
   private void endReached() throws IOException {
     throw new IOException("Input data stream ended unexpectedly!");
   }
