@@ -831,8 +831,13 @@ class RecordXMLReader {
     }
     if (capStyle.equals("square")) {
       return EnhancedStrokeStyle.CAPS_SQUARE;
+    } else {
+      try {
+        return Byte.parseByte(capStyle);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Illegal cap style: " + capStyle);
+      }
     }
-    return -1;
   }
 
   private static ClipEventFlags readClipEventFlags(Element parentElement) {
@@ -1005,8 +1010,13 @@ class RecordXMLReader {
       return Gradient.INTERPOLATION_LINEAR_RGB;
     } else if (interpolation.equals("rgb")) {
       return Gradient.INTERPOLATION_RGB;
+    } else {
+      try {
+        return Byte.parseByte(interpolation);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Illegal interpolation method: " + interpolation);
+      }
     }
-    return -1;
   }
 
   private static byte readJointStyle(Element element) {
@@ -1019,8 +1029,13 @@ class RecordXMLReader {
     }
     if (jointStyle.equals("bevel")) {
       return EnhancedStrokeStyle.JOINT_ROUND;
+    } else {
+      try {
+        return Byte.parseByte(jointStyle);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Illegal joint style: " + jointStyle);
+      }
     }
-    return -1;
   }
 
   private static LineStyle readLineStyle(Element element) {
@@ -1179,8 +1194,9 @@ class RecordXMLReader {
       return EnhancedStrokeStyle.SCALE_VERTICAL;
     } else if (scaleStroke.equals("both")) {
       return EnhancedStrokeStyle.SCALE_BOTH;
+    } else {
+      throw new IllegalArgumentException("Illegal scale stroke: " + scaleStroke);
     }
-    return -1;
   }
 
   private static SoundEnvelope[] readSoundEnvelopeRecords(
@@ -1207,8 +1223,13 @@ class RecordXMLReader {
       return Gradient.SPREAD_REFLECT;
     } else if (spread.equals("repeat")) {
       return Gradient.SPREAD_REPEAT;
+    } else {
+      try {
+        return Byte.parseByte(spread);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Illegal spread: " + spread);
+      }
     }
-    return -1;
   }
 
   private static ShapeRecord readStraightEdgeRecord(Element element) {

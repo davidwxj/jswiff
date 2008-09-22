@@ -821,6 +821,9 @@ class RecordXMLWriter {
       case EnhancedStrokeStyle.JOINT_BEVEL:
         parentElement.addAttribute("joint", "bevel");
         break;
+      default:
+        // write unknown value as byte value
+        parentElement.addAttribute("joint", Byte.toString(jointStyle));
     }
     Element capStyleElement = parentElement.addElement("capstyle");
     switch (startCapStyle) {
@@ -833,6 +836,9 @@ class RecordXMLWriter {
       case EnhancedStrokeStyle.CAPS_SQUARE:
         capStyleElement.addAttribute("start", "square");
         break;
+      default:
+        // write unknown value as byte value
+        capStyleElement.addAttribute("start", Byte.toString(startCapStyle));
     }
     switch (endCapStyle) {
       case EnhancedStrokeStyle.CAPS_NONE:
@@ -844,6 +850,9 @@ class RecordXMLWriter {
       case EnhancedStrokeStyle.CAPS_SQUARE:
         capStyleElement.addAttribute("end", "square");
         break;
+      default:
+        // write unknown value as byte value
+        capStyleElement.addAttribute("end", Byte.toString(endCapStyle));
     }
     switch (scaleStroke) {
       case EnhancedStrokeStyle.SCALE_NONE:
@@ -954,15 +963,20 @@ class RecordXMLWriter {
   }
 
   private static void writeGradient(Element gradientElement, Gradient gradient) {
-    switch (gradient.getInterpolationMethod()) {
+    byte interpolationMethod = gradient.getInterpolationMethod();
+    switch (interpolationMethod) {
       case Gradient.INTERPOLATION_LINEAR_RGB:
         gradientElement.addAttribute("interpolation", "linear-rgb");
         break;
       case Gradient.INTERPOLATION_RGB:
         gradientElement.addAttribute("interpolation", "rgb");
         break;
+      default:
+        // write unknown value as byte value
+        gradientElement.addAttribute("interpolation", Byte.toString(interpolationMethod));
     }
-    switch (gradient.getSpreadMethod()) {
+    byte spreadMethod = gradient.getSpreadMethod();
+    switch (spreadMethod) {
       case Gradient.SPREAD_PAD:
         gradientElement.addAttribute("spread", "pad");
         break;
@@ -972,6 +986,9 @@ class RecordXMLWriter {
       case Gradient.SPREAD_REPEAT:
         gradientElement.addAttribute("spread", "repeat");
         break;
+      default:
+        // write unknown value as byte value
+        gradientElement.addAttribute("spread", Byte.toString(spreadMethod));
     }
     GradRecord[] records = gradient.getGradientRecords();
     for (int i = 0; i < records.length; i++) {
@@ -1087,15 +1104,20 @@ class RecordXMLWriter {
 
   private static void writeMorphGradient(
     Element gradientElement, MorphGradient gradient) {
-    switch (gradient.getInterpolationMethod()) {
+    byte interpolationMethod = gradient.getInterpolationMethod();
+    switch (interpolationMethod) {
       case Gradient.INTERPOLATION_LINEAR_RGB:
         gradientElement.addAttribute("interpolation", "linear-rgb");
         break;
       case Gradient.INTERPOLATION_RGB:
         gradientElement.addAttribute("interpolation", "rgb");
         break;
+      default:
+        // write unknown value as byte value
+        gradientElement.addAttribute("interpolation", Byte.toString(interpolationMethod));
     }
-    switch (gradient.getSpreadMethod()) {
+    byte spreadMethod = gradient.getSpreadMethod();
+    switch (spreadMethod) {
       case Gradient.SPREAD_PAD:
         gradientElement.addAttribute("spread", "pad");
         break;
@@ -1105,6 +1127,9 @@ class RecordXMLWriter {
       case Gradient.SPREAD_REPEAT:
         gradientElement.addAttribute("spread", "repeat");
         break;
+      default:
+        // write unknown value as byte value
+        gradientElement.addAttribute("spread", Byte.toString(spreadMethod));
     }
     MorphGradRecord[] records = gradient.getGradientRecords();
     for (int i = 0; i < records.length; i++) {
