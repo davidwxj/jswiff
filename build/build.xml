@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="jswiff" default="jar" basedir="..">
 
+  <path id="src.classpath">
+    <fileset dir="./lib">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
   <!-- set some properties -->
   <target name="init">
+    <tstamp/>
     <property name="projectName" value="jswiff" />
-  	<tstamp/>
     <property name="version" value="svn-${DSTAMP}" />
-    <property name="sourceDir" value="src" />
-    <property name="classDir" value="classes" />
+    <property name="debug" value="on"/>
+    <property name="srcDir" value="src/java" />
+    <property name="testDir" value="src/test" />
+    <property name="samplesDir" value="src/samples" />
+    <property name="toolsDir" value="src/tools" />
+    <property name="buildDir" value="build" />
+    <property name="classDir" value="${buildDir}/classes" />
     <property name="libDir" value="lib" />
     <property name="javadocDir" value="api" />
     <property name="archiveFile" value="${projectName}-${version}" />
@@ -22,27 +33,47 @@
   <target name="compile" depends="init">
     <delete dir="${classDir}" includeEmptyDirs="true" />
     <mkdir dir="${classDir}" />
-    <javac debug="true" srcdir="${sourceDir}" destdir="${classDir}" excludes="com/jswiff/tests/**">
-      <classpath>
-        <pathelement path="${libDir}/dom4j-1.6.1.jar" />
-      </classpath>
+    <javac debug="${debug}"
+           destdir="${classDir}"
+           classpathref="src.classpath">
+      <src path="${srcDir}" />
+      <src path="${toolsDir}" />
     </javac>
-    <copy todir="${classDir}/com/jswiff/investigator/resources">
-      <fileset dir="${sourceDir}/com/jswiff/investigator/resources" />
+    <copy includeemptydirs="false" todir="${classDir}">
+      <fileset dir="${srcDir}" excludes="**/*.java" />
+      <fileset dir="${toolsDir}" excludes="**/*.java" />
     </copy>
   </target>
 
   <!-- create a JAR file -->
   <target name="jar" depends="compile">
   	<mkdir dir="${distDir}" />
-  	<jar destfile="${jarFile}" basedir="${classDir}" manifest="build/MANIFEST.MF" />
+  	<jar destfile="${jarFile}" basedir="${classDir}" manifest="${buildDir}/MANIFEST.MF" />
     <delete dir="${classDir}" includeEmptyDirs="true" />
   </target>
 
   <!-- create javadoc -->
   <target name="javadoc" depends="init">
     <delete dir="${javadocDir}" includeEmptyDirs="true" />
-    <javadoc destdir="${javadocDir}" access="public" breakiterator="true" use="true" notree="false" nonavbar="false" noindex="false" splitindex="true" author="false" version="false" nodeprecatedlist="true" nodeprecated="true" packagenames="com.jswiff.*" excludepackagenames="com.jswiff.tests.*,com.jswiff.investigator.*" sourcepath="${sourceDir}" stylesheetfile="build/javadoc.css" doctitle="JSwiff API Reference" additionalparam="-bottom &quot;&lt;div id='bottom'&gt;&amp;copy; 2005 Ralf Terdic. All rights reserved.&lt;br&gt;&lt;a href='http://www.jswiff.com'&gt;www.jswiff.com&lt;/a&gt;&lt;/div&gt;&quot;&#10;" windowtitle="JSwiff API Reference">
+    <javadoc sourcepath="${srcDir}"
+             destdir="${javadocDir}"
+             packagenames="com.jswiff.*"
+             excludepackagenames="com.jswiff.tests.*,com.jswiff.investigator.*"
+             access="public"
+             breakiterator="true"
+             use="true"
+             notree="false"
+             nonavbar="false"
+             noindex="false"
+             splitindex="true"
+             author="false"
+             version="false"
+             nodeprecatedlist="true"
+             nodeprecated="true"
+             stylesheetfile="${buildDir}/javadoc.css"
+             doctitle="JSwiff API Reference"
+             additionalparam="-bottom &quot;&lt;div id='bottom'&gt;&amp;copy; 2005 Ralf Terdic. All rights reserved.&lt;br&gt;&lt;a href='http://www.jswiff.com'&gt;www.jswiff.com&lt;/a&gt;&lt;/div&gt;&quot;&#10;"
+             windowtitle="JSwiff API Reference">
       <classpath>
         <pathelement path="${libDir}/dom4j-1.6.1.jar" />
       </classpath>
