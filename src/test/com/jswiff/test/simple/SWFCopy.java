@@ -18,11 +18,12 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tests.simple;
+package com.jswiff.test.simple;
 
-import com.jswiff.xml.Transformer;
-
-import org.dom4j.DocumentException;
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFReader;
+import com.jswiff.SWFWriter;
+import com.jswiff.listeners.SWFDocumentReader;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,24 +31,23 @@ import java.io.IOException;
 
 
 /**
- * Transforms an XML to a SWF document and writes it to a file.
+ * Parses an SWF file and writes it to another file
  */
-public class XMLToSWF {
+public class SWFCopy {
   /**
-   * Main method
+   * Main method.
    *
-   * @param args source XML and destination SWF file path
+   * @param args arguments: source and destination file
    *
    * @throws IOException if an I/O error occured
-   * @throws DocumentException if the XML couldn't be parsed
    */
-  public static void main(String[] args) throws IOException, DocumentException {
-    if (args.length < 2) {
-      System.out.println(
-        "Please pass the XML source and the SWF target file path");
-      return;
-    }
-    Transformer.toSWF(
-      new FileInputStream(args[0]), new FileOutputStream(args[1]));
+  public static void main(String[] args) throws IOException {
+    SWFReader reader            = new SWFReader(new FileInputStream(args[0]));
+    SWFDocumentReader docReader = new SWFDocumentReader();
+    reader.addListener(docReader);
+    reader.read();
+    SWFDocument doc  = docReader.getDocument();
+    SWFWriter writer = new SWFWriter(doc, new FileOutputStream(args[1]));
+    writer.write();
   }
 }

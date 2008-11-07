@@ -18,36 +18,51 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tests.simple;
+package com.jswiff.test.simple;
 
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFReader;
 import com.jswiff.SWFWriter;
 import com.jswiff.listeners.SWFDocumentReader;
+import com.jswiff.xml.XMLReader;
+import com.jswiff.xml.XMLWriter;
 
+import org.dom4j.DocumentException;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 
 /**
- * Parses an SWF file and writes it to another file
+ * Parses an SWF file, transforms it to XML, parses it back to a SWF document
+ * and writes it to a file. Useful for testing SWF and XML read/write.
  */
-public class SWFCopy {
+public class SWFXMLCopy {
   /**
    * Main method.
    *
    * @param args arguments: source and destination file
    *
    * @throws IOException if an I/O error occured
+   * @throws DocumentException if XML is malformed
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, DocumentException {
     SWFReader reader            = new SWFReader(new FileInputStream(args[0]));
     SWFDocumentReader docReader = new SWFDocumentReader();
     reader.addListener(docReader);
     reader.read();
-    SWFDocument doc  = docReader.getDocument();
-    SWFWriter writer = new SWFWriter(doc, new FileOutputStream(args[1]));
+    SWFDocument doc            = docReader.getDocument();
+    XMLWriter xmlWriter        = new XMLWriter(doc);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    xmlWriter.write(baos, false);
+    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    XMLReader xmlReader       = new XMLReader(bais);
+    doc                       = xmlReader.getDocument();
+    SWFWriter writer          = new SWFWriter(
+        doc, new FileOutputStream(args[1]));
     writer.write();
   }
 }

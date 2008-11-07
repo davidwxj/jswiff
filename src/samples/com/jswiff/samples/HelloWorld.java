@@ -18,7 +18,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tutorials;
+package com.jswiff.samples;
 
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFWriter;

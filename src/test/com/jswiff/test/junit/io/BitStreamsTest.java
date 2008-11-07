@@ -18,7 +18,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tests.junit.io;
+package com.jswiff.test.junit.io;
 
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;

@@ -18,7 +18,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tutorials;
+package com.jswiff.samples;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

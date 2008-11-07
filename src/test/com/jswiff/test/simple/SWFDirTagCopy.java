@@ -18,7 +18,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tests.simple;
+package com.jswiff.test.simple;
 
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFReader;

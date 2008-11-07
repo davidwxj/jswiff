@@ -18,31 +18,42 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.tests.simple;
+package com.jswiff.test.simple;
 
 import com.jswiff.xml.Transformer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 
 /**
- * Transforms an SWF to XML and outputs it to the console.
+ * Transforms all SWF files from a directory to XML, writing the XML documents
+ * to the specified directory.
  */
-public class SWFToXML {
+public class SWFDirToXML {
   /**
    * Main method.
    *
-   * @param args pass one SWF file path
+   * @param args arguments: source and destination dir
    *
    * @throws IOException if an I/O error occured
    */
   public static void main(String[] args) throws IOException {
-    if (args.length < 2) {
-      System.out.println("Please pass a source SWF and a target XML file path!");
-      return;
+    File sourceDir      = new File(args[0]);
+    File[] sourceFiles  = sourceDir.listFiles();
+    File destinationDir = (args.length > 1) ? new File(args[1])
+                                            : new File(args[0]);
+    for (int i = 0; i < sourceFiles.length; i++) {
+      File sourceFile      = sourceFiles[i];
+      File destinationFile = new File(
+          destinationDir, sourceFile.getName() + ".xml");
+      System.out.print("Transforming file " + sourceFile + "... ");
+      Transformer.toXML(
+        new FileInputStream(sourceFile), new FileOutputStream(destinationFile),
+        true);
+      System.out.println("done.");
     }
-    Transformer.toXML(new FileInputStream(args[0]), new FileOutputStream(args[1]), true);
   }
 }
