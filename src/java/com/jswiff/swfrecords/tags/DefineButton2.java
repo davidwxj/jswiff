@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
+import java.io.IOException;
+import java.util.Vector;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
-
-import java.io.IOException;
-
-import java.util.Vector;
 
 
 /**
@@ -190,7 +189,7 @@ public final class DefineButton2 extends DefinitionTag {
     int actionOffset = inStream.readUI16();
 
     // read ButtonRecord array into characters
-    Vector buttonRecords = new Vector();
+    Vector<ButtonRecord> buttonRecords = new Vector<ButtonRecord>();
     long startOffset = inStream.getOffset();
     do {
       // some stupid programs sometimes don't write any button records
@@ -215,7 +214,7 @@ public final class DefineButton2 extends DefinitionTag {
     }
 
     // read ButtonCondAction array into actions
-    Vector buttonCondActions = new Vector();
+    Vector<ButtonCondAction> buttonCondActions = new Vector<ButtonCondAction>();
     int condActionSize       = -1;
     do {
       condActionSize = inStream.readUI16();

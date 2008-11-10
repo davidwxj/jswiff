@@ -86,22 +86,15 @@ public class SWFDocumentReader extends SWFListener {
         document.setBackgroundColor(((SetBackgroundColor) tag).getColor());
         return;
       case TagConstants.FILE_ATTRIBUTES:
-        setFileAttributes((FileAttributes) tag);
+        if ( ((FileAttributes) tag).isAllowNetworkAccess() ) {
+            document.setAccessMode(SWFDocument.ACCESS_MODE_NETWORK);
+        }
         return;
       case TagConstants.METADATA:
-        setMetadata((Metadata) tag);
+        document.setMetadata( ((Metadata) tag).getDataString() );
         return;
     }
     document.addTag(tag);
   }
 
-  private void setFileAttributes(FileAttributes attributes) {
-    if (attributes.isAllowNetworkAccess()) {
-      document.setAccessMode(SWFDocument.ACCESS_MODE_NETWORK);
-    }
-  }
-
-  private void setMetadata(Metadata metadata) {
-    document.setMetadata(metadata.getDataString());
-  }
 }

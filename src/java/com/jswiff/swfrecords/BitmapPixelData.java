@@ -20,10 +20,10 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
+
+import com.jswiff.io.OutputBitStream;
 
 
 /**

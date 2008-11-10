@@ -20,14 +20,12 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
-import java.util.Iterator;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -295,10 +293,9 @@ public final class Try extends Action {
   private void removeTryJump() {
     // Removes the jump to the first action of the finally block.
     // This jump is the last action of the try block when there is a catch block.
-    List actions = tryBlock.getActions();
-    boolean jumpRemoved = false;
+    List<Action> actions = tryBlock.getActions();
     if (actions.size() > 0) {
-      Action lastAction = (Action) actions.get(actions.size() - 1);
+      Action lastAction = actions.get(actions.size() - 1);
       if (lastAction.getCode() == ActionConstants.JUMP) {
         if (((Jump) lastAction).getBranchLabel().equals(ActionBlock.LABEL_OUT)) {
           actions.remove(actions.size() - 1);
@@ -307,9 +304,9 @@ public final class Try extends Action {
       // check if there were Jump actions pointing to the removed action
       String lastActionLabel = lastAction.getLabel();
       if (lastActionLabel != null ) {
-        for (Iterator it = actions.iterator(); it.hasNext(); ) {
-          Object action = it.next();
-          if (action instanceof Branch) {
+        for (Action action : actions) {
+          if (action.getCode() ==  ActionConstants.IF 
+              || action.getCode() ==  ActionConstants.JUMP) {
             Branch branch = (Branch) action;
             if (branch.getBranchLabel().equals(lastActionLabel)) {
               branch.setBranchLabel(ActionBlock.LABEL_END);

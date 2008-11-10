@@ -20,6 +20,9 @@
 
 package com.jswiff;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.tags.FileAttributes;
 import com.jswiff.swfrecords.tags.Metadata;
@@ -27,11 +30,6 @@ import com.jswiff.swfrecords.tags.SetBackgroundColor;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.TagWriter;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
-import java.util.Iterator;
 
 
 /**
@@ -133,8 +131,8 @@ public class SWFWriter {
 
   private int getFrameCount() {
     int count = 0;
-    for (Iterator i = document.getTags().iterator(); i.hasNext();) {
-      if (((Tag) i.next()).getCode() == TagConstants.SHOW_FRAME) {
+    for (Tag t : document.getTags()) {
+      if (t.getCode() == TagConstants.SHOW_FRAME) {
         count++;
       }
     }

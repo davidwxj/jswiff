@@ -20,6 +20,12 @@
 
 package com.jswiff.hl.factories;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFWriter;
 import com.jswiff.io.InputBitStream;
@@ -28,12 +34,6 @@ import com.jswiff.swfrecords.tags.DefineSound;
 import com.jswiff.swfrecords.tags.ShowFrame;
 import com.jswiff.swfrecords.tags.SoundStreamHead2;
 import com.jswiff.swfrecords.tags.StartSound;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 
 /**

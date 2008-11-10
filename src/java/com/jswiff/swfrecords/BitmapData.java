@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords;
 
+import java.io.IOException;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.tags.DefineBitsLossless;
-
-import java.io.IOException;
 
 
 /**

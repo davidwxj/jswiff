@@ -20,10 +20,9 @@
 
 package com.jswiff.xml;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
-import com.jswiff.util.Base64;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
 
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -31,10 +30,10 @@ import org.dom4j.ElementHandler;
 import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 
-import java.io.InputStream;
-import java.io.Reader;
-
-import java.util.ArrayList;
+import com.jswiff.SWFDocument;
+import com.jswiff.swfrecords.tags.Tag;
+import com.jswiff.swfrecords.tags.TagConstants;
+import com.jswiff.util.Base64;
 
 
 /**
@@ -42,7 +41,7 @@ import java.util.ArrayList;
  */
 public class XMLReader {
   private SWFDocument swfDocument = new SWFDocument();
-  private ArrayList tags          = new ArrayList();
+  private ArrayList<Tag> tags     = new ArrayList<Tag>();
   private SAXReader saxReader     = new SAXReader();
   {
     addHandlers();

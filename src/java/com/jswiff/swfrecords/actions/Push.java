@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -48,7 +47,7 @@ import java.util.List;
  * @since SWF 4
  */
 public final class Push extends Action {
-  private List values = new ArrayList();
+  private List<StackValue> values = new ArrayList<StackValue>();
 
   /**
    * Creates a new Push action.
@@ -78,7 +77,7 @@ public final class Push extends Action {
   public int getSize() {
     int size = 3;
     for (int i = 0; i < values.size(); i++) {
-      size += ((StackValue) values.get(i)).getSize();
+      size += values.get(i).getSize();
     }
     return size;
   }
@@ -89,7 +88,7 @@ public final class Push extends Action {
    *
    * @return a list of Push.StackValue instances
    */
-  public List getValues() {
+  public List<StackValue> getValues() {
     return values;
   }
 
@@ -115,7 +114,7 @@ public final class Push extends Action {
     OutputBitStream dataStream, OutputBitStream mainStream)
     throws IOException {
     for (int i = 0; i < values.size(); i++) {
-      ((StackValue) values.get(i)).write(dataStream);
+      values.get(i).write(dataStream);
     }
   }
 

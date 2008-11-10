@@ -20,18 +20,15 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -59,9 +56,9 @@ public final class ActionBlock implements Serializable {
    */
   public static String LABEL_OUT = "__out";
   private static int instCounter = 0; // instance counter used for labels
-  private List actions           = new ArrayList();
-  private Map labelMap           = new HashMap();
-  private Map inverseLabelMap    = new HashMap();
+  private List<Action> actions                 = new ArrayList<Action>();
+  private Map<String, Object> labelMap         = new HashMap<String, Object>();
+  private Map<Integer, String> inverseLabelMap = new HashMap<Integer, String>();
 
   /**
    * Creates a new Block action.
@@ -99,10 +96,9 @@ public final class ActionBlock implements Serializable {
 
     // correct offsets, setting to relative to first action (not to start of stream)
     // also, populate the label map with integers containing the corresponding offsets
-    int labelCounter      = 0;
-    Map actionMap         = new HashMap(); // contains  offset->action  mapping
-    for (int i = 0; i < actions.size(); i++) {
-      Action action = (Action) actions.get(i);
+    int labelCounter = 0;
+    Map<Integer, Action> actionMap = new HashMap<Integer, Action>(); // contains  offset->action  mapping
+    for (Action action : actions) {
       int newOffset = action.getOffset() - startOffset;
       action.setOffset(newOffset);
       actionMap.put(new Integer(newOffset), action);
@@ -114,20 +110,17 @@ public final class ActionBlock implements Serializable {
 
         // temporarily put the offset into the label map
         // later on, the offset will be replaced with the corresponding action instance
-        int branchOffset    = getBranchOffset(branchAction);
+        int branchOffset = getBranchOffset(branchAction);
         String branchLabel;
         if (branchOffset < 0) {
           branchLabel = LABEL_OUT;
         } else if (branchOffset < relativeEndOffset) {
-          Integer branchOffsetObj = new Integer(branchOffset);
-
           // check if branch target isn't already assigned a label
-          String oldLabel         = (String) inverseLabelMap.get(
-              branchOffsetObj);
+          String oldLabel = inverseLabelMap.get(branchOffset);
           if (oldLabel == null) {
             branchLabel = "L_" + instCounter + "_" + labelCounter++;
-            labelMap.put(branchLabel, branchOffsetObj);
-            inverseLabelMap.put(branchOffsetObj, branchLabel);
+            labelMap.put(branchLabel, branchOffset);
+            inverseLabelMap.put(branchOffset, branchLabel);
           } else {
             branchLabel = oldLabel;
           }
@@ -141,11 +134,9 @@ public final class ActionBlock implements Serializable {
     }
 
     // now replace offsets from label map with corresponding actions
-    Set keys = labelMap.keySet();
-    for (Iterator i = keys.iterator(); i.hasNext();) {
-      String label        = (String) i.next();
+    for (String label : labelMap.keySet()) {
       Object branchOffset = labelMap.get(label);
-      Action action       = (Action) actionMap.get(branchOffset);
+      Action action       = actionMap.get(branchOffset);
       if (action != null) {
         // action == null when label == LABEL_OUT
         action.setLabel(label);
@@ -169,7 +160,7 @@ public final class ActionBlock implements Serializable {
    *
    * @return contained actions in a list
    */
-  public List getActions() {
+  public List<Action> getActions() {
     return actions;
   }
 
@@ -181,8 +172,8 @@ public final class ActionBlock implements Serializable {
    */
   public int getSize() {
     int size = 0;
-    for (Iterator i = actions.iterator(); i.hasNext();) {
-      size += ((Action) i.next()).getSize();
+    for (Action action : actions) {
+      size += action.getSize();
     }
     return size;
   }
@@ -217,7 +208,7 @@ public final class ActionBlock implements Serializable {
    * @return the action record previously contained at specified position
    */
   public Action removeAction(int index) {
-    return (Action) actions.remove(index);
+    return actions.remove(index);
   }
 
   /**
@@ -234,8 +225,7 @@ public final class ActionBlock implements Serializable {
     // two passes
     // first pass: correct offsets and populate labelMap
     int currentOffset = 0;
-    for (Iterator i = actions.iterator(); i.hasNext();) {
-      Action action = (Action) i.next();
+    for (Action action : actions) {
       action.setOffset(currentOffset);
       currentOffset += action.getSize();
       // if action has label, add (label->action) mapping to labelMap
@@ -246,8 +236,7 @@ public final class ActionBlock implements Serializable {
     }
 
     // second pass: replace branch labels with branch offsets and write actions
-    for (Iterator i = actions.iterator(); i.hasNext();) {
-      Action action = (Action) i.next();
+    for (Action action : actions) {
       switch (action.getCode()) {
         case ActionConstants.JUMP:
         case ActionConstants.IF:

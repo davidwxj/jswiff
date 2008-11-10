@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -49,7 +48,7 @@ import java.util.List;
  * @since SWF 5
  */
 public final class ConstantPool extends Action {
-  private List constants = new ArrayList();
+  private List<String> constants = new ArrayList<String>();
 
   /**
    * Creates a new ConstantPool action.
@@ -80,7 +79,7 @@ public final class ConstantPool extends Action {
    *
    * @return list containing all constants as String instances
    */
-  public List getConstants() {
+  public List<String> getConstants() {
     return constants;
   }
 
@@ -94,8 +93,8 @@ public final class ConstantPool extends Action {
   public int getSize() {
     int size = 5; // 1 (code) + 2 (data length) + 2 (# of constants)
     try {
-      for (Iterator i = constants.iterator(); i.hasNext();) {
-        size += (((String) i.next()).getBytes("UTF-8").length + 1); // Unicode, null-terminated
+      for (Iterator<String> i = constants.iterator(); i.hasNext();) {
+        size += (i.next().getBytes("UTF-8").length + 1); // Unicode, null-terminated
       }
     } catch (UnsupportedEncodingException e) {
       // UTF-8 should be available..
@@ -117,7 +116,7 @@ public final class ConstantPool extends Action {
     throws IOException {
     dataStream.writeUI16(constants.size());
     for (int i = 0; i < constants.size(); i++) {
-      dataStream.writeString((String) constants.get(i));
+      dataStream.writeString(constants.get(i));
     }
   }
 }

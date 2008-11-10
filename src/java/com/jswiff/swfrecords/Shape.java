@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -117,7 +116,7 @@ public class Shape implements Serializable {
     // StyleChangeRecords may change these values
     byte currentNumFillBits = numFillBits;
     byte currentNumLineBits = numLineBits;
-    Vector shapeRecordVector = new Vector();
+    Vector<ShapeRecord> shapeRecordVector = new Vector<ShapeRecord>();
     do {
       // read type flag - edge record or style change? check TypeFlag
       int typeFlag = (int) stream.readUnsignedBits(1);
@@ -171,7 +170,7 @@ public class Shape implements Serializable {
 
   private void computeNumBits() {
     // Iterate over shapeRecords, filter StyleChangeRecord instances.
-    List changeRecords = new ArrayList();
+    List<ShapeRecord> changeRecords = new ArrayList<ShapeRecord>();
     for (int i = 0; i < shapeRecords.length; i++) {
       ShapeRecord record = shapeRecords[i];
       if (record instanceof StyleChangeRecord) {
@@ -230,7 +229,7 @@ public class Shape implements Serializable {
   }
 
   private void storeNumBits(
-    int groupStartIndex, byte fillBits, byte lineBits, List changeRecords) {
+    int groupStartIndex, byte fillBits, byte lineBits, List<ShapeRecord> changeRecords) {
     if (groupStartIndex > -1) {
       // store in first change record of group
       StyleChangeRecord groupStartRecord = (StyleChangeRecord) changeRecords.get(

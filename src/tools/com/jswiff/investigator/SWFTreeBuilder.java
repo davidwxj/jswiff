@@ -20,25 +20,157 @@
 
 package com.jswiff.investigator;
 
-import com.jswiff.swfrecords.*;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import com.jswiff.swfrecords.AlignmentZone;
+import com.jswiff.swfrecords.AlphaBitmapData;
+import com.jswiff.swfrecords.AlphaColorMapData;
+import com.jswiff.swfrecords.BevelFilter;
+import com.jswiff.swfrecords.BitmapData;
+import com.jswiff.swfrecords.BlendMode;
+import com.jswiff.swfrecords.BlurFilter;
+import com.jswiff.swfrecords.ButtonCondAction;
+import com.jswiff.swfrecords.ButtonRecord;
+import com.jswiff.swfrecords.CXform;
+import com.jswiff.swfrecords.CXformWithAlpha;
+import com.jswiff.swfrecords.ClipActionRecord;
+import com.jswiff.swfrecords.ClipActions;
+import com.jswiff.swfrecords.ClipEventFlags;
+import com.jswiff.swfrecords.ColorMapData;
+import com.jswiff.swfrecords.ColorMatrixFilter;
+import com.jswiff.swfrecords.ConvolutionFilter;
+import com.jswiff.swfrecords.CurvedEdgeRecord;
+import com.jswiff.swfrecords.DropShadowFilter;
+import com.jswiff.swfrecords.EnhancedStrokeStyle;
+import com.jswiff.swfrecords.FillStyle;
+import com.jswiff.swfrecords.FillStyleArray;
+import com.jswiff.swfrecords.Filter;
+import com.jswiff.swfrecords.FocalGradient;
+import com.jswiff.swfrecords.FocalMorphGradient;
+import com.jswiff.swfrecords.FrameData;
+import com.jswiff.swfrecords.GlowFilter;
+import com.jswiff.swfrecords.GlyphEntry;
+import com.jswiff.swfrecords.GradRecord;
+import com.jswiff.swfrecords.Gradient;
+import com.jswiff.swfrecords.GradientBevelFilter;
+import com.jswiff.swfrecords.GradientGlowFilter;
+import com.jswiff.swfrecords.KerningRecord;
+import com.jswiff.swfrecords.LineStyle;
+import com.jswiff.swfrecords.LineStyle2;
+import com.jswiff.swfrecords.LineStyleArray;
+import com.jswiff.swfrecords.MorphFillStyle;
+import com.jswiff.swfrecords.MorphFillStyles;
+import com.jswiff.swfrecords.MorphGradRecord;
+import com.jswiff.swfrecords.MorphGradient;
+import com.jswiff.swfrecords.MorphLineStyle;
+import com.jswiff.swfrecords.MorphLineStyle2;
+import com.jswiff.swfrecords.MorphLineStyles;
+import com.jswiff.swfrecords.RGB;
+import com.jswiff.swfrecords.RGBA;
+import com.jswiff.swfrecords.Rect;
+import com.jswiff.swfrecords.RegisterParam;
+import com.jswiff.swfrecords.SWFHeader;
+import com.jswiff.swfrecords.SceneData;
+import com.jswiff.swfrecords.Shape;
+import com.jswiff.swfrecords.ShapeRecord;
+import com.jswiff.swfrecords.ShapeWithStyle;
+import com.jswiff.swfrecords.SoundEnvelope;
+import com.jswiff.swfrecords.SoundInfo;
+import com.jswiff.swfrecords.StraightEdgeRecord;
+import com.jswiff.swfrecords.StyleChangeRecord;
+import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.abc.AbcConstantPool;
 import com.jswiff.swfrecords.abc.AbcConstants;
 import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.abc.AbcMultiname;
 import com.jswiff.swfrecords.abc.AbcNamespace;
 import com.jswiff.swfrecords.abc.AbcNamespaceSet;
-import com.jswiff.swfrecords.actions.*;
-import com.jswiff.swfrecords.tags.*;
+import com.jswiff.swfrecords.actions.Action;
+import com.jswiff.swfrecords.actions.ActionBlock;
+import com.jswiff.swfrecords.actions.ActionConstants;
+import com.jswiff.swfrecords.actions.ConstantPool;
+import com.jswiff.swfrecords.actions.DefineFunction;
+import com.jswiff.swfrecords.actions.DefineFunction2;
+import com.jswiff.swfrecords.actions.If;
+import com.jswiff.swfrecords.actions.Jump;
+import com.jswiff.swfrecords.actions.Push;
+import com.jswiff.swfrecords.actions.Try;
+import com.jswiff.swfrecords.actions.With;
+import com.jswiff.swfrecords.actions.Push.StackValue;
+import com.jswiff.swfrecords.tags.DebugId;
+import com.jswiff.swfrecords.tags.DefineBinaryData;
+import com.jswiff.swfrecords.tags.DefineBits;
+import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
+import com.jswiff.swfrecords.tags.DefineBitsJPEG3;
+import com.jswiff.swfrecords.tags.DefineBitsLossless;
+import com.jswiff.swfrecords.tags.DefineBitsLossless2;
+import com.jswiff.swfrecords.tags.DefineButton;
+import com.jswiff.swfrecords.tags.DefineButton2;
+import com.jswiff.swfrecords.tags.DefineButtonCXform;
+import com.jswiff.swfrecords.tags.DefineButtonSound;
+import com.jswiff.swfrecords.tags.DefineEditText;
+import com.jswiff.swfrecords.tags.DefineFont;
+import com.jswiff.swfrecords.tags.DefineFont2;
+import com.jswiff.swfrecords.tags.DefineFont3;
+import com.jswiff.swfrecords.tags.DefineFontAlignment;
+import com.jswiff.swfrecords.tags.DefineFontInfo;
+import com.jswiff.swfrecords.tags.DefineFontInfo2;
+import com.jswiff.swfrecords.tags.DefineFontName;
+import com.jswiff.swfrecords.tags.DefineMorphShape;
+import com.jswiff.swfrecords.tags.DefineMorphShape2;
+import com.jswiff.swfrecords.tags.DefineSceneFrameData;
+import com.jswiff.swfrecords.tags.DefineShape;
+import com.jswiff.swfrecords.tags.DefineShape2;
+import com.jswiff.swfrecords.tags.DefineShape3;
+import com.jswiff.swfrecords.tags.DefineShape4;
+import com.jswiff.swfrecords.tags.DefineSound;
+import com.jswiff.swfrecords.tags.DefineSprite;
+import com.jswiff.swfrecords.tags.DefineText;
+import com.jswiff.swfrecords.tags.DefineText2;
+import com.jswiff.swfrecords.tags.DefineVideoStream;
+import com.jswiff.swfrecords.tags.DoAbc;
+import com.jswiff.swfrecords.tags.DoAbcDefine;
+import com.jswiff.swfrecords.tags.DoAction;
+import com.jswiff.swfrecords.tags.DoInitAction;
+import com.jswiff.swfrecords.tags.EnableDebugger;
+import com.jswiff.swfrecords.tags.EnableDebugger2;
+import com.jswiff.swfrecords.tags.ExportAssets;
+import com.jswiff.swfrecords.tags.FileAttributes;
+import com.jswiff.swfrecords.tags.FlashTypeSettings;
+import com.jswiff.swfrecords.tags.FrameLabel;
+import com.jswiff.swfrecords.tags.ImportAssets;
+import com.jswiff.swfrecords.tags.ImportAssets2;
+import com.jswiff.swfrecords.tags.JPEGTables;
+import com.jswiff.swfrecords.tags.MalformedTag;
+import com.jswiff.swfrecords.tags.Metadata;
+import com.jswiff.swfrecords.tags.PlaceObject;
+import com.jswiff.swfrecords.tags.PlaceObject2;
+import com.jswiff.swfrecords.tags.PlaceObject3;
+import com.jswiff.swfrecords.tags.ProductInfo;
+import com.jswiff.swfrecords.tags.Protect;
+import com.jswiff.swfrecords.tags.RemoveObject;
+import com.jswiff.swfrecords.tags.RemoveObject2;
+import com.jswiff.swfrecords.tags.Scale9Grid;
+import com.jswiff.swfrecords.tags.ScriptLimits;
+import com.jswiff.swfrecords.tags.SetBackgroundColor;
+import com.jswiff.swfrecords.tags.SetTabIndex;
+import com.jswiff.swfrecords.tags.ShowFrame;
+import com.jswiff.swfrecords.tags.SoundStreamBlock;
+import com.jswiff.swfrecords.tags.SoundStreamHead;
+import com.jswiff.swfrecords.tags.SoundStreamHead2;
+import com.jswiff.swfrecords.tags.StartSound;
+import com.jswiff.swfrecords.tags.SymbolClass;
+import com.jswiff.swfrecords.tags.Tag;
+import com.jswiff.swfrecords.tags.TagConstants;
+import com.jswiff.swfrecords.tags.UnknownTag;
+import com.jswiff.swfrecords.tags.VideoFrame;
 import com.jswiff.swfrecords.tags.ExportAssets.ExportMapping;
 import com.jswiff.swfrecords.tags.ImportAssets.ImportMapping;
 import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.HexUtils;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import javax.swing.tree.DefaultMutableTreeNode;
 
 
 /*
@@ -46,7 +178,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 final class SWFTreeBuilder {
   private static int nodes;
-  private static List constants;
+  private static List<String> constants;
 
   static void setNodes(int nodes) {
     SWFTreeBuilder.nodes = nodes;
@@ -317,8 +449,7 @@ final class SWFTreeBuilder {
 
   private static String getPushDescription(Push push) {
     String result = "Push";
-    for (Iterator i = push.getValues().iterator(); i.hasNext();) {
-      Push.StackValue value = (Push.StackValue) i.next();
+    for (StackValue value : push.getValues()) {
       switch (value.getType()) {
         case Push.StackValue.TYPE_STRING:
           result += (" string: '" + value.getString() + "'");
@@ -1019,8 +1150,7 @@ final class SWFTreeBuilder {
 
   private static void addNode(
       DefaultMutableTreeNode node, DefineSceneFrameData tag) {
-    DefaultMutableTreeNode tagNode = addParentNode(
-        node, formatDefTag("DefineSceneFrameData"));
+    addParentNode(node, formatDefTag("DefineSceneFrameData"));
     DefaultMutableTreeNode sceneEntriesElement = addParentNode(
         node, formatDefTag("scene data"));
     List<SceneData> sceneEntries = tag.getSceneEntries();
@@ -1479,11 +1609,11 @@ final class SWFTreeBuilder {
         node, formatDefTag("DefineSprite"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
     addLeaf(tagNode, "frameCount: " + tag.getFrameCount());
-    List ctrlTags                      = tag.getControlTags();
+    List<Tag> ctrlTags = tag.getControlTags();
     DefaultMutableTreeNode ctrlTagNode = addParentNode(
         tagNode, "controlTags: Tag[" + ctrlTags.size() + "]");
     for (int i = 0; i < ctrlTags.size(); i++) {
-      addNode(ctrlTagNode, (Tag) ctrlTags.get(i));
+      addNode(ctrlTagNode, ctrlTags.get(i));
     }
   }
 
@@ -1802,12 +1932,12 @@ final class SWFTreeBuilder {
       addLeaf(tagNode, "className: " + tag.getClassName());
     }
     if (tag.hasFilters()) {
-      List filters                       = tag.getFilters();
-      int count                          = filters.size();
+      List<Filter> filters = tag.getFilters();
+      int count            = filters.size();
       DefaultMutableTreeNode filtersNode = addParentNode(
           tagNode, "filters: Filter[" + count + "]");
       for (int i = 0; i < count; i++) {
-        addNode(filtersNode, (Filter) filters.get(i));
+        addNode(filtersNode, filters.get(i));
       }
     }
     if (tag.hasBlendMode()) {
@@ -1942,9 +2072,9 @@ final class SWFTreeBuilder {
     DefaultMutableTreeNode node, String var, ClipActions clipActions) {
     DefaultMutableTreeNode newNode = addParentNode(node, var + "ClipActions");
     addNode(newNode, "allEventFlags: ", clipActions.getEventFlags());
-    List records = clipActions.getClipActionRecords();
+    List<ClipActionRecord> records = clipActions.getClipActionRecords();
     for (int i = 0; i < records.size(); i++) {
-      addNode(newNode, (ClipActionRecord) records.get(i));
+      addNode(newNode, records.get(i));
     }
   }
 
@@ -1960,13 +2090,13 @@ final class SWFTreeBuilder {
 
   private static void addNode(
     DefaultMutableTreeNode node, String var, ActionBlock actionBlock) {
-    List actionRecords             = actionBlock.getActions();
+    List<Action> actionRecords = actionBlock.getActions();
     DefaultMutableTreeNode newNode = addParentNode(
         node,
         var + actionRecords.size() + " actions; size : " +
         actionBlock.getSize());
     for (int i = 0; i < actionRecords.size(); i++) {
-      addNode(newNode, (Action) actionRecords.get(i));
+      addNode(newNode, actionRecords.get(i));
     }
   }
   

@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -46,7 +45,10 @@ import java.util.List;
  * @see com.jswiff.swfrecords.tags.DefineMorphShape2
  */
 public final class MorphLineStyles implements Serializable {
-  private List styles = new ArrayList();
+  
+  //FIXME: Give MorphLineStyle and MorphLineStyle2 a common lineage
+  //and tighten generic type for styles array, etc.
+  private List<Object> styles = new ArrayList<Object>();
 
   /**
    * Creates a new MorphLineStyles instance.
@@ -111,7 +113,7 @@ public final class MorphLineStyles implements Serializable {
    *
    * @return all morph line styles
    */
-  public List getStyles() {
+  public List<Object> getStyles() {
     return styles;
   }
 
@@ -122,6 +124,12 @@ public final class MorphLineStyles implements Serializable {
    * @param lineStyle a morph line style
    */
   public void addStyle(Object lineStyle) {
+    if ( !(lineStyle instanceof MorphLineStyle) 
+      && !(lineStyle instanceof MorphLineStyle2) ) {
+        throw new IllegalArgumentException(
+            "Parameter has type '" + lineStyle.getClass().getName()
+            + "', must be of type MorphLineStyle or MorphLineStyle2");
+      }
     styles.add(lineStyle);
   }
 

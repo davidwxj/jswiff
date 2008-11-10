@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -46,7 +45,10 @@ import java.util.List;
  * @see com.jswiff.swfrecords.LineStyle2
  */
 public final class LineStyleArray implements Serializable {
-  private List styles = new ArrayList();
+  
+  //FIXME: Give LineStyle and LineStyle2 a common lineage
+  //and tighten generic type for styles array, etc.
+  private List<Object> styles = new ArrayList<Object>();
 
   /**
    * Creates a new LineStyleArray instance.
@@ -111,7 +113,7 @@ public final class LineStyleArray implements Serializable {
    *
    * @return all line styles
    */
-  public List getStyles() {
+  public List<Object> getStyles() {
     return styles;
   }
 
@@ -125,6 +127,12 @@ public final class LineStyleArray implements Serializable {
    * @see com.jswiff.swfrecords.LineStyle2
    */
   public void addStyle(Object lineStyle) {
+    if ( !(lineStyle instanceof LineStyle) 
+      && !(lineStyle instanceof LineStyle2) ) {
+      throw new IllegalArgumentException(
+          "Parameter has type '" + lineStyle.getClass().getName()
+          + "', must be of type LineStyle or LineStyle2");
+    }
     styles.add(lineStyle);
   }
 

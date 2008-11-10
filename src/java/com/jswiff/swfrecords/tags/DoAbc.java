@@ -46,9 +46,10 @@ public final class DoAbc extends Tag {
   protected void writeData(OutputBitStream outStream) throws IOException {
     forceLongHeader = true;
     abcFile.write(outStream);
-    OutputBitStream s = new OutputBitStream();
-    abcFile.write(s);
-    byte[] buf = s.getData();
+    //FIXME: Do we need this?
+    //OutputBitStream s = new OutputBitStream();
+    //abcFile.write(s);
+    //byte[] buf = s.getData();
   }
 
   void setData(byte[] data) throws IOException {

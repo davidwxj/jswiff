@@ -20,11 +20,10 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
-
 import java.util.List;
+
+import com.jswiff.io.OutputBitStream;
 
 
 /*
@@ -56,10 +55,9 @@ final class ActionWriter {
    *
    * @throws IOException if an I/O error has occured
    */
-  static void writeRecords(List actions, OutputBitStream stream)
+  static void writeRecords(List<Action> actions, OutputBitStream stream)
     throws IOException {
-    for (int i = 0; i < actions.size(); i++) {
-      Action record = (Action) actions.get(i);
+    for (Action record : actions) {
       record.write(stream);
     }
     stream.writeUI8((short) 0); // ActionEndFlag

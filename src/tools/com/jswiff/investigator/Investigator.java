@@ -429,7 +429,7 @@ public final class Investigator extends JFrame {
   }
 
   private TreePath getPath(TreeNode node) {
-    java.util.List list = new ArrayList();
+    java.util.List<TreeNode> list = new ArrayList<TreeNode>();
 
     // Add all nodes to list
     while (node != null) {

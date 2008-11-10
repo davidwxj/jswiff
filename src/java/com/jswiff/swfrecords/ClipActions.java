@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -39,7 +38,7 @@ import java.util.List;
  */
 public final class ClipActions implements Serializable {
   private ClipEventFlags eventFlags;
-  private List clipActionRecords = new ArrayList();
+  private List<ClipActionRecord> clipActionRecords = new ArrayList<ClipActionRecord>();
 
   /**
    * Creates a new ClipActions instance. Supply event flags and handlers.
@@ -50,7 +49,7 @@ public final class ClipActions implements Serializable {
    *
    * @see ClipActionRecord
    */
-  public ClipActions(ClipEventFlags eventFlags, List clipActionRecords) {
+  public ClipActions(ClipEventFlags eventFlags, List<ClipActionRecord> clipActionRecords) {
     this.eventFlags          = eventFlags;
     this.clipActionRecords   = clipActionRecords;
   }
@@ -88,7 +87,7 @@ public final class ClipActions implements Serializable {
    *
    * @see ClipActionRecord
    */
-  public List getClipActionRecords() {
+  public List<ClipActionRecord> getClipActionRecords() {
     return clipActionRecords;
   }
 
@@ -113,8 +112,8 @@ public final class ClipActions implements Serializable {
     throws IOException {
     stream.writeUI16(0); // reserved
     eventFlags.write(stream, swfVersion);
-    for (Iterator iter = clipActionRecords.iterator(); iter.hasNext();) {
-      ClipActionRecord record = (ClipActionRecord) iter.next();
+    for (Iterator<ClipActionRecord> iter = clipActionRecords.iterator(); iter.hasNext();) {
+      ClipActionRecord record = iter.next();
       record.write(stream, swfVersion);
     }
 

@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -47,7 +46,8 @@ import java.util.List;
  * @since SWF 3
  */
 public final class DefineSprite extends DefinitionTag {
-	private List controlTags = new ArrayList();
+  
+	private List<Tag> controlTags = new ArrayList<Tag>();
 
 	/**
 	 * Creates a new DefineSprite tag. Supply the character ID of the sprite.
@@ -70,7 +70,7 @@ public final class DefineSprite extends DefinitionTag {
 	 *
 	 * @return the sprite's control tags
 	 */
-	public List getControlTags() {
+	public List<Tag> getControlTags() {
 		return controlTags;
 	}
 
@@ -81,8 +81,8 @@ public final class DefineSprite extends DefinitionTag {
 	 */
 	public int getFrameCount() {
 		int count = 0;
-		for (Iterator i = controlTags.iterator(); i.hasNext();) {
-			if (((Tag) i.next()).getCode() == TagConstants.SHOW_FRAME) {
+		for (Iterator<Tag> i = controlTags.iterator(); i.hasNext();) {
+			if (i.next().getCode() == TagConstants.SHOW_FRAME) {
 				count++;
 			}
 		}
@@ -108,16 +108,16 @@ public final class DefineSprite extends DefinitionTag {
 	}
 
 	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		characterId = inStream.readUI16();
-		inStream.readUI16(); // frameCount
-		do {
-			Tag tag = TagReader.readTag(inStream, getSWFVersion(), isJapanese());
-			if (tag.getCode() != TagConstants.END) {
-				controlTags.add(tag);
-			} else {
-				break;
-			}
-		} while (true);
+	  InputBitStream inStream = new InputBitStream(data);
+	  characterId = inStream.readUI16();
+	  inStream.readUI16(); // frameCount
+	  do {
+	    Tag tag = TagReader.readTag(inStream, getSWFVersion(), isJapanese());
+	    if (tag.getCode() != TagConstants.END) {
+	      controlTags.add(tag);
+	    } else {
+	      break;
+	    }
+	  } while (true);
 	}
 }

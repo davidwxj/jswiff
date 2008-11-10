@@ -48,7 +48,12 @@
   <!-- create a JAR file -->
   <target name="jar" depends="compile">
   	<mkdir dir="${distDir}" />
-  	<jar destfile="${jarFile}" basedir="${classDir}" manifest="${buildDir}/MANIFEST.MF" />
+  	<jar destfile="${jarFile}" basedir="${classDir}">
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Main-Class" value="com.jswiff.investigator.Investigator"/>
+      </manifest>
+    </jar>
     <delete dir="${classDir}" includeEmptyDirs="true" />
   </target>
 

@@ -20,15 +20,11 @@
 
 package com.jswiff.util;
 
-import com.jswiff.swfrecords.RGBA;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -40,6 +36,8 @@ import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
+
+import com.jswiff.swfrecords.RGBA;
 
 
 /**
@@ -58,12 +56,12 @@ public class ImageUtilities {
    * @throws IOException if an I/O error occured
    */
   public static String getFormat(InputStream stream) throws IOException {
-    ImageInputStream iis = ImageIO.createImageInputStream(stream);
-    Iterator iter        = ImageIO.getImageReaders(iis);
+    ImageInputStream iis       = ImageIO.createImageInputStream(stream);
+    Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
     if (!iter.hasNext()) {
       throw new IOException("Unsupported image format!");
     }
-    ImageReader reader = (ImageReader) iter.next();
+    ImageReader reader = iter.next();
     iis.close();
     return reader.getFormatName();
   }
@@ -150,11 +148,11 @@ public class ImageUtilities {
     if ((qualityPercent < 0) || (qualityPercent > 100)) {
       throw new IllegalArgumentException("Quality out of bounds!");
     }
-    float quality      = qualityPercent / 100f;
-    ImageWriter writer = null;
-    Iterator iter      = ImageIO.getImageWritersByFormatName("jpg");
+    float quality              = qualityPercent / 100f;
+    ImageWriter writer         = null;
+    Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpg");
     if (iter.hasNext()) {
-      writer = (ImageWriter) iter.next();
+      writer = iter.next();
     }
     ImageOutputStream ios = ImageIO.createImageOutputStream(stream);
     writer.setOutput(ios);

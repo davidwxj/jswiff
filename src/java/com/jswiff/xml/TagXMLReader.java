@@ -20,6 +20,15 @@
 
 package com.jswiff.xml;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.ButtonRecord;
@@ -104,15 +113,6 @@ import com.jswiff.swfrecords.tags.VideoFrame;
 import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
-
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
 
 
 class TagXMLReader {

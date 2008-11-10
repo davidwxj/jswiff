@@ -20,13 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
+import java.io.IOException;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.CXformWithAlpha;
 import com.jswiff.swfrecords.ClipActions;
 import com.jswiff.swfrecords.Matrix;
-
-import java.io.IOException;
 
 
 /**

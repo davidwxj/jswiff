@@ -51,6 +51,7 @@ import com.jswiff.swfrecords.DropShadowFilter;
 import com.jswiff.swfrecords.EnhancedStrokeStyle;
 import com.jswiff.swfrecords.FillStyle;
 import com.jswiff.swfrecords.FillStyleArray;
+import com.jswiff.swfrecords.Filter;
 import com.jswiff.swfrecords.FocalGradient;
 import com.jswiff.swfrecords.FocalMorphGradient;
 import com.jswiff.swfrecords.GlowFilter;
@@ -198,10 +199,9 @@ class RecordXMLReader {
   
   static void readActionBlock(ActionBlock actionBlock, Element parentElement) {
     Element blockElement = getElement("actionblock", parentElement);
-    List actionElements  = blockElement.elements();
-    for (Iterator it = actionElements.iterator(); it.hasNext();) {
-      Element actionElement = (Element) it.next();
-      Action action         = ActionXMLReader.readAction(actionElement);
+    List<Element> actionElements = blockElement.elements();
+    for (Element actionElement : actionElements) {
+      Action action = ActionXMLReader.readAction(actionElement);
       actionBlock.addAction(action);
     }
   }
@@ -357,7 +357,7 @@ class RecordXMLReader {
   static ClipActions readClipActions(Element element) {
     ClipEventFlags eventFlags = readClipEventFlags(element);
     List recordElements       = element.elements("clipactionrecord");
-    List records              = new ArrayList();
+    List<ClipActionRecord> records = new ArrayList<ClipActionRecord>();
     for (Iterator it = recordElements.iterator(); it.hasNext();) {
       Element recordElement   = (Element) it.next();
       ClipActionRecord record = new ClipActionRecord(
@@ -379,10 +379,10 @@ class RecordXMLReader {
     return readRGBA(element);
   }
 
-  static List readFilters(Element element) {
+  static List<Filter> readFilters(Element element) {
     List filterElements = element.elements();
     int filterCount     = filterElements.size();
-    List filters        = new ArrayList(filterCount);
+    List<Filter> filters        = new ArrayList<Filter>(filterCount);
     for (int j = 0; j < filterCount; j++) {
       Element filterElement = (Element) filterElements.get(j);
       if (filterElement.getName().equals("colormatrix")) {

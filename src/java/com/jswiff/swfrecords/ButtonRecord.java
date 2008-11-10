@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -69,7 +68,7 @@ public final class ButtonRecord implements Serializable {
   private CXformWithAlpha colorTransform;
   private boolean hasBlendMode;
   private boolean hasFilters;
-  private List filters;
+  private List<Filter> filters;
   private short blendMode;
 
   /**
@@ -197,7 +196,7 @@ public final class ButtonRecord implements Serializable {
    *
    * @param filters TODO: Comments
    */
-  public void setFilters(List filters) {
+  public void setFilters(List<Filter> filters) {
     this.filters   = filters;
     hasFilters     = (filters != null);
   }
@@ -207,7 +206,7 @@ public final class ButtonRecord implements Serializable {
    *
    * @return TODO: Comments
    */
-  public List getFilters() {
+  public List<Filter> getFilters() {
     return filters;
   }
 

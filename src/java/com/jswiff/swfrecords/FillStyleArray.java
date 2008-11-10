@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -40,7 +39,7 @@ import java.util.List;
  * </p>
  */
 public final class FillStyleArray implements Serializable {
-  private List styles = new ArrayList();
+  private List<FillStyle> styles = new ArrayList<FillStyle>();
 
   /**
    * Creates a new FillStyleArray instance.
@@ -84,7 +83,7 @@ public final class FillStyleArray implements Serializable {
    * @return fill style located at the specified position
    */
   public FillStyle getStyle(int index) {
-    return (FillStyle) styles.get(index - 1);
+    return styles.get(index - 1);
   }
 
   /**
@@ -105,7 +104,7 @@ public final class FillStyleArray implements Serializable {
       stream.writeUI8((short) styleCount);
     }
     for (int i = 0; i < styles.size(); i++) {
-      ((FillStyle) styles.get(i)).write(stream);
+      styles.get(i).write(stream);
     }
   }
 }

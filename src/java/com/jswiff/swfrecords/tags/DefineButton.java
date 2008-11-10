@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
+import java.io.IOException;
+import java.util.Vector;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.actions.ActionBlock;
-
-import java.io.IOException;
-
-import java.util.Vector;
 
 
 /**
@@ -106,36 +105,37 @@ public final class DefineButton extends DefinitionTag {
 	}
 
 	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(characterId);
-		for (int i = 0; i < characters.length; i++) {
-			characters[i].write(outStream, false);
-		}
-		outStream.writeUI8((short) 0); // CharacterEndFlag
-		getActions().write(outStream, true);
+	throws IOException {
+	  outStream.writeUI16(characterId);
+	  for (int i = 0; i < characters.length; i++) {
+	    characters[i].write(outStream, false);
+	  }
+	  outStream.writeUI8((short) 0); // CharacterEndFlag
+	  getActions().write(outStream, true);
 	}
 
 	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-    if (getSWFVersion() < 6) {
-      if (isJapanese()) {
-        inStream.setShiftJIS(true);
-      } else {
-        inStream.setANSI(true);
-      }
-    }
-		characterId = inStream.readUI16();
-		Vector buttonRecords = new Vector();
-		do {
-			// check next byte without using stream (to be able to read it again if != 0)
-			if (data[(int) inStream.getOffset()] == 0) {
-				inStream.readUI8(); // ignore CharacterEndFlag
-				break;
-			}
-			buttonRecords.add(new ButtonRecord(inStream, false));
-		} while (true);
-		characters = new ButtonRecord[buttonRecords.size()];
-		buttonRecords.copyInto(characters);
-		actionBlock = new ActionBlock(inStream);
+	  InputBitStream inStream = new InputBitStream(data);
+	  if (getSWFVersion() < 6) {
+	    if (isJapanese()) {
+	      inStream.setShiftJIS(true);
+	    } else {
+	      inStream.setANSI(true);
+	    }
+	  }
+	  characterId = inStream.readUI16();
+	  Vector<ButtonRecord> buttonRecords = new Vector<ButtonRecord>();
+	  do {
+	    // check next byte without using stream (to be able to read it again if != 0)
+	    if (data[(int) inStream.getOffset()] == 0) {
+	      inStream.readUI8(); // ignore CharacterEndFlag
+	      break;
+	    }
+	    buttonRecords.add(new ButtonRecord(inStream, false));
+	  } while (true);
+	  characters = new ButtonRecord[buttonRecords.size()];
+	  buttonRecords.copyInto(characters);
+	  actionBlock = new ActionBlock(inStream);
 	}
+	
 }

@@ -20,15 +20,15 @@
 
 package com.jswiff.xml;
 
-import com.jswiff.swfrecords.RegisterParam;
-import com.jswiff.swfrecords.actions.*;
-import com.jswiff.util.Base64;
+import java.util.Iterator;
+import java.util.List;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
-import java.util.Iterator;
-import java.util.List;
+import com.jswiff.swfrecords.RegisterParam;
+import com.jswiff.swfrecords.actions.*;
+import com.jswiff.util.Base64;
 
 
 class ActionXMLReader {
@@ -246,10 +246,11 @@ class ActionXMLReader {
     return action;
   }
 
+  @SuppressWarnings("unchecked")
   private static ConstantPool readConstantPool(Element element) {
     List constantElements     = element.elements();
     ConstantPool constantPool = new ConstantPool();
-    List constants            = constantPool.getConstants();
+    List<String> constants    = constantPool.getConstants();
     for (Iterator it = constantElements.iterator(); it.hasNext();) {
       Element constantElement = (Element) it.next();
       Element valueElement = RecordXMLReader.getElement("value", constantElement);
@@ -261,6 +262,7 @@ class ActionXMLReader {
     return constantPool;
   }
 
+  @SuppressWarnings("unchecked")
   private static DefineFunction readDefineFunction(Element element) {
     String name            = RecordXMLReader.getStringAttributeWithBase64Check(
         "name", element);
@@ -278,6 +280,7 @@ class ActionXMLReader {
     return defineFunction;
   }
 
+  @SuppressWarnings("unchecked")
   private static DefineFunction2 readDefineFunction2(Element element) {
     String name                = RecordXMLReader.getStringAttributeWithBase64Check(
         "name", element);
@@ -391,6 +394,7 @@ class ActionXMLReader {
     return jump;
   }
 
+  @SuppressWarnings("unchecked")
   private static Push readPush(Element element) {
     List valueElements = element.elements();
     Push push          = new Push();

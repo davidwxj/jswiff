@@ -20,13 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-import com.jswiff.swfrecords.actions.Action;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+import com.jswiff.swfrecords.actions.Action;
 
 
 /**

@@ -20,6 +20,10 @@
 
 package com.jswiff.xml;
 
+import java.util.List;
+
+import org.dom4j.Element;
+
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
@@ -42,13 +46,9 @@ import com.jswiff.swfrecords.actions.UnknownAction;
 import com.jswiff.swfrecords.actions.WaitForFrame;
 import com.jswiff.swfrecords.actions.WaitForFrame2;
 import com.jswiff.swfrecords.actions.With;
+import com.jswiff.swfrecords.actions.Push.StackValue;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
-
-import org.dom4j.Element;
-
-import java.util.Iterator;
-import java.util.List;
 
 
 /*
@@ -368,10 +368,9 @@ class ActionXMLWriter {
   private static Element writeConstantPool(
     Element parentElement, ConstantPool constantPool) {
     Element element = parentElement.addElement("constantpool");
-    List constants  = constantPool.getConstants();
-    int id          = 0;
-    for (Iterator it = constants.iterator(); it.hasNext();) {
-      String constant         = (String) it.next();
+    List<String> constants = constantPool.getConstants();
+    int id = 0;
+    for (String constant : constants) {
       Element constantElement = element.addElement("constant");
       constantElement.addAttribute("id", Integer.toString(id++));
       if (StringUtilities.containsIllegalChars(constant)) {
@@ -521,9 +520,8 @@ class ActionXMLWriter {
 
   private static Element writePush(Element parentElement, Push push) {
     Element element = parentElement.addElement("push");
-    List values     = push.getValues();
-    for (Iterator it = values.iterator(); it.hasNext();) {
-      Push.StackValue value = (Push.StackValue) it.next();
+    List<StackValue> values     = push.getValues();
+    for (StackValue value : values) {
       switch (value.getType()) {
         case Push.StackValue.TYPE_BOOLEAN:
           element.addElement("boolean").addAttribute(

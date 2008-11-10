@@ -20,16 +20,15 @@
 
 package com.jswiff.swfrecords.tags;
 
+import java.io.IOException;
+import java.util.Vector;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.GlyphEntry;
 import com.jswiff.swfrecords.Matrix;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.TextRecord;
-
-import java.io.IOException;
-
-import java.util.Vector;
 
 
 /**
@@ -168,7 +167,7 @@ public final class DefineText extends DefinitionTag {
 		textMatrix	    = new Matrix(inStream);
 		short glyphBits = inStream.readUI8();
 		short advanceBits = inStream.readUI8();
-		Vector records  = new Vector();
+		Vector<TextRecord> records = new Vector<TextRecord>();
 		do {
 			if (data[(int) inStream.getOffset()] == 0) {
 				break;

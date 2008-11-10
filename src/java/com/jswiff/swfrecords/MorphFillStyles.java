@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -40,7 +39,7 @@ import java.util.List;
  * </p>
  */
 public final class MorphFillStyles implements Serializable {
-  private List styles = new ArrayList();
+  private List<MorphFillStyle> styles = new ArrayList<MorphFillStyle>();
 
   /**
    * Creates a new MorphFillStyles instance.
@@ -89,7 +88,7 @@ public final class MorphFillStyles implements Serializable {
    * @return morph fill style located at the specified position
    */
   public MorphFillStyle getStyle(int index) {
-    return (MorphFillStyle) styles.get(index - 1);
+    return styles.get(index - 1);
   }
 
   /**
@@ -117,7 +116,7 @@ public final class MorphFillStyles implements Serializable {
       stream.writeUI8((short) styleCount);
     }
     for (int i = 0; i < styles.size(); i++) {
-      ((MorphFillStyle) styles.get(i)).write(stream);
+      styles.get(i).write(stream);
     }
   }
 }

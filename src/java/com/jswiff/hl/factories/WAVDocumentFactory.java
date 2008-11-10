@@ -20,15 +20,6 @@
 
 package com.jswiff.hl.factories;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.SWFWriter;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.swfrecords.SoundInfo;
-import com.jswiff.swfrecords.tags.DefineSound;
-import com.jswiff.swfrecords.tags.ShowFrame;
-import com.jswiff.swfrecords.tags.SoundStreamHead2;
-import com.jswiff.swfrecords.tags.StartSound;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -42,6 +33,15 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFWriter;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.swfrecords.SoundInfo;
+import com.jswiff.swfrecords.tags.DefineSound;
+import com.jswiff.swfrecords.tags.ShowFrame;
+import com.jswiff.swfrecords.tags.SoundStreamHead2;
+import com.jswiff.swfrecords.tags.StartSound;
 
 
 /**

@@ -22,16 +22,13 @@ package com.jswiff;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.jswiff.swfrecords.RGB;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.SWFHeader;
-import com.jswiff.swfrecords.tags.DoAbc;
-import com.jswiff.swfrecords.tags.DoAbcDefine;
-import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
+import com.jswiff.swfrecords.tags.TagConstants;
 
 
 /**
@@ -41,33 +38,42 @@ import com.jswiff.swfrecords.tags.Tag;
  * <code>SWFWriter</code>.
  */
 public class SWFDocument implements Serializable {
+  
   /** The version of the JSwiff library */
   public static final String JSWIFF_VERSION       = "9-svn";
+  
   /**
    * The default value for the compression flag. By default, compression is on
    */
   public static final boolean DEFAULT_COMPRESSION = true;
+  
   /** The default SWF version (9) */
   public static final short DEFAULT_SWF_VERSION   = 9;
+  
   /**
    * The default frame size (based on the authoring tool from Macromedia: 11000
    * x 8000 twips)
    */
   public static final Rect DEFAULT_FRAME_SIZE     = new Rect(0, 11000, 0, 8000);
+  
   /**
    * The default frame rate of a (newly created) SWF movie (based on the
    * authoring tool from Macromedia: 12 fps)
    */
   public static final short DEFAULT_FRAME_RATE    = 12;
-  /** The latest supported SWF version (8) */
+  
+  /** The latest supported SWF version (9) */
   public static final short MAX_SWF_VERSION       = 9;
+  
   /** Grants the SWF local file access */
   public static final byte ACCESS_MODE_LOCAL      = 0;
+  
   /** Grants the SWF network access (local access is denied) */
   public static final byte ACCESS_MODE_NETWORK    = 1;
+  
   private SWFHeader header                        = new SWFHeader();
   private int currentCharId;
-  private List tags                               = new ArrayList();
+  private List<Tag> tags                          = new ArrayList<Tag>();
   private RGB backgroundColor                     = new RGB(
       (short) 255, (short) 255, (short) 255);
   private byte accessMode                         = ACCESS_MODE_LOCAL;
@@ -248,25 +254,21 @@ public class SWFDocument implements Serializable {
    *
    * @return the tag list
    */
-  public List getTags() {
+  public List<Tag> getTags() {
     return tags;
   }
   
   public boolean hasSymbolClass() {
-    for (Iterator it = tags.iterator(); it.hasNext();) {
-      if (it.next() instanceof SymbolClass) {
-        return true;
-      }
+    for (Tag t : tags) {
+      if (t.getCode() == TagConstants.SYMBOL_CLASS) return true;
     }
     return false;
   }
   
   public boolean hasABC() {
-    for (Iterator it = tags.iterator(); it.hasNext();) {
-      Object tag = it.next();
-      if (tag instanceof DoAbc || tag instanceof DoAbcDefine) {
-        return true;
-      }
+    for (Tag t : tags) {
+      if (t.getCode() == TagConstants.DO_ABC
+          || t.getCode() == TagConstants.DO_ABC_DEFINE) return true;
     }
     return false;
   }
@@ -315,7 +317,7 @@ public class SWFDocument implements Serializable {
    *
    * @param tagList a list of tags
    */
-  public void addTags(List tagList) {
+  public void addTags(List<Tag> tagList) {
     tags.addAll(tagList);
   }
 
@@ -338,6 +340,6 @@ public class SWFDocument implements Serializable {
    * @return the tag previously contained at specified position
    */
   public Tag removeTag(int index) {
-    return (Tag) tags.remove(index);
+    return tags.remove(index);
   }
 }

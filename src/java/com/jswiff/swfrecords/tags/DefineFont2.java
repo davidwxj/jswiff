@@ -20,14 +20,14 @@
 
 package com.jswiff.swfrecords.tags;
 
+import java.io.IOException;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.KerningRecord;
 import com.jswiff.swfrecords.LangCode;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.Shape;
-
-import java.io.IOException;
 
 
 /**

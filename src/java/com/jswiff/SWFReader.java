@@ -23,7 +23,6 @@ package com.jswiff;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.jswiff.io.InputBitStream;
@@ -51,7 +50,7 @@ import com.jswiff.swfrecords.tags.TagReader;
  */
 public final class SWFReader {
   private InputBitStream bitStream;
-  private List listeners   = new ArrayList();
+  private List<SWFListener> listeners = new ArrayList<SWFListener>();
   private boolean japanese;
 
   /**
@@ -149,53 +148,52 @@ public final class SWFReader {
   }
 
   private void postProcess() {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).postProcess();
+    for (SWFListener l : listeners) {
+      l.postProcess();
     }
   }
 
   private void preProcess() {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).preProcess();
+    for (SWFListener l : listeners) {
+      l.preProcess();
     }
   }
 
   private void processHeader(SWFHeader header) {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).processHeader(header);
+    for (SWFListener l : listeners) {
+      l.processHeader(header);
     }
   }
 
   private void processHeaderReadError(Exception e) {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).processHeaderReadError(e);
+    for (SWFListener l : listeners) {
+      l.processHeaderReadError(e);
     }
   }
 
   private void processTag(Tag tag, long streamOffset) {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).processTag(tag, streamOffset);
+    for (SWFListener l : listeners) {
+      l.processTag(tag, streamOffset);
     }
   }
 
   private void processTagHeader(TagHeader tagHeader) {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).processTagHeader(tagHeader);
+    for (SWFListener l : listeners) {
+      l.processTagHeader(tagHeader);
     }
   }
 
   private void processTagHeaderReadError(Exception e) {
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      ((SWFListener) iterator.next()).processTagHeaderReadError(e);
+    for (SWFListener l : listeners) {
+      l.processTagHeaderReadError(e);
     }
   }
 
   private boolean processTagReadError(
     TagHeader tagHeader, byte[] tagData, Exception e) {
     boolean result = false;
-    for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-      result = ((SWFListener) iterator.next()).processTagReadError(
-          tagHeader, tagData, e) || result;
+    for (SWFListener l : listeners) {
+      result = l.processTagReadError(tagHeader, tagData, e) || result;
     }
     return result;
   }

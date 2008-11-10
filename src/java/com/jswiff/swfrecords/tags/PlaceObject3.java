@@ -20,6 +20,9 @@
 
 package com.jswiff.swfrecords.tags;
 
+import java.io.IOException;
+import java.util.List;
+
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.BlendMode;
@@ -27,10 +30,6 @@ import com.jswiff.swfrecords.CXformWithAlpha;
 import com.jswiff.swfrecords.ClipActions;
 import com.jswiff.swfrecords.Filter;
 import com.jswiff.swfrecords.Matrix;
-
-import java.io.IOException;
-
-import java.util.List;
 
 
 /**
@@ -46,7 +45,7 @@ public final class PlaceObject3 extends Tag {
   private String name;
   private int clipDepth;
   private ClipActions clipActions;
-  private List filters;
+  private List<Filter> filters;
   private short blendMode;
   private boolean hasClipActions;
   private boolean hasClipDepth;
@@ -227,7 +226,7 @@ public final class PlaceObject3 extends Tag {
    *
    * @param filters TODO: Comments
    */
-  public void setFilters(List filters) {
+  public void setFilters(List<Filter> filters) {
     this.filters   = filters;
     hasFilters     = (filters != null);
   }
@@ -237,7 +236,7 @@ public final class PlaceObject3 extends Tag {
    *
    * @return TODO: Comments
    */
-  public List getFilters() {
+  public List<Filter> getFilters() {
     return filters;
   }
 

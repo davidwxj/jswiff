@@ -20,26 +20,23 @@
 
 package com.jswiff;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.jswiff.hl.factories.ImageDocumentFactory;
 import com.jswiff.hl.factories.MP3DocumentFactory;
 import com.jswiff.hl.factories.WAVDocumentFactory;
 import com.jswiff.util.ImageUtilities;
-
-import java.awt.image.BufferedImage;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 
 /**
  * Helper class for media import. Creates SWF documents from media files.
  */
 public class MediaImporter {
-  /** mp3 sound type */
-  public static final int TYPE_MP3 = 0;
-  /** wav sound type */
-  public static final int TYPE_WAV = 1;
+  
+  public enum SoundType { MP3, WAV; }
 
   /**
    * Reads an image from a stream and creates a SWF document containing this
@@ -50,7 +47,7 @@ public class MediaImporter {
    *
    * @return SWF document containing image
    *
-   * @throws IOException if an I/O error occured
+   * @throws IOException if an I/O error occurred
    */
   public static SWFDocument importImageAsJPEG(
     InputStream imageStream, int qualityPercent) throws IOException {
@@ -69,7 +66,7 @@ public class MediaImporter {
    *
    * @return SWF document containing image
    *
-   * @throws IOException if an I/O error occured
+   * @throws IOException if an I/O error occurred
    */
   public static SWFDocument importImageAsLossless(InputStream imageStream)
     throws IOException {
@@ -87,16 +84,16 @@ public class MediaImporter {
    *
    * @return SWF document containing sound
    *
-   * @throws IOException if an I/O error occured
+   * @throws IOException if an I/O error occurred
    * @throws IllegalArgumentException in case of an illegal sound type
    */
-  public static SWFDocument importSound(InputStream soundStream, int soundType)
+  public static SWFDocument importSound(InputStream soundStream, SoundType soundType)
     throws IOException {
     switch (soundType) {
-      case TYPE_MP3:
+      case MP3:
         MP3DocumentFactory mp3Factory = new MP3DocumentFactory(soundStream);
         return mp3Factory.getDocument();
-      case TYPE_WAV:
+      case WAV:
         WAVDocumentFactory wavFactory = new WAVDocumentFactory(soundStream);
         return wavFactory.getDocument();
       default:
@@ -114,7 +111,7 @@ public class MediaImporter {
    * @param qualityPercent JPEG quality in percent
    * @param compressed if true, SWF compression is activated
    *
-   * @throws IOException if an I/O error occured
+   * @throws IOException if an I/O error occurred
    */
   public static void writeJPEGImageDocument(
     InputStream imageInStream, OutputStream swfOutStream, int qualityPercent,
@@ -156,7 +153,7 @@ public class MediaImporter {
    * @throws IOException if an I/O error occured
    */
   public static void writeSoundDocument(
-    InputStream soundInStream, int soundType, OutputStream swfOutStream,
+    InputStream soundInStream, SoundType soundType, OutputStream swfOutStream,
     boolean compressed) throws IOException {
     SWFDocument doc = importSound(soundInStream, soundType);
     doc.setCompressed(compressed);

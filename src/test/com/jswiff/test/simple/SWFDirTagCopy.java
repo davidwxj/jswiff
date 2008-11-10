@@ -20,20 +20,18 @@
 
 package com.jswiff.test.simple;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFReader;
 import com.jswiff.SWFWriter;
 import com.jswiff.listeners.SWFDocumentReader;
 import com.jswiff.swfrecords.tags.Tag;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -70,11 +68,10 @@ public class SWFDirTagCopy {
     reader.addListener(docReader);
     reader.read();
     SWFDocument sourceDoc = docReader.getDocument();
-    List tags             = sourceDoc.getTags();
-    List tagCopies        = new ArrayList();
-    for (Iterator it = tags.iterator(); it.hasNext();) {
-      Tag tag = (Tag) it.next();
-      tagCopies.add(tag.copy());
+    List<Tag> tags        = sourceDoc.getTags();
+    List<Tag> tagCopies   = new ArrayList<Tag>();
+    for (Tag t : tags) {
+      tagCopies.add(t.copy());
     }
     SWFDocument targetDoc = copyDocProperties(sourceDoc);
     targetDoc.addTags(tagCopies);

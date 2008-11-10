@@ -20,12 +20,10 @@
 
 package com.jswiff.swfrecords.tags;
 
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
-
-import java.util.Iterator;
 import java.util.List;
+
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -82,7 +80,7 @@ public final class TagWriter {
    *
    * @throws IOException if an I/O error occured
    */
-  public static byte[] writeTags(List tags, short swfVersion, boolean japanese)
+  public static byte[] writeTags(List<Tag> tags, short swfVersion, boolean japanese)
     throws IOException {
     OutputBitStream stream = new OutputBitStream();
     if (swfVersion < 6) {
@@ -106,11 +104,9 @@ public final class TagWriter {
    *
    * @throws IOException if an I/O error occured
    */
-  public static void writeTags(
-    OutputBitStream stream, List tags, short swfVersion)
+  public static void writeTags(OutputBitStream stream, List<Tag> tags, short swfVersion)
     throws IOException {
-    for (Iterator i = tags.iterator(); i.hasNext();) {
-      Tag tag = (Tag) i.next();
+    for (Tag tag : tags) {
       writeTag(stream, tag, swfVersion);
     }
 

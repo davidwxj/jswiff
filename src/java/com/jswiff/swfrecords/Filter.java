@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -60,10 +59,10 @@ public abstract class Filter implements Serializable {
    *
    * @throws IOException TODO: Comments
    */
-  public static List readFilters(InputBitStream stream)
+  public static List<Filter> readFilters(InputBitStream stream)
     throws IOException {
     int count    = stream.readUI8();
-    List filters = new ArrayList(count);
+    List<Filter> filters = new ArrayList<Filter>(count);
     for (int i = 0; i < count; i++) {
       int filterType = stream.readUI8();
       Filter filter;
@@ -109,7 +108,7 @@ public abstract class Filter implements Serializable {
    * @throws IOException TODO: Comments
    * @throws IllegalArgumentException TODO: Comments
    */
-  public static void writeFilters(List filters, OutputBitStream stream)
+  public static void writeFilters(List<Filter> filters, OutputBitStream stream)
     throws IOException {
     int count = filters.size();
     stream.writeUI8((short) count);

@@ -20,6 +20,12 @@
 
 package com.jswiff.hl.factories;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFWriter;
 import com.jswiff.swfrecords.AlphaBitmapData;
@@ -41,13 +47,6 @@ import com.jswiff.swfrecords.tags.DefinitionTag;
 import com.jswiff.swfrecords.tags.PlaceObject2;
 import com.jswiff.swfrecords.tags.ShowFrame;
 import com.jswiff.util.ImageUtilities;
-
-import java.awt.image.BufferedImage;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 
 /**

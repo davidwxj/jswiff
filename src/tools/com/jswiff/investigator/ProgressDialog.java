@@ -43,6 +43,7 @@ import javax.swing.WindowConstants;
  * (inspired by James Gosling's ProgressMonitor class).
  */
 final class ProgressDialog {
+  
   private JDialog myDialog;
   private JOptionPane pane;
   private JProgressBar myBar;
