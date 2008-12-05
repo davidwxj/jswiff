@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * This action makes the target sprite draggable, i.e. it makes sure users can

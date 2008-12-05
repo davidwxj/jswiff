@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * Increments a number by one.

@@ -20,11 +20,6 @@
 
 package com.jswiff.investigator;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.SWFReader;
-import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -41,15 +36,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -80,6 +72,10 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFReader;
+import com.jswiff.SWFWriter;
 
 
 /**
@@ -218,12 +214,8 @@ public final class Investigator extends JFrame {
           new File(destPathString).mkdir();
           File destFile               = new File(
               destPathString + File.separatorChar + sourceFile.getName());
-          SWFReader reader            = new SWFReader(
-              new FileInputStream(sourceFile));
-          SWFDocumentReader docReader = new SWFDocumentReader();
-          reader.addListener(docReader);
-          reader.read();
-          SWFDocument doc  = docReader.getDocument();
+          SWFReader reader = new SWFReader(new FileInputStream(sourceFile));
+          SWFDocument doc  = reader.read();
           SWFWriter writer = new SWFWriter(doc, new FileOutputStream(destFile));
           writer.write();
         }

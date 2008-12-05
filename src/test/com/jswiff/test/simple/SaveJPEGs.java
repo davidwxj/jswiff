@@ -28,11 +28,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.jswiff.SWFReader;
+import com.jswiff.constants.TagConstants;
 import com.jswiff.listeners.SWFListener;
+import com.jswiff.listeners.SWFListenerAdapter;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG3;
 import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.util.ImageUtilities;
 
 
@@ -66,7 +67,7 @@ public class SaveJPEGs {
     }
   }
 
-  private static class JPEGListener extends SWFListener {
+  private static class JPEGListener extends SWFListenerAdapter {
     /**
      * @see SWFListener#processTag(Tag, long)
      */

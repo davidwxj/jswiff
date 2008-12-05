@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -44,11 +45,9 @@ public final class SymbolClass extends Tag {
     /**
      * Creates a new SymbolClass instance. Supply an array of export mappings
      * (for each  exported character one).
-     *
-     * @param references character export mappings
      */
     public SymbolClass() {
-        code            = TagConstants.SYMBOL_CLASS;
+        code = TagConstants.SYMBOL_CLASS;
     }
 
     /**

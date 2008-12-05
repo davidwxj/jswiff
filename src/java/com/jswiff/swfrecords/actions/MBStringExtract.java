@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * Extracts a substring from a string, multibyte-aware. Deprecated as of SWF 5,

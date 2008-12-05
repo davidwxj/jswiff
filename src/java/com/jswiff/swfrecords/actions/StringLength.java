@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * Computes the length of a string. Deprecated as of SWF 5, use String.length

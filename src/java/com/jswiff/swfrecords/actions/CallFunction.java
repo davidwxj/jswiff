@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * Invokes a function, e.g. a user-defined ActionScript function (defined with

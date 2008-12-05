@@ -21,31 +21,36 @@
 package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.List;
 
+import com.jswiff.constants.AbcConstants.TraitKind;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcFunctionTrait extends AbcTrait {
+
+  private static final long serialVersionUID = 1L;
+
   private int slotId;
   private int functionIndex;
 
   public AbcFunctionTrait(int nameIndex, int slotId, int functionIndex) {
-    super(nameIndex);
+    super(nameIndex, TraitKind.FUNCTION);
     this.slotId = slotId;
     this.functionIndex = functionIndex;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeAbcInt(nameIndex);
+    stream.writeAbcInt(getNameIndex());
+    List<Integer> metadataIndices = getMetadataIndices();
     int metadataCount = metadataIndices.size();
-    int flagsAndKind = (metadataCount != 0 ? METADATA_FLAG << 4 : 0) | TYPE_FUNCTION;
+    int flagsAndKind = (metadataCount != 0 ? METADATA_FLAG << 4 : 0) | TraitKind.FUNCTION.getCode();
     stream.writeUI8((short) flagsAndKind);
     stream.writeAbcInt(slotId);
     stream.writeAbcInt(functionIndex);
     if (metadataCount != 0) {
       stream.writeAbcInt(metadataCount);
-      for (Iterator<Integer> it = metadataIndices.iterator(); it.hasNext(); ) {
-        stream.writeAbcInt(it.next());
+      for (int index : metadataIndices) {
+        stream.writeAbcInt(index);
       }
     }
   }

@@ -18,41 +18,43 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.swfrecords.abc;
+package com.jswiff.swfrecords.abc.opcode;
 
 import java.io.IOException;
 
+import com.jswiff.constants.AbcConstants.OpCode;
+import com.jswiff.constants.AbcConstants.OpCodeType;
 import com.jswiff.io.OutputBitStream;
 
-public class AbcOpHasNext2 extends AbcOp {
-  private int objectRegister;
-  private int propertyIndexRegister;
+public class AbcOpIndexArgs extends AbcOp {
 
-  public AbcOpHasNext2(int objectRegister, int propertyIndexRegister) {
-    super(AbcConstants.Opcodes.OPCODE_hasnext2);
-    this.objectRegister = objectRegister;
-    this.propertyIndexRegister = propertyIndexRegister;
-  }
-
-  public int getObjectRegister() {
-    return objectRegister;
-  }
-
-  public int getPropertyIndexRegister() {
-    return propertyIndexRegister;
-  }
+  private static final long serialVersionUID = 1L;
   
-  public String toString() {
-    return "hasnext2 objectRegister = " + objectRegister + " propertyIndexRegister = " + propertyIndexRegister;
+  private int index;
+  private int argCount;
+
+  public AbcOpIndexArgs(OpCode opCode, int index, int argCount) {
+    super(opCode, OpCodeType.INDEX_ARGS);
+    this.index = index;
+    this.argCount = argCount;
   }
 
-  public String getOpName() {
-    return "hasnext2";
+  public int getIndex() {
+    return index;
+  }
+
+  public int getArgCount() {
+    return argCount;
+  }
+
+  public String toString() {
+    return getOpcode().toString() + ": index = " + index + ", argCount = " + argCount;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(opcode);
-    stream.writeAbcInt(objectRegister);
-    stream.writeAbcInt(propertyIndexRegister);
+    stream.writeUI8(getOpcode().getCode());
+    stream.writeAbcInt(index);
+    stream.writeAbcInt(argCount);
   }
+  
 }

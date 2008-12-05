@@ -18,32 +18,22 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.swfrecords.abc;
+package com.jswiff.swfrecords.abc.opcode;
 
 import java.io.IOException;
 
+import com.jswiff.constants.AbcConstants.OpCode;
+import com.jswiff.constants.AbcConstants.OpCodeType;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcOpValueInt extends AbcOp {
+
+  private static final long serialVersionUID = 1L;
+  
   private int value;
 
-  public AbcOpValueInt(short opcode, int value) {
-    super(opcode);
-    checkOpcode(opcode);
-    this.value = value;
-  }
-
-  private void checkOpcode(short opcode) {
-    switch(opcode) {
-      case AbcConstants.Opcodes.OPCODE_debugline:
-      case AbcConstants.Opcodes.OPCODE_pushshort:
-        break;
-      default:
-        throw new IllegalArgumentException("Illegal opcode for class " + getClass().getName() + ": " + opcode);
-    }
-  }
-
-  public AbcOpValueInt(int value) {
+  public AbcOpValueInt(OpCode opCode, int value) {
+    super(opCode, OpCodeType.VALUE_INT);
     this.value = value;
   }
 
@@ -52,26 +42,12 @@ public class AbcOpValueInt extends AbcOp {
   }
   
   public String toString() {
-    return getOpName() + " value = " + value;
-  }
-
-  public String getOpName() {
-    String opName;
-    switch (getOpcode()) {
-      case AbcConstants.Opcodes.OPCODE_debugline:
-        opName = "debugline";
-        break;
-      case AbcConstants.Opcodes.OPCODE_pushshort:
-        opName = "pushshort";
-        break;
-      default:
-        opName = "unknown";
-    }
-    return opName;
+    return getOpcode().toString() + ": value = " + value;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(opcode);
+    stream.writeUI8(getOpcode().getCode());
     stream.writeAbcInt(value);
   }
+  
 }

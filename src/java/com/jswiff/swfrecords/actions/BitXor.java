@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * Performs a bitwise XOR (<code>^</code>). The arguments are treated as 32-bit

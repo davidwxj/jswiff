@@ -20,6 +20,7 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
 import com.jswiff.io.OutputBitStream;
 
 

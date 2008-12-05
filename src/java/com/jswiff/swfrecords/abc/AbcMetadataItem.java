@@ -27,12 +27,13 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcMetadataItem implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private int keyIndex;
   private int valueIndex;
   
-  private AbcMetadataItem() {
-    // empty
-  }
+  private AbcMetadataItem() { } // empty
   
   public AbcMetadataItem(int keyIndex, int valueIndex) {
     this.keyIndex = keyIndex;

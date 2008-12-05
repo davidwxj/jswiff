@@ -18,56 +18,36 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.swfrecords.abc;
+package com.jswiff.swfrecords.abc.opcode;
 
 import java.io.IOException;
 
+import com.jswiff.constants.AbcConstants.OpCode;
+import com.jswiff.constants.AbcConstants.OpCodeType;
 import com.jswiff.io.OutputBitStream;
 
-public class AbcOpDebug extends AbcOp {
-  private short type;
-  private int registerNameIndex;
-  private short register;
-  private int extra;
+public class AbcOpIndex extends AbcOp {
 
-  public AbcOpDebug(short type, int registerNameIndex, short register, int extra) {
-    super(AbcConstants.Opcodes.OPCODE_debug);
-    this.type = type;
-    this.registerNameIndex = registerNameIndex;
-    this.register = register;
-    this.extra = extra;
-  }
-
-  public short getType() {
-    return type;
-  }
-
-  public int getRegisterNameIndex() {
-    return registerNameIndex;
-  }
-
-  public short getRegister() {
-    return register;
-  }
-
-  public int getExtra() {
-    return extra;
-  }
+  private static final long serialVersionUID = 1L;
   
-  public String toString() {
-    return "debug registerNameIndex = " + registerNameIndex + " register = " + register + " extra = " + extra;
+  private int index;
+
+  public AbcOpIndex(OpCode opCode, int index) {
+    super(opCode, OpCodeType.INDEX);
+    this.index = index;
   }
 
-  public String getOpName() {
-    return "debug";
+  public int getIndex() {
+    return index;
+  }
+
+  public String toString() {
+    return getOpcode().toString() + ": index = " + index;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(opcode);
-    stream.writeUI8(type);
-    stream.writeAbcInt(registerNameIndex);
-    stream.writeUI8(register);
-    stream.writeAbcInt(extra);
+    stream.writeUI8(getOpcode().getCode());
+    stream.writeAbcInt(index);
   }
   
 }

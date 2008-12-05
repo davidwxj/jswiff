@@ -18,7 +18,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.swfrecords.tags;
+package com.jswiff.constants;
 
 /**
  * This class contains constants regarding SWF tags.

@@ -25,30 +25,46 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.listeners.SWFListener;
 import com.jswiff.swfrecords.SWFHeader;
+import com.jswiff.swfrecords.tags.FileAttributes;
 import com.jswiff.swfrecords.tags.MalformedTag;
+import com.jswiff.swfrecords.tags.Metadata;
+import com.jswiff.swfrecords.tags.SetBackgroundColor;
 import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.TagHeader;
 import com.jswiff.swfrecords.tags.TagReader;
 
 /**
- * This class reads an SWF file from a stream, invoking registered listeners to
- * process the SWF. Use the following code to parse a SWF into a
- * <code>SWFDocument</code> instance:
+ * This class reads a SWF file from a stream and builds a {@link SWFDocument}.
+ * Use the following code to parse a SWF into a <code>SWFDocument</code> instance:
  * <pre>
  * <code>
- * SWFReader reader            = new SWFReader(inputStream);
- * SWFDocumentReader docReader = new SWFDocumentReader();
- * reader.addListener(docReader);
- * reader.read();
- * SWFDocument doc             = docReader.getDocument();
+ * SWFReader reader = new SWFReader(inputStream);
+ * SWFDocument doc  = reader.read();
+ * </code>
+ * </pre>
+ * Additionally classes implementing the {@link SWFListener} interface can be 
+ * registered to receive parsing events, for example:
+ * <pre>
+ * <code>
+ * SWFReader reader     = new SWFReader(inputStream);
+ * SWFListener listener = new SWFListenerAdapter() {
+ *     public void processHeader(SWFHeader header) {
+ *         System.out.println("Frame Rate: " + header.getFrameRate());
+ *     }
+ * };
+ * reader.addListener(listener);
+ * SWFDocument doc = reader.read();
  * </code>
  * </pre>
  */
 public final class SWFReader {
+  
+  private final SWFDocument document = new SWFDocument();
+  
   private InputBitStream bitStream;
   private List<SWFListener> listeners = new ArrayList<SWFListener>();
   private boolean japanese;
@@ -89,20 +105,24 @@ public final class SWFReader {
    * Reads the SWF content from the stream passed to the constructor, and
    * invokes the methods of the registered listeners. Finally, the stream is
    * closed.
-   *
-   * @see SWFListener
    * 
+   * Returns the SWF document created during parsing.
+   * 
+   * @see SWFListener
+   * @return the parsed <code>SWFDocument</code> instance
    * @throws IOException if an error occured while reading
    */
-  public void read() throws IOException {
+  public SWFDocument read() throws IOException {
     preProcess();
     SWFHeader header;
     try {
       header = new SWFHeader(bitStream);
     } catch (Exception e) {
-      // invoke error processing
+      // invoke error processing, without header we cannot do anything...
       processHeaderReadError(e);
-      return; // without header we cannot do anything...
+      IOException ioe = new IOException("Error while reading SWF header");
+      ioe.initCause(e);
+      throw ioe;
     }
     processHeader(header);
     do {
@@ -115,8 +135,11 @@ public final class SWFReader {
       try {
         tagHeader = TagReader.readTagHeader(bitStream);
       } catch (Exception e) {
+        // cannot continue without tag header
         processTagHeaderReadError(e);
-        break; // cannot continue without tag header
+        IOException ioe =  new IOException("Error while reading Tag header");
+        ioe.initCause(e);
+        throw ioe;
       }
       processTagHeader(tagHeader);
       Tag tag        = null;
@@ -131,7 +154,9 @@ public final class SWFReader {
       } catch (Exception e) {
         // invoke error processing
         if (processTagReadError(tagHeader, tagData, e)) {
-          IOException ioe = new IOException("Error while parsing SWF");
+          IOException ioe = new IOException(
+              "Error while reading Tag (code:" + tagHeader.getCode()
+              + ", length:" + tagHeader.getLength() + ")");
           ioe.initCause(e);
           throw ioe;
         }
@@ -145,6 +170,7 @@ public final class SWFReader {
     } catch (Exception e) {
       // empty on purpose - don't need to propagate errors which occur while closing
     }
+    return document;
   }
 
   private void postProcess() {
@@ -160,6 +186,12 @@ public final class SWFReader {
   }
 
   private void processHeader(SWFHeader header) {
+    document.setFrameRate(header.getFrameRate());
+    document.setFrameSize(header.getFrameSize());
+    document.setVersion(header.getVersion());
+    document.setFileLength(header.getFileLength());
+    document.setFrameCount(header.getFrameCount());
+    document.setCompressed(header.isCompressed());
     for (SWFListener l : listeners) {
       l.processHeader(header);
     }
@@ -172,6 +204,20 @@ public final class SWFReader {
   }
 
   private void processTag(Tag tag, long streamOffset) {
+    switch (tag.getCode()) {
+    case TagConstants.SET_BACKGROUND_COLOR:
+      document.setBackgroundColor(((SetBackgroundColor) tag).getColor());
+      return;
+    case TagConstants.FILE_ATTRIBUTES:
+      if ( ((FileAttributes) tag).isAllowNetworkAccess() ) {
+        document.setAccessMode(SWFDocument.ACCESS_MODE_NETWORK);
+      }
+      return;
+    case TagConstants.METADATA:
+      document.setMetadata( ((Metadata) tag).getDataString() );
+      return;
+    }
+    document.addTag(tag);
     for (SWFListener l : listeners) {
       l.processTag(tag, streamOffset);
     }
@@ -190,7 +236,7 @@ public final class SWFReader {
   }
 
   private boolean processTagReadError(
-    TagHeader tagHeader, byte[] tagData, Exception e) {
+      TagHeader tagHeader, byte[] tagData, Exception e) {
     boolean result = false;
     for (SWFListener l : listeners) {
       result = l.processTagReadError(tagHeader, tagData, e) || result;

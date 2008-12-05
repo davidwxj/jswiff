@@ -20,121 +20,78 @@
 
 package com.jswiff.listeners;
 
+import com.jswiff.SWFReader;
 import com.jswiff.swfrecords.SWFHeader;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagHeader;
 
 
 /**
- * Base class for SWF listeners, which can be passed to an
- * <code>SWFReader</code>, offering a flexible way to define it's behaviour
- * before, during and after the parsing process.
+ * Listener interface for classes wishing to receive parsing events from
+ * <code>SWFReader</code>, use {@link SWFReader#addListener(SWFListener)} 
+ * to register the listener.
+ * 
+ * {@link SWFListenerAdapter} provides an adapter for this interface.
  *
  * @see com.jswiff.SWFReader
  */
-public abstract class SWFListener {
+public interface SWFListener {
+  
   /**
-   * Contains code executed after parsing (after reading the end tag). Does
-   * nothing by default, override in subclass to change this behavior.
+   * Triggered after reading last tag in the SWF
    */
-  public void postProcess() {
-    // empty on purpose
-  }
+  public void postProcess();
 
   /**
-   * Contains code executed before parsing (before reading the SWF file
-   * header). Does nothing by default, override in subclass to change this
-   * behavior.
+   * Triggered prior to reading the SWF header
    */
-  public void preProcess() {
-    // empty on purpose
-  }
+  public void preProcess();
 
   /**
-   * Contains processing code for the SWF header. By default, this method
-   * doesn't do anything, override in subclass to change this behavior.
+   * Triggered after reading the SWF header
    *
    * @param header the header of the SWF file
    */
-  public void processHeader(SWFHeader header) {
-    // empty on purpose
-  }
+  public void processHeader(SWFHeader header);
 
   /**
-   * Processes errors which occur during header parsing. By default, this
-   * method prints the stack trace.
+   * Triggered if an error occurs while reading the SWF header
    *
-   * @param e the exception which occured while parsing the header
+   * @param e the exception which occurred while parsing the header
    */
-  public void processHeaderReadError(Exception e) {
-    e.printStackTrace();
-  }
+  public void processHeaderReadError(Exception e);
 
   /**
-   * <p>
-   * Contains tag processing code. Doesn't do anything by default.
-   * </p>
-   * 
-   * <p>
-   * End tags are ignored. However, there is no need to process end tags, they
-   * are implicitly read and written.
-   * </p>
+   * Triggered for each tag read while parsing the SWF
    *
    * @param tag the current tag read by the <code>SWFReader</code>
    * @param streamOffset the current stream offset
    */
-  public void processTag(Tag tag, long streamOffset) {
-    // empty on purpose
-  }
+  public void processTag(Tag tag, long streamOffset);
 
   /**
-   * <p>
-   * Contains tag header processing code. By default, this method does nothing,
-   * override in subclass to change this behavior.
-   * </p>
-   * 
-   * <p>
-   * End tag headers are ignored. However, there is no need to process end
-   * tags, they are implicitly read and written.
-   * </p>
+   * Triggered for each tag header read while parsing the SWF
    *
    * @param tagHeader the tag header
    */
-  public void processTagHeader(TagHeader tagHeader) {
-    // empty on purpose
-  }
+  public void processTagHeader(TagHeader tagHeader);
 
   /**
-   * <p>
-   * Contains error processing for tag header parsing. After invoking this
-   * method on all registered listeners, the reader stops, not being aware of
-   * the current tag's length and thus being unable to continue parsing.
-   * </p>
-   * 
-   * <p>
-   * By default, this method prints the exception's stack trace to the console.
-   * </p>
+   * Triggered if an error occurs while reading a tag header 
    *
-   * @param e the exception which occured during tag header parsing
+   * @param e the exception which occurred during tag header parsing
    */
-  public void processTagHeaderReadError(Exception e) {
-    e.printStackTrace();
-  }
+  public void processTagHeaderReadError(Exception e);
 
   /**
    * <p>
-   * Processes a tag parsing error. Returns a break condition which tells the
-   * reader (<code>SWFReader</code>) whether to stop reading the rest of the
-   * file. However, the reader invokes this method on all registered listeners
+   * Triggered if an error occurs while reading a tag. The return value 
+   * indicates whether the reader (<code>SWFReader</code>) should stop reading
+   * the rest of the file.
+   * However, the reader invokes this method on all registered listeners
    * before stopping. In case the reader isn't supposed to stop, it creates a
    * <code>MalformedTag</code> instance from the tag header and data and
    * invokes <code>processTag()</code> before parsing the next tag.
-   * </p>
-   * 
-   * <p>
-   * By default, this method prints the tag header and the exception's stack
-   * trace to the console and returns <code>true</code> (telling the reader to
-   * stop).
    * </p>
    *
    * @param tagHeader header of the malformed tag
@@ -144,12 +101,6 @@ public abstract class SWFListener {
    * @return <code>true</code> if reader is supposed to stop reading further
    *         tags after error processing, else <code>false</code>
    */
-  public boolean processTagReadError(
-    TagHeader tagHeader, byte[] tagData, Exception e) {
-    System.err.println(
-      "Malformed tag (code: " + tagHeader.getCode() + ", length: " +
-      tagHeader.getLength() + ")");
-    e.printStackTrace();
-    return true;
-  }
+  public boolean processTagReadError(TagHeader tagHeader, byte[] tagData, Exception e);
+  
 }

@@ -30,7 +30,6 @@ import java.util.List;
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFReader;
 import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
 import com.jswiff.swfrecords.tags.Tag;
 
 
@@ -62,28 +61,17 @@ public class SWFDirCopy {
 		}
 	}
 
-	private static void copy(File source, File destination)
-		throws IOException {
-		SWFReader reader		    = new SWFReader(
-				new FileInputStream(source));
-		SWFDocumentReader docReader = new SWFDocumentReader();
-		reader.addListener(docReader);
-		reader.read();
-		SWFDocument doc = docReader.getDocument();
+	private static void copy(File source, File destination) throws IOException {
+		SWFReader reader = new SWFReader(new FileInputStream(source));
+		SWFDocument doc = reader.read();
 		doc.setCompressed(false);
-		SWFWriter writer = new SWFWriter(
-				doc, new FileOutputStream(destination));
+		SWFWriter writer = new SWFWriter(doc, new FileOutputStream(destination));
 		writer.write();
 	}
 
-	private static void copyEachTag(File source, File destination)
-		throws IOException {
-		SWFReader reader		    = new SWFReader(
-				new FileInputStream(source));
-		SWFDocumentReader docReader = new SWFDocumentReader();
-		reader.addListener(docReader);
-		reader.read();
-		SWFDocument doc = docReader.getDocument();
+	private static void copyEachTag(File source, File destination) throws IOException {
+		SWFReader reader = new SWFReader(new FileInputStream(source));
+		SWFDocument doc = reader.read();
 		List<Tag> tags	= doc.getTags();
 		List<Tag> tagCopies = new ArrayList<Tag>();
 		for (Tag t : tags) {
@@ -92,8 +80,7 @@ public class SWFDirCopy {
 		tags.clear();
 		doc.addTags(tagCopies);
 		doc.setCompressed(false);
-		SWFWriter writer = new SWFWriter(
-				doc, new FileOutputStream(destination));
+		SWFWriter writer = new SWFWriter(doc, new FileOutputStream(destination));
 		writer.write();
 	}
 }

@@ -27,6 +27,10 @@ import java.util.List;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
+import com.jswiff.exception.MalformedElementException;
+import com.jswiff.exception.MissingAttributeException;
+import com.jswiff.exception.MissingElementException;
+import com.jswiff.exception.MissingNodeException;
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.AlphaColorMapData;

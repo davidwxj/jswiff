@@ -22,6 +22,7 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.abc.AbcFile;
@@ -46,10 +47,6 @@ public final class DoAbc extends Tag {
   protected void writeData(OutputBitStream outStream) throws IOException {
     forceLongHeader = true;
     abcFile.write(outStream);
-    //FIXME: Do we need this?
-    //OutputBitStream s = new OutputBitStream();
-    //abcFile.write(s);
-    //byte[] buf = s.getData();
   }
 
   void setData(byte[] data) throws IOException {

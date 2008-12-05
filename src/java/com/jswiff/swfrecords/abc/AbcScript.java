@@ -30,12 +30,13 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcScript implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private int initializerIndex;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   
-  private AbcScript() {
-    // empty
-  }
+  private AbcScript() { } // empty
   
   public AbcScript(int initializerIndex) {
     this.initializerIndex = initializerIndex;

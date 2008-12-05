@@ -20,20 +20,19 @@
 
 package com.jswiff.test.simple;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.SWFReader;
-import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
-import com.jswiff.xml.XMLReader;
-import com.jswiff.xml.XMLWriter;
-
-import org.dom4j.DocumentException;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import org.dom4j.DocumentException;
+
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFReader;
+import com.jswiff.SWFWriter;
+import com.jswiff.xml.XMLReader;
+import com.jswiff.xml.XMLWriter;
 
 
 /**
@@ -50,11 +49,8 @@ public class SWFXMLCopy {
    * @throws DocumentException if XML is malformed
    */
   public static void main(String[] args) throws IOException, DocumentException {
-    SWFReader reader            = new SWFReader(new FileInputStream(args[0]));
-    SWFDocumentReader docReader = new SWFDocumentReader();
-    reader.addListener(docReader);
-    reader.read();
-    SWFDocument doc            = docReader.getDocument();
+    SWFReader reader           = new SWFReader(new FileInputStream(args[0]));
+    SWFDocument doc            = reader.read();
     XMLWriter xmlWriter        = new XMLWriter(doc);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     xmlWriter.write(baos, false);

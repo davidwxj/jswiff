@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 

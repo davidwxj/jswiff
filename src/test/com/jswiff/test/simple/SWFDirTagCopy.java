@@ -30,7 +30,6 @@ import java.util.List;
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFReader;
 import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
 import com.jswiff.swfrecords.tags.Tag;
 
 
@@ -61,13 +60,9 @@ public class SWFDirTagCopy {
     }
   }
 
-  private static void copy(File source, File destination)
-    throws IOException {
-    SWFReader reader            = new SWFReader(new FileInputStream(source));
-    SWFDocumentReader docReader = new SWFDocumentReader();
-    reader.addListener(docReader);
-    reader.read();
-    SWFDocument sourceDoc = docReader.getDocument();
+  private static void copy(File source, File destination) throws IOException {
+    SWFReader reader = new SWFReader(new FileInputStream(source));
+    SWFDocument sourceDoc = reader.read();
     List<Tag> tags        = sourceDoc.getTags();
     List<Tag> tagCopies   = new ArrayList<Tag>();
     for (Tag t : tags) {

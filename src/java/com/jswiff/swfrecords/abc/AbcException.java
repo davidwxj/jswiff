@@ -27,15 +27,16 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcException implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private int from;
   private int to;
   private int target;
   private int typeIndex;
   private int nameIndex;
   
-  private AbcException() {
-    // empty
-  }
+  private AbcException() { } // empty
   
   public AbcException(int from, int to, int target, int typeIndex, int nameIndex) {
     this.from = from;

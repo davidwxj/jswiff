@@ -18,18 +18,18 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.xml;
+package com.jswiff.exception;
 
 /**
- * Indicates that a mandatory node is missing.
+ * Indicates that an element is malformed.
  */
-public class MissingNodeException extends RuntimeException {
+public class MalformedElementException extends RuntimeException {
   /**
-   * Creates a new MissingNodeException instance.
+   * Creates a new MalformedElementException instance
    *
-   * @param message detail message (returned by <code>getMessage()</code>).
+   * @param message exception message
    */
-  public MissingNodeException(String message) {
+  public MalformedElementException(String message) {
     super(message);
   }
 }

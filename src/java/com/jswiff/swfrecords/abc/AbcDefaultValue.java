@@ -27,12 +27,13 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcDefaultValue implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private short kind;
   private int valueIndex;
   
-  private AbcDefaultValue() {
-    // empty
-  }
+  private AbcDefaultValue() { } // empty
   
   public AbcDefaultValue(short kind, int valueIndex) {
     this.kind = kind;

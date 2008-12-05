@@ -23,6 +23,7 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.io.OutputBitStream;
 
 

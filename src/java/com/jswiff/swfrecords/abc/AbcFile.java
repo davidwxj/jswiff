@@ -30,6 +30,9 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcFile implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private int majorVersion;
   private int minorVersion;
   private AbcConstantPool constantPool;

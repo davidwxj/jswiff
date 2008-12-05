@@ -24,11 +24,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.swfrecords.RGB;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.SWFHeader;
 import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
 
 
 /**
@@ -39,6 +39,8 @@ import com.jswiff.swfrecords.tags.TagConstants;
  */
 public class SWFDocument implements Serializable {
   
+  private static final long serialVersionUID = 1L;
+
   /** The version of the JSwiff library */
   public static final String JSWIFF_VERSION       = "9-svn";
   

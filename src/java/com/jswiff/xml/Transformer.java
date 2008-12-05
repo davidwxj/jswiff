@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import org.dom4j.DocumentException;
@@ -31,8 +32,6 @@ import org.dom4j.DocumentException;
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFReader;
 import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
-import com.jswiff.swfrecords.tags.TagHeader;
 
 
 /**
@@ -42,6 +41,7 @@ import com.jswiff.swfrecords.tags.TagHeader;
  * <code>SWFReader</code> with <code>XMLWriter</code>.
  */
 public class Transformer {
+  
   /**
    * Transforms XML from an input stream to a SWF, which is written to an
    * output stream.
@@ -115,17 +115,24 @@ public class Transformer {
     XMLWriter xmlWriter = new XMLWriter(doc);
     xmlWriter.write(xmlStream, format);
   }
+  
+  /**
+   * Converts a SWF document into an XML string.
+   * @param doc the SWF document to convert to XML
+   * @param format set to true to have the XML formatted
+   * @return a string containing an XML representation of the SWF document
+   * @throws IOException if there is a problem during conversion
+   */
+  public static String toXML(SWFDocument doc, boolean format) throws IOException {
+    if (doc == null) return "";
+    StringWriter xmlString = new StringWriter();
+    new XMLWriter(doc).write(xmlString, format);
+    return xmlString.toString();
+  }
 
   private static SWFDocument parseSWFDocument(InputStream swfStream) throws IOException {
-    SWFReader swfReader         = new SWFReader(swfStream);
-    SWFDocumentReader docReader = new SWFDocumentReader() {
-      public boolean processTagReadError(TagHeader tagHeader, byte[] tagData,
-          Exception e) {
-        return true;
-      }
-    };
-    swfReader.addListener(docReader);
-    swfReader.read();
-    return docReader.getDocument();
+    SWFReader swfReader = new SWFReader(swfStream);
+    return swfReader.read();
   }
+  
 }

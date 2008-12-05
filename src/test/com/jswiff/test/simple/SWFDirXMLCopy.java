@@ -20,21 +20,20 @@
 
 package com.jswiff.test.simple;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.SWFReader;
-import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
-import com.jswiff.xml.XMLReader;
-import com.jswiff.xml.XMLWriter;
-
-import org.dom4j.DocumentException;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import org.dom4j.DocumentException;
+
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFReader;
+import com.jswiff.SWFWriter;
+import com.jswiff.xml.XMLReader;
+import com.jswiff.xml.XMLWriter;
 
 
 /**
@@ -67,11 +66,8 @@ public class SWFDirXMLCopy {
 
   private static void copy(File source, File destination)
     throws IOException, DocumentException {
-    SWFReader reader            = new SWFReader(new FileInputStream(source));
-    SWFDocumentReader docReader = new SWFDocumentReader();
-    reader.addListener(docReader);
-    reader.read();
-    SWFDocument sourceDoc      = docReader.getDocument();
+    SWFReader reader           = new SWFReader(new FileInputStream(source));
+    SWFDocument sourceDoc      = reader.read();
     XMLWriter xmlWriter        = new XMLWriter(sourceDoc);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     xmlWriter.write(baos, false);

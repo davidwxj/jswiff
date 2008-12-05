@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.dom4j.Element;
 
+import com.jswiff.constants.ActionConstants;
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
-import com.jswiff.swfrecords.actions.ActionConstants;
 import com.jswiff.swfrecords.actions.ConstantPool;
 import com.jswiff.swfrecords.actions.DefineFunction;
 import com.jswiff.swfrecords.actions.DefineFunction2;

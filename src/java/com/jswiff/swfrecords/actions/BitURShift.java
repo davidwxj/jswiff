@@ -20,6 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.ActionConstants;
+
 /**
  * <p>
  * Performs a bitwise unsigned right shift (<code>&gt;&gt;&gt;</code>). For

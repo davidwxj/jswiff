@@ -28,8 +28,12 @@ import java.util.List;
 
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+import com.jswiff.swfrecords.abc.opcode.AbcOp;
 
 public class AbcMethodBody implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private int signatureIndex;
   private int maxStack;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
@@ -39,9 +43,7 @@ public class AbcMethodBody implements Serializable {
   private List<AbcOp> abcCode = new ArrayList<AbcOp>();
   private List<AbcException> exceptions = new ArrayList<AbcException>();
   
-  private AbcMethodBody() {
-    // empty
-  }
+  private AbcMethodBody() { } // empty
   
   public AbcMethodBody(int signatureIndex, int maxStack, int localCount,
       int initScopeDepth, int maxScopeDepth) {

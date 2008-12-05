@@ -20,24 +20,24 @@
 
 package com.jswiff.investigator;
 
-import com.jswiff.listeners.SWFListener;
-import com.jswiff.swfrecords.SWFHeader;
-import com.jswiff.swfrecords.actions.ActionBlock;
-import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
-import com.jswiff.swfrecords.tags.TagHeader;
-
 import java.awt.Frame;
 
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import com.jswiff.constants.TagConstants;
+import com.jswiff.listeners.SWFListenerAdapter;
+import com.jswiff.swfrecords.SWFHeader;
+import com.jswiff.swfrecords.actions.ActionBlock;
+import com.jswiff.swfrecords.tags.Tag;
+import com.jswiff.swfrecords.tags.TagHeader;
 
 
 /*
  * SWF Listener implementation used to generate a tree while parsing an SWF
  * document.
  */
-final class SWFTreeListener extends SWFListener {
+final class SWFTreeListener extends SWFListenerAdapter {
   private DefaultMutableTreeNode treeNode;
   private Frame parent;
   private ProgressDialog progressDialog;

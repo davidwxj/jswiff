@@ -20,14 +20,13 @@
 
 package com.jswiff.test.simple;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.SWFReader;
-import com.jswiff.SWFWriter;
-import com.jswiff.listeners.SWFDocumentReader;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFReader;
+import com.jswiff.SWFWriter;
 
 
 /**
@@ -42,11 +41,8 @@ public class SWFCopy {
    * @throws IOException if an I/O error occured
    */
   public static void main(String[] args) throws IOException {
-    SWFReader reader            = new SWFReader(new FileInputStream(args[0]));
-    SWFDocumentReader docReader = new SWFDocumentReader();
-    reader.addListener(docReader);
-    reader.read();
-    SWFDocument doc  = docReader.getDocument();
+    SWFReader reader = new SWFReader(new FileInputStream(args[0]));
+    SWFDocument doc  = reader.read();
     SWFWriter writer = new SWFWriter(doc, new FileOutputStream(args[1]));
     writer.write();
   }

@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants;
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.AlphaColorMapData;
@@ -83,14 +85,12 @@ import com.jswiff.swfrecords.StraightEdgeRecord;
 import com.jswiff.swfrecords.StyleChangeRecord;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.abc.AbcConstantPool;
-import com.jswiff.swfrecords.abc.AbcConstants;
 import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.abc.AbcMultiname;
 import com.jswiff.swfrecords.abc.AbcNamespace;
 import com.jswiff.swfrecords.abc.AbcNamespaceSet;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
-import com.jswiff.swfrecords.actions.ActionConstants;
 import com.jswiff.swfrecords.actions.ConstantPool;
 import com.jswiff.swfrecords.actions.DefineFunction;
 import com.jswiff.swfrecords.actions.DefineFunction2;
@@ -164,7 +164,6 @@ import com.jswiff.swfrecords.tags.SoundStreamHead2;
 import com.jswiff.swfrecords.tags.StartSound;
 import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.UnknownTag;
 import com.jswiff.swfrecords.tags.VideoFrame;
 import com.jswiff.swfrecords.tags.ExportAssets.ExportMapping;
@@ -2236,33 +2235,7 @@ final class SWFTreeBuilder {
 
   private static String getNamespaceDescription(List<String> strings, AbcNamespace ns) {
     int nameIndex = ns.getNameIndex();
-    String kind;
-    switch (ns.getKind()) {
-      case AbcConstants.NamespaceKinds.EXPLICIT_NAMESPACE:
-        kind = "explicit";
-        break;
-      case AbcConstants.NamespaceKinds.NAMESPACE:
-        kind = "namespace";
-        break;
-      case AbcConstants.NamespaceKinds.PACKAGE_INTERNAL_NAMESPACE:
-        kind = "package internal";
-        break;
-      case AbcConstants.NamespaceKinds.PACKAGE_NAMESPACE:
-        kind = "package";
-        break;
-      case AbcConstants.NamespaceKinds.PRIVATE_NAMESPACE:
-        kind = "private";
-        break;
-      case AbcConstants.NamespaceKinds.PROTECTED_NAMESPACE:
-        kind = "protected";
-        break;
-      case AbcConstants.NamespaceKinds.STATIC_PROTECTED_NAMESPACE:
-        kind = "static protected";
-        break;
-      default:
-        kind = "unknown";
-        break;
-    }
+    String kind = ( ns != null ? ns.getKind().toString().replaceAll("_", "@") : "NULL" );
     String nsDescription = "Namespace kind: " + kind + " name: strings[" + nameIndex + "]=\"" + strings.get(nameIndex) + "\"";
     return nsDescription;
   }

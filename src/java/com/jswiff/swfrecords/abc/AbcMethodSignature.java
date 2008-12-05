@@ -30,6 +30,9 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcMethodSignature implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   public static final short NEED_ARGUMENTS_FLAG = 0x01;
   public static final short NEED_ACTIVATION_FLAG = 0x02;
   public static final short NEED_REST_FLAG = 0x04;
@@ -44,9 +47,7 @@ public class AbcMethodSignature implements Serializable {
   private List<AbcDefaultValue> optionalParameters = new ArrayList<AbcDefaultValue>();
   private List<Integer> parameterNameIndices = new ArrayList<Integer>();
 
-  private AbcMethodSignature() {
-    // empty
-  }
+  private AbcMethodSignature() { } // empty
   
   public AbcMethodSignature(int nameIndex, int returnTypeIndex) {
     this.nameIndex = nameIndex;

@@ -31,8 +31,8 @@ import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 
 import com.jswiff.SWFDocument;
+import com.jswiff.constants.TagConstants;
 import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.util.Base64;
 
 

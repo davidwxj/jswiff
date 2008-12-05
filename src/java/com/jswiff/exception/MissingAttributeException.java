@@ -18,39 +18,39 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.xml;
+package com.jswiff.exception;
 
 /**
- * Indicates that a mandatory element is missing within a specific parent
+ * Indicates that a mandatory attribute is missing within a specific parent
  * element.
  */
-public class MissingElementException extends MissingNodeException {
-  private String missingElementName;
+public class MissingAttributeException extends MissingNodeException {
+  private String missingAttributeName;
   private String parentElementPath;
 
   /**
    * Creates a new MissingAttributeException instance. Pass the name of the
-   * missing element and the path of the parent element (in XPath notation).
+   * missing attribute and the path of the parent element (in XPath notation).
    *
-   * @param missingElementName name of the missing element
-   * @param parentElementPath parent element path
+   * @param missingAttributeName name of the missing element
+   * @param parentElementPath TODO: Comments
    */
-  public MissingElementException(
-    String missingElementName, String parentElementPath) {
+  public MissingAttributeException(
+    String missingAttributeName, String parentElementPath) {
     super(
-      "Mandatory element '" + missingElementName + "' missing from " +
+      "Mandatory attribute '" + missingAttributeName + "' missing from " +
       parentElementPath);
-    this.missingElementName   = missingElementName;
-    this.parentElementPath    = parentElementPath;
+    this.missingAttributeName   = missingAttributeName;
+    this.parentElementPath      = parentElementPath;
   }
 
   /**
-   * Returns the name of the missing element.
+   * Returns the name of the missing attribute.
    *
-   * @return missing element name
+   * @return missing attribute name
    */
-  public String getMissingElementName() {
-    return missingElementName;
+  public String getMissingAttributeName() {
+    return missingAttributeName;
   }
 
   /**

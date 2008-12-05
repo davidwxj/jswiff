@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.dom4j.Element;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
@@ -99,7 +100,6 @@ import com.jswiff.swfrecords.tags.SoundStreamHead2;
 import com.jswiff.swfrecords.tags.StartSound;
 import com.jswiff.swfrecords.tags.SymbolClass;
 import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.swfrecords.tags.TagConstants;
 import com.jswiff.swfrecords.tags.UnknownTag;
 import com.jswiff.swfrecords.tags.VideoFrame;
 import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;

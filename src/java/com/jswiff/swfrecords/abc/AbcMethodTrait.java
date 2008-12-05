@@ -21,11 +21,15 @@
 package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.List;
 
+import com.jswiff.constants.AbcConstants.TraitKind;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcMethodTrait extends AbcTrait {
+
+  private static final long serialVersionUID = 1L;
+  
   private int dispId;
   private int methodIndex;
   private boolean isSetter;
@@ -34,7 +38,7 @@ public class AbcMethodTrait extends AbcTrait {
   private boolean isOverride;
   
   public AbcMethodTrait(int nameIndex, int dispId, int methodIndex, boolean isGetter, boolean isSetter, boolean isFinal, boolean isOverride) {
-    super(nameIndex);
+    super(nameIndex, TraitKind.METHOD);
     this.dispId = dispId;
     this.methodIndex = methodIndex;
     this.isGetter = isGetter;
@@ -47,7 +51,8 @@ public class AbcMethodTrait extends AbcTrait {
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeAbcInt(nameIndex);
+    stream.writeAbcInt(getNameIndex());
+    List<Integer> metadataIndices = getMetadataIndices();
     int metadataCount = metadataIndices.size();
     int flagsAndKind = metadataCount != 0 ? METADATA_FLAG : 0;
     if (isFinal) {
@@ -58,19 +63,19 @@ public class AbcMethodTrait extends AbcTrait {
     }
     flagsAndKind <<= 4;
     if (isGetter) {
-      flagsAndKind |= TYPE_GETTER;
+      flagsAndKind |= TraitKind.GETTER.getCode();
     } else if (isSetter) {
-      flagsAndKind |= TYPE_SETTER;
+      flagsAndKind |= TraitKind.SETTER.getCode();
     } else {
-      flagsAndKind |= TYPE_METHOD;
+      flagsAndKind |= TraitKind.METHOD.getCode();
     }
     stream.writeUI8((short) flagsAndKind);
     stream.writeAbcInt(dispId);
     stream.writeAbcInt(methodIndex);
     if (metadataCount != 0) {
       stream.writeAbcInt(metadataCount);
-      for (Iterator<Integer> it = metadataIndices.iterator(); it.hasNext(); ) {
-        stream.writeAbcInt(it.next());
+      for (int index : metadataIndices) {
+        stream.writeAbcInt(index);
       }
     }
   }

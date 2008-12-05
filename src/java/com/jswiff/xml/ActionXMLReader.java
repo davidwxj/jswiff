@@ -26,6 +26,7 @@ import java.util.List;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
+import com.jswiff.exception.MissingNodeException;
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.*;
 import com.jswiff.util.Base64;

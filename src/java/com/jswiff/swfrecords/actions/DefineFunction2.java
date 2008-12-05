@@ -23,6 +23,7 @@ package com.jswiff.swfrecords.actions;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import com.jswiff.constants.ActionConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.RegisterParam;

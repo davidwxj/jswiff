@@ -18,7 +18,7 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.swfrecords.actions;
+package com.jswiff.constants;
 
 /**
  * This class contains constants regarding action records.

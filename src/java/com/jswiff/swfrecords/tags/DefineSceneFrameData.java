@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jswiff.constants.TagConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.FrameData;
@@ -34,7 +35,8 @@ import com.jswiff.swfrecords.SceneData;
 /**
  * This tag defines data describing scenes and frames.
  *
- * @see SceneData, FrameData
+ * @see SceneData
+ * @see FrameData
  * @since SWF 9.
  */
 public final class DefineSceneFrameData extends Tag {

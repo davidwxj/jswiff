@@ -18,21 +18,26 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jswiff.swfrecords.abc;
+package com.jswiff.swfrecords.abc.opcode;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jswiff.constants.AbcConstants.OpCode;
+import com.jswiff.constants.AbcConstants.OpCodeType;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcOpLookupSwitch extends AbcOp {
+
+  private static final long serialVersionUID = 1L;
+  
   private int defaultOffset;
   private List<Integer> caseOffsets = new ArrayList<Integer>();
 
   public AbcOpLookupSwitch(int defaultOffset) {
-    super(AbcConstants.Opcodes.OPCODE_lookupswitch);
+    super(OpCode.LOOKUPSWITCH, OpCodeType.LOOKUP_SWITCH);
     this.defaultOffset = defaultOffset;
   }
 
@@ -49,20 +54,16 @@ public class AbcOpLookupSwitch extends AbcOp {
   }
 
   public String toString() {
-    String result = "lookupswitch defaultOffset = " + defaultOffset + " caseOffsets = [ ";
-    for (int i = 0; i < caseOffsets.size(); i++) {
-      result += caseOffsets.get(i) + " ";
+    String result = getOpcode().toString() + ": defaultOffset = " + defaultOffset + ", caseOffsets = [ ";
+    for (int offset : caseOffsets) {
+      result = result.concat( offset + " " );
     }
     result += "]";
     return result;
   }
 
-  public String getOpName() {
-    return "lookupswitch";
-  }
-
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(opcode);
+    stream.writeUI8(getOpcode().getCode());
     stream.writeSI24(defaultOffset);
     stream.writeAbcInt(caseOffsets.size() - 1);
     for (Iterator<Integer> it = caseOffsets.iterator(); it.hasNext(); ) {

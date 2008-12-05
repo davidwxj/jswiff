@@ -23,19 +23,19 @@ package com.jswiff.swfrecords.abc;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcClass implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
   private int initializerIndex;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   
-  private AbcClass() {
-    // empty
-  }
+  private AbcClass() { } // empty
   
   public AbcClass(int initializerIndex) {
     this.initializerIndex = initializerIndex;
@@ -55,8 +55,7 @@ public class AbcClass implements Serializable {
   public void write(OutputBitStream stream) throws IOException {
     stream.writeAbcInt(initializerIndex);
     stream.writeAbcInt(traits.size());
-    for (Iterator<AbcTrait> it = traits.iterator(); it.hasNext(); ) {
-      AbcTrait trait = it.next();
+    for (AbcTrait trait : traits) {
       trait.write(stream);
     }
   }

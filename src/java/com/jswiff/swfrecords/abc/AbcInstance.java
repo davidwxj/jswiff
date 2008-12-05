@@ -30,6 +30,9 @@ import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcInstance implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   public static final short SEALED_FLAG = 0x01;
   public static final short FINAL_FLAG = 0x02;
   public static final short INTERFACE_FLAG = 0x04;
@@ -43,9 +46,7 @@ public class AbcInstance implements Serializable {
   private int initializerIndex;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
   
-  private AbcInstance() {
-    // empty
-  }
+  private AbcInstance() { } // empty
   
   public AbcInstance(int nameIndex, int supernameIndex, int initializerIndex) {
     this.nameIndex = nameIndex;

@@ -25,10 +25,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.constants.AbcConstants;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcConstantPool implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private List<Integer> ints = new ArrayList<Integer>();
   private List<Integer> uints = new ArrayList<Integer>();
   private List<Double> doubles = new ArrayList<Double>();
@@ -42,7 +46,7 @@ public class AbcConstantPool implements Serializable {
     uints.add(0);
     doubles.add(Double.NaN);
     strings.add("");
-    namespaces.add(new AbcNamespace(AbcConstants.NamespaceKinds.NAMESPACE, 0)); //TODO determine correct ns kind for this
+    namespaces.add(new AbcNamespace(AbcConstants.NamespaceKind.NAMESPACE, 0)); //TODO determine correct ns kind for this
     namespaceSets.add(null);
     multinames.add(null);
   }

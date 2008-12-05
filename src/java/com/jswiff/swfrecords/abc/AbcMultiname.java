@@ -23,70 +23,63 @@ package com.jswiff.swfrecords.abc;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.jswiff.constants.AbcConstants.MultiNameKind;
+import com.jswiff.exception.UnknownCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcMultiname implements Serializable {
-  public static final short Q_NAME = 0x07;
-  public static final short Q_NAME_A = 0x0D;
-  public static final short RTQ_NAME = 0x0F;
-  public static final short RTQ_NAME_A = 0x10;
-  public static final short RTQ_NAME_L = 0x11;
-  public static final short RTQ_NAME_L_A = 0x12;
-  public static final short MULTINAME = 0x09;
-  public static final short MULTINAME_A = 0x0E;
-  public static final short MULTINAME_L = 0x1B;
-  public static final short MULTINAME_L_A = 0x1C;
 
-  private short kind;
+  private static final long serialVersionUID = 1L;
+  
+  private MultiNameKind kind;
   private int nameIndex;
   private int namespaceIndex;
-  private int namespaceSetIndex;
 
-  private AbcMultiname() {
-    // empty
-  }
+  private AbcMultiname() { } // empty
   
-  public static AbcMultiname createQName(short kind, int namespaceIndex, int nameIndex) {
+  public static AbcMultiname createQName(int nsIndex, int nameIndex, boolean attribute) {
     AbcMultiname mn = new AbcMultiname();
-    mn.kind = kind;
-    mn.namespaceIndex = namespaceIndex;
+    mn.kind = attribute ? MultiNameKind.Q_NAME_A : MultiNameKind.Q_NAME;
+    mn.namespaceIndex = nsIndex;
     mn.nameIndex = nameIndex;
     return mn;
   }
   
-  public static AbcMultiname createRTQName(short kind, int nameIndex) {
+  public static AbcMultiname createRTQName(int nameIndex, boolean attribute) {
     AbcMultiname mn = new AbcMultiname();
-    mn.kind = kind;
+    mn.kind = attribute ? MultiNameKind.RTQ_NAME_A : MultiNameKind.RTQ_NAME;
     mn.nameIndex = nameIndex;
     return mn;
   }
   
-  public static AbcMultiname createRTQNameL(short kind) {
+  public static AbcMultiname createRTQNameL(boolean attribute) {
     AbcMultiname mn = new AbcMultiname();
-    mn.kind = kind;
+    mn.kind = attribute ? MultiNameKind.RTQ_NAME_L_A : MultiNameKind.RTQ_NAME_L;
     return mn;
   }
   
-  public static AbcMultiname createMultiname(short kind, int nameIndex, int namespaceSetIndex) {
+  public static AbcMultiname createMultiname(int nameIndex, int nsSetIndex, boolean attribute) {
     AbcMultiname mn = new AbcMultiname();
-    mn.kind = kind;
+    mn.kind = attribute ? MultiNameKind.MULTINAME_A : MultiNameKind.MULTINAME;
     mn.nameIndex = nameIndex;
-    mn.namespaceSetIndex = namespaceSetIndex;
+    mn.namespaceIndex = nsSetIndex;
     return mn;
   }
   
-  public static AbcMultiname createMultinameL(short kind, int namespaceSetIndex) {
+  public static AbcMultiname createMultinameL(int nsSetIndex, boolean attribute) {
     AbcMultiname mn = new AbcMultiname();
-    mn.kind = kind;
-    mn.namespaceSetIndex = namespaceSetIndex;
+    mn.kind = attribute ? MultiNameKind.MULTINAME_L_A : MultiNameKind.MULTINAME_L;
+    mn.namespaceIndex = nsSetIndex;
     return mn;
   }
   
   public static AbcMultiname read(InputBitStream stream) throws IOException {
     AbcMultiname mn = new AbcMultiname();
-    mn.kind = stream.readUI8();
-    switch (mn.kind) {
+    short kind = stream.readUI8();
+    MultiNameKind mnKind = MultiNameKind.getKind(kind);
+    if (mnKind == null) throw new UnknownCodeException("Unknown multiname kind: " + kind, kind);
+    switch (mnKind) {
       case Q_NAME:
       case Q_NAME_A:
         mn.namespaceIndex = stream.readAbcInt();
@@ -103,18 +96,18 @@ public class AbcMultiname implements Serializable {
       case MULTINAME:
       case MULTINAME_A:
         mn.nameIndex = stream.readAbcInt();
-        mn.namespaceSetIndex = stream.readAbcInt();
+        mn.namespaceIndex = stream.readAbcInt();
         break;
       case MULTINAME_L:
       case MULTINAME_L_A:
-        mn.namespaceSetIndex = stream.readAbcInt();
+        mn.namespaceIndex = stream.readAbcInt();
         break;
     }
     return mn;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(kind);
+    stream.writeUI8(getKind().getCode());
     switch (kind) {
     case Q_NAME:
     case Q_NAME_A:
@@ -132,28 +125,56 @@ public class AbcMultiname implements Serializable {
     case MULTINAME:
     case MULTINAME_A:
       stream.writeAbcInt(nameIndex);
-      stream.writeAbcInt(namespaceSetIndex);
+      stream.writeAbcInt(namespaceIndex);
       break;
     case MULTINAME_L:
     case MULTINAME_L_A:
-      stream.writeAbcInt(namespaceSetIndex);
+      stream.writeAbcInt(namespaceIndex);
       break;
-  }
+    }
   }
 
-  public short getKind() {
+  public MultiNameKind getKind() {
     return kind;
   }
 
+  /**
+   * Gets the index of the name value in the strings constant pool.
+   * @return an index into the strings constant pool
+   */
   public int getNameIndex() {
     return nameIndex;
   }
 
+  /**
+   * Gets an index into the nameSpace constant pool for QNames,
+   * or for multiNames the index into the NameSpaceSet constant pool.
+   * @return the constant pool index for either the NameSpace or NameSpaceSet
+   */
   public int getNamespaceIndex() {
     return namespaceIndex;
   }
-
-  public int getNamespaceSetIndex() {
-    return namespaceSetIndex;
+  
+  @Override
+  public String toString() {
+    String str = this.kind.toString();
+    switch (this.kind) {
+    case Q_NAME:
+    case Q_NAME_A:
+    case MULTINAME:
+    case MULTINAME_A:
+      str = str + ": nameIndex = " + this.nameIndex + ", nameSpaceIndex = " + this.namespaceIndex;
+      break;
+    case RTQ_NAME:
+    case RTQ_NAME_A:
+      str = str + ": nameIndex = " + this.nameIndex;
+      break;
+    case MULTINAME_L:
+    case MULTINAME_L_A:
+      str = str + ": nameSpaceIndex = " + namespaceIndex;
+      break;
+    }
+    return str;
   }
+
 }
