@@ -34,7 +34,10 @@ import com.jswiff.io.OutputBitStream;
  * @see MorphLineStyles
  * @see com.jswiff.swfrecords.tags.DefineMorphShape
  */
-public final class MorphLineStyle implements Serializable {
+public final class MorphLineStyle implements MorphLineStyleTag, Serializable {
+  
+  private static final long serialVersionUID = 1L;
+
   private int startWidth;
   private int endWidth;
   private RGBA startColor;
@@ -100,10 +103,11 @@ public final class MorphLineStyle implements Serializable {
     return startWidth;
   }
 
-  void write(OutputBitStream stream) throws IOException {
+  public void write(OutputBitStream stream) throws IOException {
     stream.writeUI16(startWidth);
     stream.writeUI16(endWidth);
     startColor.write(stream);
     endColor.write(stream);
   }
+  
 }

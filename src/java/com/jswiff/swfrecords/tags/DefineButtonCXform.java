@@ -22,55 +22,58 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.CXform;
 
-
 /**
  * Specifies a color transform for a button defined with the
  * <code>DefineButton</code> tag.
- *
+ * 
  * @since SWF 2
  */
 public final class DefineButtonCXform extends DefinitionTag {
-	private CXform colorTransform;
 
-	/**
-	 * Creates a new DefineButtonCXform instance.
-	 *
-	 * @param characterId character ID of the button
-	 * @param colorTransform color transform
-	 */
-	public DefineButtonCXform(int characterId, CXform colorTransform) {
-		code				    = TagConstants.DEFINE_BUTTON_C_XFORM;
-		this.characterId	    = characterId;
-		this.colorTransform     = colorTransform;
-	}
+  private static final long serialVersionUID = 1L;
 
-	DefineButtonCXform() {
-		// empty
-	}
+  private CXform colorTransform;
 
-	/**
-	 * Returns the color transform.
-	 *
-	 * @return color transform.
-	 */
-	public CXform getColorTransform() {
-		return colorTransform;
-	}
+  /**
+   * Creates a new DefineButtonCXform instance.
+   * 
+   * @param characterId
+   *          character ID of the button
+   * @param colorTransform
+   *          color transform
+   */
+  public DefineButtonCXform(int characterId, CXform colorTransform) {
+    super(TagType.DEFINE_BUTTON_C_XFORM);
+    this.characterId = characterId;
+    this.colorTransform = colorTransform;
+  }
+  
+  DefineButtonCXform() {
+    super(TagType.DEFINE_BUTTON_C_XFORM);
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(characterId);
-		colorTransform.write(outStream);
-	}
+  /**
+   * Returns the color transform.
+   * 
+   * @return color transform.
+   */
+  public CXform getColorTransform() {
+    return colorTransform;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		characterId		   = inStream.readUI16();
-		colorTransform     = new CXform(inStream);
-	}
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(characterId);
+    colorTransform.write(outStream);
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    characterId = inStream.readUI16();
+    colorTransform = new CXform(inStream);
+  }
 }

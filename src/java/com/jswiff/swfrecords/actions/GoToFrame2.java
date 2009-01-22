@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -44,6 +44,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class GoToFrame2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private boolean play;
   private int sceneBias;
 
@@ -57,13 +60,13 @@ public final class GoToFrame2 extends Action {
    * @param sceneBias offset added to target frame
    */
   public GoToFrame2(boolean play, int sceneBias) {
-    code             = ActionConstants.GO_TO_FRAME_2;
+    super(ActionType.GO_TO_FRAME_2);
     this.play        = play;
     this.sceneBias   = sceneBias;
   }
 
   GoToFrame2(InputBitStream stream) throws IOException {
-    code = ActionConstants.GO_TO_FRAME_2;
+    super(ActionType.GO_TO_FRAME_2);
     short bits            = stream.readUI8();
 
     // 6 reserved bits
@@ -117,7 +120,7 @@ public final class GoToFrame2 extends Action {
    * @return <code>"GoToFrame2", play, sceneBias</code>
    */
   public String toString() {
-    String result = "GoToFrame2  play: " + play;
+    String result = super.toString() + "  play: " + play;
     if (sceneBias > 0) {
       result += (" sceneBias: " + sceneBias);
     }

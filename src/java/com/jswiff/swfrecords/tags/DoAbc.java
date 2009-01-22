@@ -22,34 +22,37 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.abc.AbcFile;
 
-
 /**
  * Defines ActionScript 3 code in ABC (ActionScript byte code) format.
- *
+ * 
  * @since SWF 9
  */
 public final class DoAbc extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private AbcFile abcFile;
-  
+
   /**
    * Creates a new DoABC instance.
    */
   public DoAbc() {
-    code = TagConstants.DO_ABC;
+    super(TagType.DO_ABC);
     abcFile = new AbcFile();
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
-    forceLongHeader = true;
+    this.setForceLongHeader(true);
     abcFile.write(outStream);
   }
 
-  void setData(byte[] data) throws IOException {
+  void setData(byte[] data) throws IOException, InvalidCodeException {
     InputBitStream inStream = new InputBitStream(data);
     abcFile = AbcFile.read(inStream);
   }

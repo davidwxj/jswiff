@@ -22,30 +22,32 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
-
 /**
  * This tag defines the name and license of a font.
- *
+ * 
  * @since SWF 9.
  */
 public final class DefineFontName extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private int fontId;
   private String fontName;
   private String fontLicense;
 
   public DefineFontName(int fontId, String fontName, String fontLicense) {
+    super(TagType.DEFINE_FONT_NAME);
     this.fontId = fontId;
     this.fontName = fontName;
     this.fontLicense = fontLicense;
-    code = TagConstants.DEFINE_FONT_NAME;
   }
-
+  
   DefineFontName() {
-    // empty
+    super(TagType.DEFINE_FONT_NAME);
   }
 
   public int getFontId() {
@@ -59,7 +61,7 @@ public final class DefineFontName extends Tag {
   public String getFontLicense() {
     return fontLicense;
   }
-  
+
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     fontId = inStream.readUI16();

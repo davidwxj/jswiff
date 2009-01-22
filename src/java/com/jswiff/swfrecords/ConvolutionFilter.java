@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -44,11 +45,13 @@ public final class ConvolutionFilter extends Filter {
    * @param matrixRows TODO: Comments
    */
   public ConvolutionFilter(float[] matrix, int matrixRows) {
+    super(FilterType.CONVOLUTION);
     setMatrix(matrix, matrixRows);
     initDefaults();
   }
   
   public ConvolutionFilter(InputBitStream stream) throws IOException {
+    super(FilterType.CONVOLUTION);
     int matrixColumns = stream.readUI8();
     matrixRows = stream.readUI8();
     divisor = stream.readFloat();

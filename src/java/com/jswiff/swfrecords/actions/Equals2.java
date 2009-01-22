@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -43,19 +44,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class Equals2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Equals2 actions.
    */
   public Equals2() {
-    code = ActionConstants.EQUALS_2;
+    super(ActionType.EQUALS_2);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Equals2"</code>
-   */
-  public String toString() {
-    return "Equals2";
-  }
 }

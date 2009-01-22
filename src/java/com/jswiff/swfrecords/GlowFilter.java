@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -42,6 +43,7 @@ public final class GlowFilter extends Filter {
    * Creates a new DropSGlowFilterhadowFilter instance.
    */
   public GlowFilter() {
+    super(FilterType.GLOW);
     initDefaults();
   }
 
@@ -53,6 +55,7 @@ public final class GlowFilter extends Filter {
    * @throws IOException TODO: Comments
    */
   public GlowFilter(InputBitStream stream) throws IOException {
+    super(FilterType.GLOW);
     color      = new RGBA(stream);
     x          = stream.readFP32();
     y          = stream.readFP32();

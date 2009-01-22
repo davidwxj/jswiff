@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import com.jswiff.constants.AbcConstants.NamespaceKind;
-import com.jswiff.exception.UnknownCodeException;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -40,10 +40,9 @@ public class AbcNamespace implements Serializable {
     this.nameIndex = nameIndex;
   }
 
-  public static AbcNamespace read(InputBitStream stream) throws IOException {
+  public static AbcNamespace read(InputBitStream stream) throws IOException, InvalidCodeException {
     short code = stream.readUI8();
-    NamespaceKind kind = NamespaceKind.getKind( code );
-    if (kind == null) throw new UnknownCodeException("Unknown namespace kind : " + code, code);
+    NamespaceKind kind = NamespaceKind.lookup( code );
     AbcNamespace ns = new AbcNamespace(kind, stream.readAbcInt());
     return ns;
   }

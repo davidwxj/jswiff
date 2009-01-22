@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -45,6 +45,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class GetURL2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /** Indicates that the clip's variables should not be encoded and submitted. */
   public static final byte METHOD_NONE = 0;
   /** The clip's variables are encoded and sent with HTTP GET */
@@ -68,7 +71,7 @@ public final class GetURL2 extends Action {
    */
   public GetURL2(
     byte sendVarsMethod, boolean loadTarget, boolean loadVariables) {
-    code                  = ActionConstants.GET_URL_2;
+    super(ActionType.GET_URL_2);
     this.sendVarsMethod   = sendVarsMethod;
     this.loadTarget       = loadTarget;
     this.loadVariables    = loadVariables;
@@ -78,7 +81,7 @@ public final class GetURL2 extends Action {
    * Reads a GetURL2 action from a bit stream.
    */
   GetURL2(InputBitStream stream) throws IOException {
-    code             = ActionConstants.GET_URL_2;
+    super(ActionType.GET_URL_2);
     loadVariables   = stream.readBooleanBit();
     loadTarget      = stream.readBooleanBit();
     stream.readUnsignedBits(4); // 4 reserved bits
@@ -133,7 +136,7 @@ public final class GetURL2 extends Action {
    *         <code>loadTarget</code> and <code>loadVariables</code> flags.
    */
   public String toString() {
-    String result = "GetURL2 sendVarsMethod: ";
+    String result = super.toString() + " sendVarsMethod: ";
     switch (sendVarsMethod) {
       case METHOD_GET:
         result += "GET";

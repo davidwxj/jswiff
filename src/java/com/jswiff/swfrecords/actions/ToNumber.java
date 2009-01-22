@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class ToNumber extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new ToNumber action.
    */
   public ToNumber() {
-    code = ActionConstants.TO_NUMBER;
+    super(ActionType.TO_NUMBER);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"ToNumber"</code>
-   */
-  public String toString() {
-    return "ToNumber";
-  }
 }

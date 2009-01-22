@@ -42,11 +42,11 @@ public class AbcOpArgs extends AbcOp {
   }
 
   public String toString() {
-    return getOpcode().toString() + ": argCount = " + argCount;
+    return super.toString() + ": argCount = " + argCount;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeAbcInt(argCount);
   }
   

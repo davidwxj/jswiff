@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -39,19 +40,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 3
  */
 public final class Stop extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Stop action.
    */
   public Stop() {
-    code = ActionConstants.STOP;
+    super(ActionType.STOP);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Stop"</code>
-   */
-  public String toString() {
-    return "Stop";
-  }
 }

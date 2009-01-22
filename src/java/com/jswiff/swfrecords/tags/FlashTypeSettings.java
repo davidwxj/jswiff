@@ -22,19 +22,21 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * @since SWF 8
  */
 public final class FlashTypeSettings extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   /** TODO: Comments */
-  public static final byte GRID_FIT_NONE     = 0;
+  public static final byte GRID_FIT_NONE = 0;
   /** TODO: Comments */
-  public static final byte GRID_FIT_PIXEL    = 1;
+  public static final byte GRID_FIT_PIXEL = 1;
   /** TODO: Comments */
   public static final byte GRID_FIT_SUBPIXEL = 2;
   private int textId;
@@ -45,24 +47,27 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * Creates a new FlashTypeSettings instance.
-   *
-   * @param textId TODO: Comments
-   * @param flashType TODO: Comments
+   * 
+   * @param textId
+   *          TODO: Comments
+   * @param flashType
+   *          TODO: Comments
    */
   public FlashTypeSettings(int textId, boolean flashType) {
-    code         = TagConstants.FLASHTYPE_SETTINGS;
-    this.textId      = textId;
-    this.flashType   = flashType;
+    super(TagType.FLASHTYPE_SETTINGS);
+    this.textId = textId;
+    this.flashType = flashType;
   }
 
   FlashTypeSettings() {
-    // empty
+    super(TagType.FLASHTYPE_SETTINGS);
   }
-  
+
   /**
    * TODO: Comments
-   *
-   * @param flashType TODO: Comments
+   * 
+   * @param flashType
+   *          TODO: Comments
    */
   public void setFlashType(boolean flashType) {
     this.flashType = flashType;
@@ -70,7 +75,7 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public boolean isFlashType() {
@@ -79,8 +84,9 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param gridFit TODO: Comments
+   * 
+   * @param gridFit
+   *          TODO: Comments
    */
   public void setGridFit(byte gridFit) {
     this.gridFit = gridFit;
@@ -88,7 +94,7 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public byte getGridFit() {
@@ -97,8 +103,9 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param sharpness TODO: Comments
+   * 
+   * @param sharpness
+   *          TODO: Comments
    */
   public void setSharpness(float sharpness) {
     this.sharpness = sharpness;
@@ -106,7 +113,7 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public double getSharpness() {
@@ -115,8 +122,9 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param textId TODO: Comments
+   * 
+   * @param textId
+   *          TODO: Comments
    */
   public void setTextId(int textId) {
     this.textId = textId;
@@ -124,7 +132,7 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public int getTextId() {
@@ -133,8 +141,9 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param thickness TODO: Comments
+   * 
+   * @param thickness
+   *          TODO: Comments
    */
   public void setThickness(float thickness) {
     this.thickness = thickness;
@@ -142,7 +151,7 @@ public final class FlashTypeSettings extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public double getThickness() {
@@ -161,12 +170,12 @@ public final class FlashTypeSettings extends Tag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
-    textId      = inStream.readUI16();
-    flashType   = (inStream.readUnsignedBits(2) == 1);
-    gridFit     = (byte) inStream.readUnsignedBits(3);
+    textId = inStream.readUI16();
+    flashType = (inStream.readUnsignedBits(2) == 1);
+    gridFit = (byte) inStream.readUnsignedBits(3);
     inStream.readUnsignedBits(3);
-    thickness   = inStream.readFloat();
-    sharpness   = inStream.readFloat();
+    thickness = inStream.readFloat();
+    sharpness = inStream.readFloat();
     inStream.readUI8();
   }
 }

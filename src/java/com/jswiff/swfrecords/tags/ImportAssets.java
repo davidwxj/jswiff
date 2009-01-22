@@ -23,10 +23,9 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.io.Serializable;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * <p>
@@ -44,80 +43,94 @@ import com.jswiff.io.OutputBitStream;
  * character IDs within <code>ImportAssets</code> (using
  * <code>ImportMapping</code> instances).
  * </p>
- *
+ * 
  * @see ExportAssets
  * @since SWF 5
  */
 public class ImportAssets extends Tag {
-	protected String url;
-	protected ImportMapping[] importMappings;
 
-	/**
-	 * Creates a new ImportAssets tag. Supply the URL of the exporting SWF and
-	 * an array of import mappings (for each imported character one).
-	 *
-	 * @param url URL of the source SWF
-	 * @param importMappings character import mappings
-	 */
-	public ImportAssets(String url, ImportMapping[] importMappings) {
-		code				    = TagConstants.IMPORT_ASSETS;
-		this.url			    = url;
-		this.importMappings     = importMappings;
-	}
+  private static final long serialVersionUID = 1L;
+  
+  protected String url;
+  protected ImportMapping[] importMappings;
 
-	ImportAssets() {
-		// empty
-	}
+  /**
+   * Creates a new ImportAssets tag. Supply the URL of the exporting SWF and an
+   * array of import mappings (for each imported character one).
+   * 
+   * @param url
+   *          URL of the source SWF
+   * @param importMappings
+   *          character import mappings
+   */
+  public ImportAssets(String url, ImportMapping[] importMappings) {
+    this(url, importMappings, TagType.IMPORT_ASSETS);
+  }
+  
+  ImportAssets(String url, ImportMapping[] importMappings, TagType t) {
+    super(t);
+    this.url = url;
+    this.importMappings = importMappings;
+  }
 
-	/**
-	 * Sets the import mappings defined in this tag.
-	 *
-	 * @param importMappings character import mappings
-	 */
-	public void setImportMappings(ImportMapping[] importMappings) {
-		this.importMappings = importMappings;
-	}
+  ImportAssets() {
+    this(TagType.IMPORT_ASSETS);
+  }
+  
+  ImportAssets(TagType t) {
+    super(t);
+  }
 
-	/**
-	 * Returns the import mappings defined in this tag.
-	 *
-	 * @return character import mappings
-	 */
-	public ImportMapping[] getImportMappings() {
-		return importMappings;
-	}
+  /**
+   * Sets the import mappings defined in this tag.
+   * 
+   * @param importMappings
+   *          character import mappings
+   */
+  public void setImportMappings(ImportMapping[] importMappings) {
+    this.importMappings = importMappings;
+  }
 
-	/**
-	 * Sets the URL of the SWF file exporting the characters.
-	 *
-	 * @param url URL of import source
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+  /**
+   * Returns the import mappings defined in this tag.
+   * 
+   * @return character import mappings
+   */
+  public ImportMapping[] getImportMappings() {
+    return importMappings;
+  }
 
-	/**
-	 * Returns the URL of the SWF file exporting the characters.
-	 *
-	 * @return URL of import source
-	 */
-	public String getUrl() {
-		return url;
-	}
+  /**
+   * Sets the URL of the SWF file exporting the characters.
+   * 
+   * @param url
+   *          URL of import source
+   */
+  public void setUrl(String url) {
+    this.url = url;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeString(url);
-		int count = importMappings.length;
-		outStream.writeUI16(count);
-		for (int i = 0; i < count; i++) {
-			outStream.writeUI16(importMappings[i].getCharacterId());
-			outStream.writeString(importMappings[i].getName());
-		}
-	}
+  /**
+   * Returns the URL of the SWF file exporting the characters.
+   * 
+   * @return URL of import source
+   */
+  public String getUrl() {
+    return url;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeString(url);
+    int count = importMappings.length;
+    outStream.writeUI16(count);
+    for (int i = 0; i < count; i++) {
+      outStream.writeUI16(importMappings[i].getCharacterId());
+      outStream.writeString(importMappings[i].getName());
+    }
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {
         inStream.setShiftJIS(true);
@@ -125,52 +138,57 @@ public class ImportAssets extends Tag {
         inStream.setANSI(true);
       }
     }
-		url = inStream.readString();
-		int count = inStream.readUI16();
-		importMappings = new ImportMapping[count];
-		for (int i = 0; i < count; i++) {
-			int characterId   = inStream.readUI16();
-			String name		  = inStream.readString();
-			importMappings[i] = new ImportMapping(name, characterId);
-		}
-	}
+    url = inStream.readString();
+    int count = inStream.readUI16();
+    importMappings = new ImportMapping[count];
+    for (int i = 0; i < count; i++) {
+      int characterId = inStream.readUI16();
+      String name = inStream.readString();
+      importMappings[i] = new ImportMapping(name, characterId);
+    }
+  }
 
-	/**
-	 * Defines an (immutable) import mapping for a character, containing its
-	 * export name and the ID the character instance gets after import.
-	 */
-	public static class ImportMapping implements Serializable {
-		private int characterId;
-		private String name;
+  /**
+   * Defines an (immutable) import mapping for a character, containing its
+   * export name and the ID the character instance gets after import.
+   */
+  public static class ImportMapping implements Serializable {
 
-		/**
-		 * Creates a new import mapping. Supply export name of character and ID
-		 * of imported instance.
-		 *
-		 * @param name export name of imported character
-		 * @param characterId imported instance ID
-		 */
-		public ImportMapping(String name, int characterId) {
-			this.name			 = name;
-			this.characterId     = characterId;
-		}
+    private static final long serialVersionUID = 1L;
+    
+    private int characterId;
+    private String name;
 
-		/**
-		 * Returns the imported character instance's ID.
-		 *
-		 * @return character ID
-		 */
-		public int getCharacterId() {
-			return characterId;
-		}
+    /**
+     * Creates a new import mapping. Supply export name of character and ID of
+     * imported instance.
+     * 
+     * @param name
+     *          export name of imported character
+     * @param characterId
+     *          imported instance ID
+     */
+    public ImportMapping(String name, int characterId) {
+      this.name = name;
+      this.characterId = characterId;
+    }
 
-		/**
-		 * Returns the export name of the imported character.
-		 *
-		 * @return export name
-		 */
-		public String getName() {
-			return name;
-		}
-	}
+    /**
+     * Returns the imported character instance's ID.
+     * 
+     * @return character ID
+     */
+    public int getCharacterId() {
+      return characterId;
+    }
+
+    /**
+     * Returns the export name of the imported character.
+     * 
+     * @return export name
+     */
+    public String getName() {
+      return name;
+    }
+  }
 }

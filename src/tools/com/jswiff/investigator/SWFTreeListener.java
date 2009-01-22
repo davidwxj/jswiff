@@ -25,7 +25,7 @@ import java.awt.Frame;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.listeners.SWFListenerAdapter;
 import com.jswiff.swfrecords.SWFHeader;
 import com.jswiff.swfrecords.actions.ActionBlock;
@@ -118,8 +118,8 @@ final class SWFTreeListener extends SWFListenerAdapter {
     progressDialog.setMessage(tagCount++ + " tags read");
     SWFTreeBuilder.addNode(treeNode, tag);
     progressDialog.setProgressValue((int) offset);
-    progressDialog.setNote(TagConstants.getTagName(tag.getCode()));
-    if (tag.getCode() == TagConstants.PROTECT) {
+    progressDialog.setNote(tag.toString());
+    if (TagType.PROTECT.equals(tag.tagType())) {
       isProtected = true;
     }
   }

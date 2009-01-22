@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.swfrecords.RGB;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.SWFHeader;
@@ -262,15 +262,15 @@ public class SWFDocument implements Serializable {
   
   public boolean hasSymbolClass() {
     for (Tag t : tags) {
-      if (t.getCode() == TagConstants.SYMBOL_CLASS) return true;
+      if (TagType.SYMBOL_CLASS.equals(t.tagType())) return true;
     }
     return false;
   }
   
   public boolean hasABC() {
     for (Tag t : tags) {
-      if (t.getCode() == TagConstants.DO_ABC
-          || t.getCode() == TagConstants.DO_ABC_DEFINE) return true;
+      if (TagType.DO_ABC.equals(t.tagType()) || 
+          TagType.DO_ABC_DEFINE.equals(t.tagType()) ) return true;
     }
     return false;
   }

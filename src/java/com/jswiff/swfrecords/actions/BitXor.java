@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -40,19 +41,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class BitXor extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new BitXor action.
    */
   public BitXor() {
-    code = ActionConstants.BIT_XOR;
+    super(ActionType.BIT_XOR);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"BitXor"</code>
-   */
-  public String toString() {
-    return "BitXor";
-  }
 }

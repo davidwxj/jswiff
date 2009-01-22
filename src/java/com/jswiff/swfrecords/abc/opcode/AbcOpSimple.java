@@ -33,13 +33,9 @@ public class AbcOpSimple extends AbcOp {
   public AbcOpSimple(OpCode opCode) {
     super(opCode, OpCodeType.SIMPLE);
   }
-  
-  public String toString() {
-    return getOpcode().toString();
-  }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
   }
   
 }

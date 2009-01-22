@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -53,19 +54,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class CallMethod extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new CallMethod action.
    */
   public CallMethod() {
-    code = ActionConstants.CALL_METHOD;
+    super(ActionType.CALL_METHOD);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"CallMethod"</code>
-   */
-  public String toString() {
-    return "CallMethod";
-  }
 }

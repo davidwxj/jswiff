@@ -34,7 +34,7 @@ public class AbcOpHasNext2 extends AbcOp {
   private int propertyIndexRegister;
 
   public AbcOpHasNext2(int objectRegister, int propertyIndexRegister) {
-    super(OpCode.HASNEXT2, OpCodeType.HAS_NEXT2);
+    super(OpCode.HAS_NEXT_2, OpCodeType.HAS_NEXT2);
     this.objectRegister = objectRegister;
     this.propertyIndexRegister = propertyIndexRegister;
   }
@@ -48,11 +48,12 @@ public class AbcOpHasNext2 extends AbcOp {
   }
   
   public String toString() {
-    return getOpcode().toString() + ": objectRegister = " + objectRegister + ", propertyIndexRegister = " + propertyIndexRegister;
+    return super.toString() + ": objectRegister = " + objectRegister + 
+    ", propertyIndexRegister = " + propertyIndexRegister;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeAbcInt(objectRegister);
     stream.writeAbcInt(propertyIndexRegister);
   }

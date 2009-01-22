@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -42,7 +43,7 @@ public class AbcScript implements Serializable {
     this.initializerIndex = initializerIndex;
   }
   
-  public static AbcScript read(InputBitStream stream) throws IOException {
+  public static AbcScript read(InputBitStream stream) throws IOException, InvalidCodeException {
     AbcScript script = new AbcScript();
     script.initializerIndex = stream.readAbcInt();
     int traitCount = stream.readAbcInt();

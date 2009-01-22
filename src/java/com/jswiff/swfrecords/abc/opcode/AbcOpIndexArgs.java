@@ -48,11 +48,11 @@ public class AbcOpIndexArgs extends AbcOp {
   }
 
   public String toString() {
-    return getOpcode().toString() + ": index = " + index + ", argCount = " + argCount;
+    return super.toString() + ": index = " + index + ", argCount = " + argCount;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeAbcInt(index);
     stream.writeAbcInt(argCount);
   }

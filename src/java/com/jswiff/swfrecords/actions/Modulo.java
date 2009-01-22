@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class Modulo extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Modulo action.
    */
   public Modulo() {
-    code = ActionConstants.MODULO;
+    super(ActionType.MODULO);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Modulo"</code>
-   */
-  public String toString() {
-    return "Modulo";
-  }
 }

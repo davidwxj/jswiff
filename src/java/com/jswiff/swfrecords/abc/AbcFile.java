@@ -23,9 +23,9 @@ package com.jswiff.swfrecords.abc;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -49,7 +49,7 @@ public class AbcFile implements Serializable {
     constantPool = new AbcConstantPool();
   }
   
-  public static AbcFile read(InputBitStream stream) throws IOException {
+  public static AbcFile read(InputBitStream stream) throws IOException, InvalidCodeException {
     AbcFile abcFile = new AbcFile();
     abcFile.minorVersion = stream.readUI16();
     abcFile.majorVersion = stream.readUI16();
@@ -89,27 +89,27 @@ public class AbcFile implements Serializable {
     stream.writeUI16(majorVersion);
     constantPool.write(stream);
     stream.writeAbcInt(methods.size());
-    for (Iterator<AbcMethodSignature> it = methods.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    for (AbcMethodSignature sig : methods) {
+      sig.write(stream);
     }
     stream.writeAbcInt(metadataEntries.size());
-    for (Iterator<AbcMetadata> it = metadataEntries.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    for (AbcMetadata metaData : metadataEntries) {
+      metaData.write(stream);
     }
     stream.writeAbcInt(instances.size());
-    for (Iterator<AbcInstance> it = instances.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    for (AbcInstance instance : instances) {
+      instance.write(stream);
     }
-    for (Iterator<AbcClass> it = classes.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    for (AbcClass abcClass : classes) {
+      abcClass.write(stream);
     }
     stream.writeAbcInt(scripts.size());
-    for (Iterator<AbcScript> it = scripts.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    for (AbcScript script : scripts) {
+      script.write(stream);
     }
     stream.writeAbcInt(methodBodies.size());
-    for (Iterator<AbcMethodBody> it = methodBodies.iterator(); it.hasNext(); ) {
-      it.next().write(stream);
+    for (AbcMethodBody method : methodBodies) {
+      method.write(stream);
     }
   }
 

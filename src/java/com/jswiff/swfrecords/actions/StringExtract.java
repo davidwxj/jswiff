@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -43,19 +44,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class StringExtract extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new StringExtract action.
    */
   public StringExtract() {
-    code = ActionConstants.STRING_EXTRACT;
+    super(ActionType.STRING_EXTRACT);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"StringExtract"</code>
-   */
-  public String toString() {
-    return "StringExtract";
-  }
 }

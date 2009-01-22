@@ -21,7 +21,12 @@
 package com.jswiff.swfrecords;
 
 import java.io.IOException;
+import java.util.EnumSet;
 
+import com.jswiff.constants.TagConstants.CapStyle;
+import com.jswiff.constants.TagConstants.JointStyle;
+import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -29,15 +34,11 @@ import com.jswiff.io.OutputBitStream;
 /**
  * This class is used to define a line style. Contains line width and color.
  */
-public final class LineStyle2 extends EnhancedStrokeStyle {
+public final class LineStyle2 extends EnhancedStrokeStyle implements LineStyleTag {
+  
+  private static final long serialVersionUID = 1L;
+  
   private int width;
-  private byte startCapStyle   = CAPS_ROUND;
-  private byte endCapStyle     = CAPS_ROUND;
-  private byte jointStyle      = JOINT_ROUND;
-  private boolean pixelHinting;
-  private boolean close        = true;
-  private byte scaleStroke     = SCALE_BOTH;
-  private double miterLimit    = 3;
   private RGBA color           = RGBA.BLACK;
   private FillStyle fillStyle;
 
@@ -51,21 +52,21 @@ public final class LineStyle2 extends EnhancedStrokeStyle {
     this.width = width;
   }
 
-  LineStyle2(InputBitStream stream) throws IOException {
+  LineStyle2(InputBitStream stream) throws IOException, InvalidCodeException {
     width           = stream.readUI16();
-    startCapStyle   = (byte) stream.readUnsignedBits(2);
-    jointStyle      = (byte) stream.readUnsignedBits(2);
+    setStartCapStyle(CapStyle.lookup((short)stream.readUnsignedBits(2)));
+    setJointStyle(JointStyle.lookup((short) stream.readUnsignedBits(2)));
     boolean hasFill = stream.readBooleanBit();
     boolean noHScale = stream.readBooleanBit();
     boolean noVScale = stream.readBooleanBit();
-    scaleStroke     = (byte) ((noHScale ? 0 : SCALE_HORIZONTAL) |
-      (noVScale ? 0 : SCALE_VERTICAL));
-    pixelHinting    = stream.readBooleanBit();
+    //Bitwise OR the two flags to get a number between 0 - 3 representing the stroke scaling method
+    setScaleStroke(ScaleStrokeMethod.lookup( (short) ((noHScale ? 0 : 2) | (noVScale ? 0 : 1)) ));
+    setPixelHinting(stream.readBooleanBit());
     stream.readUnsignedBits(5);
-    close         = !stream.readBooleanBit();
-    endCapStyle   = (byte) stream.readUnsignedBits(2);
-    if (jointStyle == JOINT_MITER) {
-      miterLimit = stream.readFP16();
+    setClose(!stream.readBooleanBit());
+    setEndCapStyle(CapStyle.lookup((short) stream.readUnsignedBits(2)));
+    if (JointStyle.MITER.equals(getJointStyle())) {
+      setMiterLimit(stream.readFP16());
     }
     if (hasFill) {
       fillStyle   = new FillStyle(stream, true);
@@ -76,207 +77,51 @@ public final class LineStyle2 extends EnhancedStrokeStyle {
   }
 
   /**
-   * TODO: Comments
-   *
-   * @param close TODO: Comments
-   */
-  public void setClose(boolean close) {
-    this.close = close;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public boolean isClose() {
-    return close;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param color TODO: Comments
+   * Set the line colour
+   * @param color the line colour
    */
   public void setColor(RGBA color) {
     this.color = color;
   }
 
   /**
-   * Returns the line color.
-   *
-   * @return line color
+   * Returns the line colour.
+   * @return line colour
    */
   public RGBA getColor() {
     return color;
   }
 
-  /**
-   * TODO: Comments
-   *
-   * @param endCapStyle TODO: Comments
-   *
-   * @see EnhancedStrokeStyle
-   */
-  public void setEndCapStyle(byte endCapStyle) {
-    this.endCapStyle = endCapStyle;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public byte getEndCapStyle() {
-    return endCapStyle;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param fillStyle TODO: Comments
-   */
   public void setFillStyle(FillStyle fillStyle) {
     this.fillStyle = fillStyle;
   }
 
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
   public FillStyle getFillStyle() {
     return fillStyle;
   }
 
-  /**
-   * TODO: Comments
-   *
-   * @param jointStyle TODO: Comments
-   *
-   * @see EnhancedStrokeStyle
-   */
-  public void setJointStyle(byte jointStyle) {
-    this.jointStyle = jointStyle;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public byte getJointStyle() {
-    return jointStyle;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param miterLimit TODO: Comments
-   */
-  public void setMiterLimit(double miterLimit) {
-    this.miterLimit = miterLimit;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public double getMiterLimit() {
-    return miterLimit;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param pixelHinting TODO: Comments
-   */
-  public void setPixelHinting(boolean pixelHinting) {
-    this.pixelHinting = pixelHinting;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public boolean isPixelHinting() {
-    return pixelHinting;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param scaleStroke TODO: Comments
-   */
-  public void setScaleStroke(byte scaleStroke) {
-    this.scaleStroke = scaleStroke;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public byte getScaleStroke() {
-    return scaleStroke;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param startCapStyle TODO: Comments
-   *
-   * @see EnhancedStrokeStyle
-   */
-  public void setStartCapStyle(byte startCapStyle) {
-    this.startCapStyle = startCapStyle;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @return TODO: Comments
-   */
-  public byte getStartCapStyle() {
-    return startCapStyle;
-  }
-
-  /**
-   * TODO: Comments
-   *
-   * @param width TODO: Comments
-   */
   public void setWidth(int width) {
     this.width = width;
   }
 
-  /**
-   * Returns the line width in twips (1/20 px).
-   *
-   * @return line width in twips
-   */
   public int getWidth() {
     return width;
   }
 
-  void write(OutputBitStream stream) throws IOException {
+  public void write(OutputBitStream stream) throws IOException {
     stream.writeUI16(width);
-    stream.writeUnsignedBits(startCapStyle, 2);
-    stream.writeUnsignedBits(jointStyle, 2);
+    stream.writeUnsignedBits(getStartCapStyle().getCode(), 2);
+    stream.writeUnsignedBits(getJointStyle().getCode(), 2);
     boolean hasFill = fillStyle != null;
     stream.writeBooleanBit(hasFill);
-    stream.writeBooleanBit(
-      (scaleStroke == SCALE_VERTICAL) || (scaleStroke == SCALE_NONE));
-    stream.writeBooleanBit(
-      (scaleStroke == SCALE_HORIZONTAL) || (scaleStroke == SCALE_NONE));
-    stream.writeBooleanBit(pixelHinting);
+    stream.writeBooleanBit(EnumSet.of(ScaleStrokeMethod.VERTICAL, ScaleStrokeMethod.NONE).contains(getScaleStroke()));
+    stream.writeBooleanBit(EnumSet.of(ScaleStrokeMethod.HORIZONTAL, ScaleStrokeMethod.NONE).contains(getScaleStroke()));
+    stream.writeBooleanBit(isPixelHinting());
     stream.writeUnsignedBits(0, 5);
-    stream.writeBooleanBit(!close);
-    stream.writeUnsignedBits(endCapStyle, 2);
-    if (jointStyle == JOINT_MITER) {
-      stream.writeFP16(miterLimit);
+    stream.writeBooleanBit(!isClose());
+    stream.writeUnsignedBits(getEndCapStyle().getCode(), 2);
+    if (JointStyle.MITER.equals(getJointStyle())) {
+      stream.writeFP16(getMiterLimit());
     }
     if (hasFill) {
       fillStyle.write(stream);

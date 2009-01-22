@@ -22,103 +22,105 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
-
 /**
  * <p>
- * This tag defines a sprite character (i.e. a movie inside the main SWF
- * movie). It consists of a character ID, a frame count and several control
- * tags. Character instances referred to by these control tags in the sprite
- * must have been previously defined.
+ * This tag defines a sprite character (i.e. a movie inside the main SWF movie).
+ * It consists of a character ID, a frame count and several control tags.
+ * Character instances referred to by these control tags in the sprite must have
+ * been previously defined.
  * </p>
  * 
  * <p>
- * Once defined, the sprite can be displayed using the
- * <code>PlaceObject2</code> tag.
+ * Once defined, the sprite can be displayed using the <code>PlaceObject2</code>
+ * tag.
  * </p>
- *
+ * 
  * @see PlaceObject2
  * @since SWF 3
  */
 public final class DefineSprite extends DefinitionTag {
-  
-	private List<Tag> controlTags = new ArrayList<Tag>();
 
-	/**
-	 * Creates a new DefineSprite tag. Supply the character ID of the sprite.
-	 * After tag creation, use <code>addControlTag()</code> to add tags to the
-	 * sprite's tag list.
-	 *
-	 * @param characterId sprite's character ID
-	 */
-	public DefineSprite(int characterId) {
-		code				 = TagConstants.DEFINE_SPRITE;
-		this.characterId     = characterId;
-	}
+  private static final long serialVersionUID = 1L;
 
-	DefineSprite() {
-		// empty
-	}
+  private List<Tag> controlTags = new ArrayList<Tag>();
 
-	/**
-	 * Returns the list of control tags contained in the sprite.
-	 *
-	 * @return the sprite's control tags
-	 */
-	public List<Tag> getControlTags() {
-		return controlTags;
-	}
+  /**
+   * Creates a new DefineSprite tag. Supply the character ID of the sprite.
+   * After tag creation, use <code>addControlTag()</code> to add tags to the
+   * sprite's tag list.
+   * 
+   * @param characterId
+   *          sprite's character ID
+   */
+  public DefineSprite(int characterId) {
+    super(TagType.DEFINE_SPRITE);
+    this.characterId = characterId;
+  }
 
-	/**
-	 * Returns the number of frames contained in the sprite.
-	 *
-	 * @return Returns the frameCount.
-	 */
-	public int getFrameCount() {
-		int count = 0;
-		for (Iterator<Tag> i = controlTags.iterator(); i.hasNext();) {
-			if (i.next().getCode() == TagConstants.SHOW_FRAME) {
-				count++;
-			}
-		}
-		return count;
-	}
+  DefineSprite() {
+    super(TagType.DEFINE_SPRITE);
+  }
 
-	/**
-	 * Adds a control tag to the sprite. Do not use definition tags
-	 * (<code>Define...</code>) here!
-	 *
-	 * @param controlTag a control tag
-	 */
-	public void addControlTag(Tag controlTag) {
-		controlTags.add(controlTag);
-	}
+  /**
+   * Returns the list of control tags contained in the sprite.
+   * 
+   * @return the sprite's control tags
+   */
+  public List<Tag> getControlTags() {
+    return controlTags;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		forceLongHeader = true;
-		outStream.writeUI16(characterId);
-		outStream.writeUI16(getFrameCount());
-		TagWriter.writeTags(outStream, controlTags, getSWFVersion());
-	}
+  /**
+   * Returns the number of frames contained in the sprite.
+   * 
+   * @return Returns the frameCount.
+   */
+  public int getFrameCount() {
+    int count = 0;
+    for (Tag tag : controlTags) {
+      if (TagType.SHOW_FRAME.equals(tag.tagType())) {
+        count++;
+      }
+    }
+    return count;
+  }
 
-	void setData(byte[] data) throws IOException {
-	  InputBitStream inStream = new InputBitStream(data);
-	  characterId = inStream.readUI16();
-	  inStream.readUI16(); // frameCount
-	  do {
-	    Tag tag = TagReader.readTag(inStream, getSWFVersion(), isJapanese());
-	    if (tag.getCode() != TagConstants.END) {
-	      controlTags.add(tag);
-	    } else {
-	      break;
-	    }
-	  } while (true);
-	}
+  /**
+   * Adds a control tag to the sprite. Do not use definition tags (
+   * <code>Define...</code>) here!
+   * 
+   * @param controlTag
+   *          a control tag
+   */
+  public void addControlTag(Tag controlTag) {
+    controlTags.add(controlTag);
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    this.setForceLongHeader(true);
+    outStream.writeUI16(characterId);
+    outStream.writeUI16(getFrameCount());
+    TagWriter.writeTags(outStream, controlTags, getSWFVersion());
+  }
+
+  void setData(byte[] data) throws IOException, InvalidCodeException {
+    InputBitStream inStream = new InputBitStream(data);
+    characterId = inStream.readUI16();
+    inStream.readUI16(); // frameCount
+    do {
+      Tag tag = TagReader.readTag(inStream, getSWFVersion(), isJapanese());
+      if (!TagType.END.equals(tag.tagType())) {
+        controlTags.add(tag);
+      } else {
+        break;
+      }
+    } while (true);
+  }
 }

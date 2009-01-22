@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -39,19 +40,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 3
  */
 public final class PreviousFrame extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new PreviousFrame action.
    */
   public PreviousFrame() {
-    code = ActionConstants.PREVIOUS_FRAME;
+    super(ActionType.PREVIOUS_FRAME);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"PreviousFrame"</code>
-   */
-  public String toString() {
-    return "PreviousFrame";
-  }
 }

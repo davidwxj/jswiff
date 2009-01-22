@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -45,19 +46,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class Enumerate extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Enumerate action.
    */
   public Enumerate() {
-    code = ActionConstants.ENUMERATE;
+    super(ActionType.ENUMERATE);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Enumerate"</code>
-   */
-  public String toString() {
-    return "Enumerate";
-  }
 }

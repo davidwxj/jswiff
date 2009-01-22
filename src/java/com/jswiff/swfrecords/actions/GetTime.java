@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -39,19 +40,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class GetTime extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new GetTime action.
    */
   public GetTime() {
-    code = ActionConstants.GET_TIME;
+    super(ActionType.GET_TIME);
   }
-
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"GetTime"</code>
-   */
-  public String toString() {
-    return "GetTime";
-  }
+  
 }

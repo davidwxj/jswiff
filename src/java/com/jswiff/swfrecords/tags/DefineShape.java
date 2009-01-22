@@ -22,101 +22,107 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.ShapeWithStyle;
 
-
 /**
- * This tag defines a shape, assigning it a character ID. After definition,
- * this shape can be displayed on the screen (e.g. with
- * <code>PlaceObject</code>) or referenced from within other tags.  The
- * shape's primitives (i.e. lines and curves) and its styles are contained in
- * a <code>ShapeWithStyle</code> instance.
- *
+ * This tag defines a shape, assigning it a character ID. After definition, this
+ * shape can be displayed on the screen (e.g. with <code>PlaceObject</code>) or
+ * referenced from within other tags. The shape's primitives (i.e. lines and
+ * curves) and its styles are contained in a <code>ShapeWithStyle</code>
+ * instance.
+ * 
  * @see ShapeWithStyle
  * @see DefineShape2
  * @see DefineShape3
  * @since SWF 1
  */
 public final class DefineShape extends DefinitionTag {
-	private Rect shapeBounds;
-	private ShapeWithStyle shapes;
 
-	/**
-	 * Creates a new DefineShape tag. Supply the character ID of the shape, its
-	 * bounding box and its primitives and styles.
-	 *
-	 * @param characterId character ID of shape
-	 * @param shapeBounds bounding box of shape
-	 * @param shapes shape's primitives and styles
-	 */
-	public DefineShape(
-		int characterId, Rect shapeBounds, ShapeWithStyle shapes) {
-		code				 = TagConstants.DEFINE_SHAPE;
-		this.characterId     = characterId;
-		this.shapeBounds     = shapeBounds;
-		this.shapes			 = shapes;
-	}
+  private static final long serialVersionUID = 1L;
 
-	DefineShape() {
-		// empty
-	}
+  private Rect shapeBounds;
+  private ShapeWithStyle shapes;
 
-	/**
-	 * Sets the bounding box of the shape, i.e. the rectangle that completely
-	 * encloses it.
-	 *
-	 * @param shapeBounds shape's bounds
-	 */
-	public void setShapeBounds(Rect shapeBounds) {
-		this.shapeBounds = shapeBounds;
-	}
+  /**
+   * Creates a new DefineShape tag. Supply the character ID of the shape, its
+   * bounding box and its primitives and styles.
+   * 
+   * @param characterId
+   *          character ID of shape
+   * @param shapeBounds
+   *          bounding box of shape
+   * @param shapes
+   *          shape's primitives and styles
+   */
+  public DefineShape(int characterId, Rect shapeBounds, ShapeWithStyle shapes) {
+    super(TagType.DEFINE_SHAPE);
+    this.characterId = characterId;
+    this.shapeBounds = shapeBounds;
+    this.shapes = shapes;
+  }
 
-	/**
-	 * Returns the bounding box of the shape, i.e. the rectangle that
-	 * completely encloses it.
-	 *
-	 * @return shape's bounds
-	 */
-	public Rect getShapeBounds() {
-		return shapeBounds;
-	}
+  DefineShape() {
+    super(TagType.DEFINE_SHAPE);
+  }
 
-	/**
-	 * Sets the shape's primitives and styles (i.e. lines and curves) in a
-	 * <code>ShapeWithStyle</code> instance.
-	 *
-	 * @param shapes shape's primitives and styles
-	 */
-	public void setShapes(ShapeWithStyle shapes) {
-		this.shapes = shapes;
-	}
+  /**
+   * Sets the bounding box of the shape, i.e. the rectangle that completely
+   * encloses it.
+   * 
+   * @param shapeBounds
+   *          shape's bounds
+   */
+  public void setShapeBounds(Rect shapeBounds) {
+    this.shapeBounds = shapeBounds;
+  }
 
-	/**
-	 * Returns the shape's primitives and styles (i.e. lines and curves) in a
-	 * <code>ShapeWithStyle</code> instance.
-	 *
-	 * @return shape's primitives and styles
-	 */
-	public ShapeWithStyle getShapes() {
-		return shapes;
-	}
+  /**
+   * Returns the bounding box of the shape, i.e. the rectangle that completely
+   * encloses it.
+   * 
+   * @return shape's bounds
+   */
+  public Rect getShapeBounds() {
+    return shapeBounds;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		forceLongHeader = true;
-		outStream.writeUI16(characterId);
-		shapeBounds.write(outStream);
-		shapes.write(outStream);
-	}
+  /**
+   * Sets the shape's primitives and styles (i.e. lines and curves) in a
+   * <code>ShapeWithStyle</code> instance.
+   * 
+   * @param shapes
+   *          shape's primitives and styles
+   */
+  public void setShapes(ShapeWithStyle shapes) {
+    this.shapes = shapes;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		characterId     = inStream.readUI16();
-		shapeBounds     = new Rect(inStream);
-		shapes		    = new ShapeWithStyle(inStream, false); // no alpha here
-	}
+  /**
+   * Returns the shape's primitives and styles (i.e. lines and curves) in a
+   * <code>ShapeWithStyle</code> instance.
+   * 
+   * @return shape's primitives and styles
+   */
+  public ShapeWithStyle getShapes() {
+    return shapes;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    this.setForceLongHeader(true);
+    outStream.writeUI16(characterId);
+    shapeBounds.write(outStream);
+    shapes.write(outStream);
+  }
+
+  void setData(byte[] data) throws IOException, InvalidCodeException {
+    InputBitStream inStream = new InputBitStream(data);
+    characterId = inStream.readUI16();
+    shapeBounds = new Rect(inStream);
+    shapes = new ShapeWithStyle(inStream, false); // no alpha here
+  }
 }

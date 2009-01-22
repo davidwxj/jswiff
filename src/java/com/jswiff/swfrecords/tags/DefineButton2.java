@@ -23,69 +23,75 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.util.Vector;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
 
-
 /**
  * <p>
  * This tag defines a button character. It contains an array of at least one
- * <code>ButtonRecord</code> instance in order to define the button's
- * appearance depending on it's state. See <code>ButtonRecord</code> for
- * details on button states.
+ * <code>ButtonRecord</code> instance in order to define the button's appearance
+ * depending on it's state. See <code>ButtonRecord</code> for details on button
+ * states.
  * </p>
  * 
  * <p>
  * DefineButton2 allows actions to be triggered by any state transition. See
  * <code>ButtonCondAction</code> for details on button state transitions.
  * </p>
- *
+ * 
  * @see ButtonRecord
  * @see ButtonCondAction
  * @since SWF 3
  */
 public final class DefineButton2 extends DefinitionTag {
+
+  private static final long serialVersionUID = 1L;
+
   private boolean trackAsMenu;
   private ButtonRecord[] characters;
   private ButtonCondAction[] actions;
 
   /**
    * Creates a new DefineButton2 tag.
-   *
-   * @param characterId the button's character ID
-   * @param characters array of button records
-   * @param trackAsMenu if <code>true</code>, button can be influenced by
-   *        events started on other buttons
+   * 
+   * @param characterId
+   *          the button's character ID
+   * @param characters
+   *          array of button records
+   * @param trackAsMenu
+   *          if <code>true</code>, button can be influenced by events started
+   *          on other buttons
    */
-  public DefineButton2(
-    int characterId, ButtonRecord[] characters, boolean trackAsMenu) {
-    code               = TagConstants.DEFINE_BUTTON_2;
-    this.characterId   = characterId;
-    this.characters    = characters;
-    this.trackAsMenu   = trackAsMenu;
+  public DefineButton2(int characterId, ButtonRecord[] characters, boolean trackAsMenu) {
+    super(TagType.DEFINE_BUTTON_2);
+    this.characterId = characterId;
+    this.characters = characters;
+    this.trackAsMenu = trackAsMenu;
   }
-
+  
   DefineButton2() {
-    // empty
+    super(TagType.DEFINE_BUTTON_2);
   }
 
   /**
    * Sets an array of <code>ButtonCondAction</code> instaces which define the
    * button's behavior.
-   *
-   * @param actions <code>ButtonCondAction</code> array
+   * 
+   * @param actions
+   *          <code>ButtonCondAction</code> array
    */
   public void setActions(ButtonCondAction[] actions) {
     this.actions = actions;
   }
 
   /**
-   * Returns an array of <code>ButtonCondAction</code> instaces which define
-   * the button's behavior.
-   *
+   * Returns an array of <code>ButtonCondAction</code> instaces which define the
+   * button's behavior.
+   * 
    * @return <code>ButtonCondAction</code> array
    */
   public ButtonCondAction[] getActions() {
@@ -95,8 +101,9 @@ public final class DefineButton2 extends DefinitionTag {
   /**
    * Sets an array of at least one <code>ButtonRecord</code> instance defining
    * the appearance of the button depending on it's state.
-   *
-   * @param characters button records
+   * 
+   * @param characters
+   *          button records
    */
   public void setCharacters(ButtonRecord[] characters) {
     this.characters = characters;
@@ -105,7 +112,7 @@ public final class DefineButton2 extends DefinitionTag {
   /**
    * Returns an array of at least one <code>ButtonRecord</code> instance
    * defining the appearance of the button depending on it's state.
-   *
+   * 
    * @return button records
    */
   public ButtonRecord[] getCharacters() {
@@ -116,9 +123,9 @@ public final class DefineButton2 extends DefinitionTag {
    * Specifies whether the button is tracked as menu or as conventional button
    * (i.e. if the button's events are affected by events started on other
    * buttons or not).
-   *
-   * @param trackAsMenu <code>true</code> if tracked as menu button, otherwise
-   *        false
+   * 
+   * @param trackAsMenu
+   *          <code>true</code> if tracked as menu button, otherwise false
    */
   public void setTrackAsMenu(boolean trackAsMenu) {
     this.trackAsMenu = trackAsMenu;
@@ -128,7 +135,7 @@ public final class DefineButton2 extends DefinitionTag {
    * Checks if the button is tracked as menu or as conventional button (i.e. if
    * the button's events are affected by events started on other buttons or
    * not).
-   *
+   * 
    * @return <code>true</code> if tracked as menu button, otherwise false
    */
   public boolean isTrackAsMenu() {
@@ -136,7 +143,7 @@ public final class DefineButton2 extends DefinitionTag {
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
-    forceLongHeader = true;
+    this.setForceLongHeader(true);
     outStream.writeUI16(characterId);
     outStream.writeUnsignedBits(0, 7); // 7 reserved bits
     outStream.writeBooleanBit(trackAsMenu);
@@ -176,7 +183,7 @@ public final class DefineButton2 extends DefinitionTag {
     }
   }
 
-  void setData(byte[] data) throws IOException {
+  void setData(byte[] data) throws IOException, InvalidCodeException {
     InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {
@@ -185,8 +192,8 @@ public final class DefineButton2 extends DefinitionTag {
         inStream.setANSI(true);
       }
     }
-    characterId   = inStream.readUI16();
-    trackAsMenu   = ((inStream.readUI8() & 1) != 0); // ignore upper 7 bits
+    characterId = inStream.readUI16();
+    trackAsMenu = ((inStream.readUI8() & 1) != 0); // ignore upper 7 bits
     int actionOffset = inStream.readUI16();
 
     // read ButtonRecord array into characters
@@ -216,7 +223,7 @@ public final class DefineButton2 extends DefinitionTag {
 
     // read ButtonCondAction array into actions
     Vector<ButtonCondAction> buttonCondActions = new Vector<ButtonCondAction>();
-    int condActionSize       = -1;
+    int condActionSize = -1;
     do {
       condActionSize = inStream.readUI16();
       buttonCondActions.add(new ButtonCondAction(inStream));

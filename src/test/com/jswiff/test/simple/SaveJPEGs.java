@@ -28,7 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.jswiff.SWFReader;
-import com.jswiff.constants.TagConstants;
 import com.jswiff.listeners.SWFListener;
 import com.jswiff.listeners.SWFListenerAdapter;
 import com.jswiff.swfrecords.tags.DefineBitsJPEG2;
@@ -73,11 +72,11 @@ public class SaveJPEGs {
      */
     public void processTag(Tag tag, long streamOffset) {
       try {
-        switch (tag.getCode()) {
-          case TagConstants.DEFINE_BITS_JPEG_2:
+        switch (tag.tagType()) {
+          case DEFINE_BITS_JPEG_2:
             saveJPEG(((DefineBitsJPEG2) tag).getJpegData());
             break;
-          case TagConstants.DEFINE_BITS_JPEG_3:
+          case DEFINE_BITS_JPEG_3:
             saveJPEG(((DefineBitsJPEG3) tag).getJpegData());
             break;
         }

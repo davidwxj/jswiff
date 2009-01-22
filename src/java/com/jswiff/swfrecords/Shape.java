@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -41,6 +42,9 @@ import com.jswiff.io.OutputBitStream;
  * @see com.jswiff.swfrecords.tags.DefineMorphShape
  */
 public class Shape implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   // Byte number of fill/line styles - these are used as initial values for parsing,
   // StyleChangeRecords may contain new values used for further parsing.
   // However, these values aren't overwritten!
@@ -59,7 +63,7 @@ public class Shape implements Serializable {
 
   /*
    */
-  public Shape(InputBitStream stream) throws IOException {
+  public Shape(InputBitStream stream) throws IOException, InvalidCodeException {
     read(stream, false, false);
   }
 
@@ -109,7 +113,7 @@ public class Shape implements Serializable {
   }
 
   protected void read(InputBitStream stream, boolean useNewLineStyle, boolean hasAlpha)
-    throws IOException {
+    throws IOException, InvalidCodeException {
     numFillBits   = (byte) stream.readUnsignedBits(4);
     numLineBits   = (byte) stream.readUnsignedBits(4);
     // use values from Shape/ShapeWithStyle as initial values for parsing

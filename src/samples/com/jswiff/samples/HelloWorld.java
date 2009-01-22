@@ -20,6 +20,9 @@
 
 package com.jswiff.samples;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFWriter;
 import com.jswiff.swfrecords.Matrix;
@@ -29,9 +32,6 @@ import com.jswiff.swfrecords.tags.DefineEditText;
 import com.jswiff.swfrecords.tags.DefineFont2;
 import com.jswiff.swfrecords.tags.PlaceObject2;
 import com.jswiff.swfrecords.tags.ShowFrame;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 
 /**

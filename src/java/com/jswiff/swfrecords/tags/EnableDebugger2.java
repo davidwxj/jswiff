@@ -22,9 +22,8 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * <p>
@@ -37,57 +36,61 @@ import com.jswiff.io.OutputBitStream;
  * debugger has changed with version 6. In SWF 6 or later, this tag is used
  * instead of <code>EnableDebugger</code>.
  * </p>
- *
+ * 
  * @since SWF 6
  */
 public final class EnableDebugger2 extends Tag {
-	private String password;
 
-	/**
-	 * Creates a new EnableDebugger instance. Supply a password encrypted with
-	 * the MD5 algorithm.
-	 *
-	 * @param password MD5 encrypted password
-	 */
-	public EnableDebugger2(String password) {
-		code			  = TagConstants.ENABLE_DEBUGGER_2;
-		this.password     = password;
-	}
+  private static final long serialVersionUID = 1L;
 
-	EnableDebugger2() {
-		// empty
-	}
+  private String password;
 
-	/**
-	 * Sets the (MD5-encrypted) password.
-   *
-   * @param password encrypted password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  /**
+   * Creates a new EnableDebugger instance. Supply a password encrypted with the
+   * MD5 algorithm.
+   * 
+   * @param password
+   *          MD5 encrypted password
+   */
+  public EnableDebugger2(String password) {
+    super(TagType.ENABLE_DEBUGGER_2);
+    this.password = password;
+  }
 
-	/**
-	 * Returns the MD5-encrypted password.
-	 *
-	 * @return encrypted password
-	 */
-	public String getPassword() {
-		return password;
-	}
+  EnableDebugger2() {
+    super(TagType.ENABLE_DEBUGGER_2);
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(0);
-		if (password != null) {
-			outStream.writeString(password);
-		}
-	}
+  /**
+   * Sets the (MD5-encrypted) password.
+   * 
+   * @param password
+   *          encrypted password
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-	void setData(byte[] data) throws IOException {
-		if ((data.length > 3)) {
-			// reserved UINT16=0, then passwd as MD5
-			password = new String(data, 2, data.length - 3, "UTF-8");
-		}
-	}
+  /**
+   * Returns the MD5-encrypted password.
+   * 
+   * @return encrypted password
+   */
+  public String getPassword() {
+    return password;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(0);
+    if (password != null) {
+      outStream.writeString(password);
+    }
+  }
+
+  void setData(byte[] data) throws IOException {
+    if ((data.length > 3)) {
+      // reserved UINT16=0, then passwd as MD5
+      password = new String(data, 2, data.length - 3, "UTF-8");
+    }
+  }
 }

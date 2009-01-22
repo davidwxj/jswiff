@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -40,19 +41,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class ToString extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new ToString action.
    */
   public ToString() {
-    code = ActionConstants.TO_STRING;
+    super(ActionType.TO_STRING);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"ToString"</code>
-   */
-  public String toString() {
-    return "ToString";
-  }
 }

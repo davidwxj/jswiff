@@ -26,18 +26,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
 public class AbcInstance implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  
+
   public static final short SEALED_FLAG = 0x01;
   public static final short FINAL_FLAG = 0x02;
   public static final short INTERFACE_FLAG = 0x04;
   public static final short PROTECTED_NS_FLAG = 0x08;
-  
+
   private int nameIndex;
   private int supernameIndex;
   private short flags;
@@ -45,28 +46,28 @@ public class AbcInstance implements Serializable {
   private List<Integer> interfaceIndices = new ArrayList<Integer>();
   private int initializerIndex;
   private List<AbcTrait> traits = new ArrayList<AbcTrait>();
-  
+
   private AbcInstance() { } // empty
-  
+
   public AbcInstance(int nameIndex, int supernameIndex, int initializerIndex) {
     this.nameIndex = nameIndex;
     this.supernameIndex = supernameIndex;
     this.initializerIndex = initializerIndex;
   }
-  
+
   public boolean isSetFlag(short flag) {
     return ((flags & flag) != 0);
   }
-  
+
   public void setFlag(short flag) {
     flags |= flag;
   }
-  
-  public void clearFlags(short flag) {
+
+  public void clearFlags() {
     flags = 0;
   }
-  
-  public static AbcInstance read(InputBitStream stream) throws IOException {
+
+  public static AbcInstance read(InputBitStream stream) throws IOException, InvalidCodeException {
     AbcInstance inst = new AbcInstance();
     inst.nameIndex = stream.readAbcInt();
     inst.supernameIndex = stream.readAbcInt();
@@ -100,13 +101,8 @@ public class AbcInstance implements Serializable {
     }
     stream.writeAbcInt(initializerIndex);
     stream.writeAbcInt(traits.size());
-    for (Iterator<AbcTrait> it = traits.iterator(); it.hasNext(); ) {
-      AbcTrait trait = it.next();
-      if (trait instanceof AbcMethodTrait) {
-      ((AbcMethodTrait)trait).write(stream);
-      } else {
-        trait.write(stream);
-      }
+    for (AbcTrait trait : traits) {
+      trait.write(stream);
     }
   }
 

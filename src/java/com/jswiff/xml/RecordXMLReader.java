@@ -27,6 +27,14 @@ import java.util.List;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
+import com.jswiff.constants.TagConstants.BlendMode;
+import com.jswiff.constants.TagConstants.CapStyle;
+import com.jswiff.constants.TagConstants.FillType;
+import com.jswiff.constants.TagConstants.InterpolationMethod;
+import com.jswiff.constants.TagConstants.JointStyle;
+import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
+import com.jswiff.constants.TagConstants.SpreadMethod;
+import com.jswiff.exception.InvalidNameException;
 import com.jswiff.exception.MalformedElementException;
 import com.jswiff.exception.MissingAttributeException;
 import com.jswiff.exception.MissingElementException;
@@ -37,7 +45,6 @@ import com.jswiff.swfrecords.AlphaColorMapData;
 import com.jswiff.swfrecords.BevelFilter;
 import com.jswiff.swfrecords.BitmapData;
 import com.jswiff.swfrecords.BitmapPixelData;
-import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.BlurFilter;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
@@ -52,7 +59,6 @@ import com.jswiff.swfrecords.ColorMatrixFilter;
 import com.jswiff.swfrecords.ConvolutionFilter;
 import com.jswiff.swfrecords.CurvedEdgeRecord;
 import com.jswiff.swfrecords.DropShadowFilter;
-import com.jswiff.swfrecords.EnhancedStrokeStyle;
 import com.jswiff.swfrecords.FillStyle;
 import com.jswiff.swfrecords.FillStyleArray;
 import com.jswiff.swfrecords.Filter;
@@ -94,8 +100,9 @@ import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
 import com.jswiff.util.Base64;
 
-
+@SuppressWarnings("unchecked")
 class RecordXMLReader {
+  
   static boolean getBooleanAttribute(String name, Element parentElement) {
     // boolean attributes are written only for "true" values
     Attribute attribute = parentElement.attribute(name);
@@ -201,7 +208,7 @@ class RecordXMLReader {
     // TODO
   }
   
-  static void readActionBlock(ActionBlock actionBlock, Element parentElement) {
+  static void readActionBlock(ActionBlock actionBlock, Element parentElement) throws InvalidNameException {
     Element blockElement = getElement("actionblock", parentElement);
     List<Element> actionElements = blockElement.elements();
     for (Element actionElement : actionElements) {
@@ -235,7 +242,7 @@ class RecordXMLReader {
     return zones;
   }
 
-  static ButtonCondAction[] readButtonCondActions(Element parentElement) {
+  static ButtonCondAction[] readButtonCondActions(Element parentElement) throws InvalidNameException {
     Element actionsElement = parentElement.element("actions");
     if (actionsElement != null) {
       List actions                   = actionsElement.elements();
@@ -283,7 +290,7 @@ class RecordXMLReader {
     return null;
   }
 
-  static ButtonRecord[] readButtonRecords(Element parentElement) {
+  static ButtonRecord[] readButtonRecords(Element parentElement) throws InvalidNameException {
     Element charsElement   = getElement("chars", parentElement);
     List recordElements    = charsElement.elements("buttonrecord");
     int arrayLength        = recordElements.size();
@@ -306,8 +313,7 @@ class RecordXMLReader {
       }
       Attribute blendMode = recordElement.attribute("blendmode");
       if (blendMode != null) {
-        record.setBlendMode(
-          BlendMode.getFromDescription(blendMode.getValue()));
+        record.setBlendMode(BlendMode.lookup(blendMode.getValue()));
       }
       Element filters = recordElement.element("filters");
       if (filters != null) {
@@ -358,7 +364,7 @@ class RecordXMLReader {
     return colorTransform;
   }
 
-  static ClipActions readClipActions(Element element) {
+  static ClipActions readClipActions(Element element) throws InvalidNameException {
     ClipEventFlags eventFlags = readClipEventFlags(element);
     List recordElements       = element.elements("clipactionrecord");
     List<ClipActionRecord> records = new ArrayList<ClipActionRecord>();
@@ -561,58 +567,31 @@ class RecordXMLReader {
     return readMatrix(matrixElement);
   }
 
-  static MorphFillStyle readMorphFillStyle(Element element) {
+  static MorphFillStyle readMorphFillStyle(Element element) throws InvalidNameException {
     Element startElement = getElement("start", element);
     Element endElement   = getElement("end", element);
     String type          = getStringAttribute("type", element);
-    if (type.equals("solid")) {
+    FillType fillType = FillType.lookup(type);
+    switch (fillType.getGroup()) {
+    case SOLID:
       RGBA startColor = readRGBA(getElement("color", startElement));
       RGBA endColor   = readRGBA(getElement("color", endElement));
       return new MorphFillStyle(startColor, endColor);
-    } else if (type.equals("lineargradient")) {
+    case GRADIENT:
       return new MorphFillStyle(
-        readMorphGradient(element), readMatrix("gradientmatrix", startElement),
-        readMatrix("gradientmatrix", endElement),
-        MorphFillStyle.TYPE_LINEAR_GRADIENT);
-    } else if (type.equals("focalradialgradient")) {
+          readMorphGradient(element), readMatrix("gradientmatrix", startElement),
+          readMatrix("gradientmatrix", endElement), fillType);
+    case BITMAP:
       return new MorphFillStyle(
-        readMorphGradient(element), readMatrix("gradientmatrix", startElement),
-        readMatrix("gradientmatrix", endElement),
-        MorphFillStyle.TYPE_FOCAL_RADIAL_GRADIENT);
-    } else if (type.equals("radialgradient")) {
-      return new MorphFillStyle(
-        readMorphGradient(element), readMatrix("gradientmatrix", startElement),
-        readMatrix("gradientmatrix", endElement),
-        MorphFillStyle.TYPE_RADIAL_GRADIENT);
-    } else if (type.equals("tiledbitmap")) {
-      return new MorphFillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", startElement),
-        readMatrix("bitmapmatrix", endElement), MorphFillStyle.TYPE_TILED_BITMAP);
-    } else if (type.equals("clippedbitmap")) {
-      return new MorphFillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", startElement),
-        readMatrix("bitmapmatrix", endElement),
-        MorphFillStyle.TYPE_CLIPPED_BITMAP);
-    } else if (type.equals("nonsmoothedtiledbitmap")) {
-      return new MorphFillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", startElement),
-        readMatrix("bitmapmatrix", endElement),
-        MorphFillStyle.TYPE_NONSMOOTHED_TILED_BITMAP);
-    } else if (type.equals("nonsmoothedclippedbitmap")) {
-      return new MorphFillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", startElement),
-        readMatrix("bitmapmatrix", endElement),
-        MorphFillStyle.TYPE_NONSMOOTHED_CLIPPED_BITMAP);
-    } else {
-      throw new IllegalArgumentException("Illegal morph fill type: " + type);
+          getIntAttribute("bitmapid", element),
+          readMatrix("bitmapmatrix", startElement),
+          readMatrix("bitmapmatrix", endElement), fillType);
+    default:
+      throw new AssertionError("Unhandled morph fill type: " + type);
     }
   }
 
-  static MorphFillStyles readMorphFillStyles(Element parentElement) {
+  static MorphFillStyles readMorphFillStyles(Element parentElement) throws InvalidNameException {
     Element element        = getElement("morphfillstyles", parentElement);
     List styleElements     = element.elements();
     MorphFillStyles styles = new MorphFillStyles();
@@ -623,7 +602,7 @@ class RecordXMLReader {
     return styles;
   }
 
-  static MorphLineStyles readMorphLineStyles(Element parentElement) {
+  static MorphLineStyles readMorphLineStyles(Element parentElement) throws InvalidNameException {
     Element element        = getElement("morphlinestyles", parentElement);
     MorphLineStyles styles = new MorphLineStyles();
     List styleElements     = element.elements();
@@ -661,7 +640,7 @@ class RecordXMLReader {
     return new Rect(xMin, xMax, yMin, yMax);
   }
 
-  static Shape readShape(Element element) {
+  static Shape readShape(Element element) throws InvalidNameException {
     List shapeRecordElements   = element.elements();
     int arrayLength            = shapeRecordElements.size();
     ShapeRecord[] shapeRecords = new ShapeRecord[arrayLength];
@@ -678,7 +657,7 @@ class RecordXMLReader {
     return new Shape(shapeRecords);
   }
 
-  static ShapeWithStyle readShapeWithStyle(Element parentElement) {
+  static ShapeWithStyle readShapeWithStyle(Element parentElement) throws InvalidNameException {
     Element element            = getElement("shapewithstyle", parentElement);
     Element shape              = getElement("shape", element);
     List shapeRecordElements   = shape.elements();
@@ -825,25 +804,6 @@ class RecordXMLReader {
       " must contain either a pix15array or a pix24array element!");
   }
 
-  private static byte readCapStyle(String attrName, Element element) {
-    String capStyle = getStringAttribute(attrName, element);
-    if (capStyle.equals("none")) {
-      return EnhancedStrokeStyle.CAPS_NONE;
-    }
-    if (capStyle.equals("round")) {
-      return EnhancedStrokeStyle.CAPS_ROUND;
-    }
-    if (capStyle.equals("square")) {
-      return EnhancedStrokeStyle.CAPS_SQUARE;
-    } else {
-      try {
-        return Byte.parseByte(capStyle);
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Illegal cap style: " + capStyle);
-      }
-    }
-  }
-
   private static ClipEventFlags readClipEventFlags(Element parentElement) {
     Element element               = getElement("clipeventflags", parentElement);
     ClipEventFlags clipEventFlags = new ClipEventFlags();
@@ -916,47 +876,25 @@ class RecordXMLReader {
       controlDeltaX, controlDeltaY, anchorDeltaX, anchorDeltaY);
   }
 
-  private static FillStyle readFillStyle(Element element) {
-    String type = getStringAttribute("type", element);
-    if (type.equals("solid")) {
+  private static FillStyle readFillStyle(Element element) throws InvalidNameException {
+    String typeStr = getStringAttribute("type", element);
+    FillType type = FillType.lookup(typeStr);
+    switch (type.getGroup()) {
+    case SOLID:
       Color color = readColor(getElement("color", element));
       return new FillStyle(color);
-    } else if (type.equals("lineargradient")) {
-      return new FillStyle(
-        readGradient(element), readMatrix("gradientmatrix", element),
-        FillStyle.TYPE_LINEAR_GRADIENT);
-    } else if (type.equals("focalradialgradient")) {
-      return new FillStyle(
-        readGradient(element), readMatrix("gradientmatrix", element),
-        FillStyle.TYPE_FOCAL_RADIAL_GRADIENT);
-    } else if (type.equals("radialgradient")) {
-      return new FillStyle(
-        readGradient(element), readMatrix("gradientmatrix", element),
-        FillStyle.TYPE_RADIAL_GRADIENT);
-    } else if (type.equals("tiledbitmap")) {
-      return new FillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", element), FillStyle.TYPE_TILED_BITMAP);
-    } else if (type.equals("clippedbitmap")) {
-      return new FillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", element), FillStyle.TYPE_CLIPPED_BITMAP);
-    } else if (type.equals("nonsmoothedtiledbitmap")) {
-      return new FillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", element),
-        FillStyle.TYPE_NONSMOOTHED_TILED_BITMAP);
-    } else if (type.equals("nonsmoothedclippedbitmap")) {
-      return new FillStyle(
-        getIntAttribute("bitmapid", element),
-        readMatrix("bitmapmatrix", element),
-        FillStyle.TYPE_NONSMOOTHED_CLIPPED_BITMAP);
-    } else {
-      throw new IllegalArgumentException("Illegal fill type: " + type);
+    case GRADIENT:
+      return new FillStyle(readGradient(element),
+          readMatrix("gradientmatrix", element), type);
+    case BITMAP:
+      return new FillStyle(getIntAttribute("bitmapid", element),
+          readMatrix("bitmapmatrix", element), type);
+    default:
+      throw new AssertionError("Unhandled fill type: " + type);
     }
   }
 
-  private static FillStyleArray readFillStyles(Element element) {
+  private static FillStyleArray readFillStyles(Element element) throws InvalidNameException {
     List styleElements        = element.elements();
     FillStyleArray styleArray = new FillStyleArray();
     for (Iterator it = styleElements.iterator(); it.hasNext();) {
@@ -980,7 +918,7 @@ class RecordXMLReader {
     return entries;
   }
 
-  private static Gradient readGradient(Element parentElement) {
+  private static Gradient readGradient(Element parentElement) throws InvalidNameException {
     Element element = parentElement.element("gradient");
     boolean focal   = false;
     if (element == null) {
@@ -1007,39 +945,21 @@ class RecordXMLReader {
     gradient.setSpreadMethod(readSpreadMethod(element));
     return gradient;
   }
-
-  private static byte readInterpolationMethod(Element element) {
-    String interpolation = getStringAttribute("interpolation", element);
-    if (interpolation.equals("linear-rgb")) {
-      return Gradient.INTERPOLATION_LINEAR_RGB;
-    } else if (interpolation.equals("rgb")) {
-      return Gradient.INTERPOLATION_RGB;
-    } else {
-      try {
-        return Byte.parseByte(interpolation);
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Illegal interpolation method: " + interpolation);
-      }
-    }
+  
+  private static CapStyle readStartCapStyle(Element element) throws InvalidNameException {
+    return CapStyle.lookup(getStringAttribute("start", element));
+  }
+  
+  private static CapStyle readEndCapStyle(Element element) throws InvalidNameException {
+    return CapStyle.lookup(getStringAttribute("end", element));
+  }
+  
+  private static InterpolationMethod readInterpolationMethod(Element element) throws InvalidNameException {
+    return InterpolationMethod.lookup(getStringAttribute("interpolation", element));
   }
 
-  private static byte readJointStyle(Element element) {
-    String jointStyle = getStringAttribute("joint", element);
-    if (jointStyle.equals("round")) {
-      return EnhancedStrokeStyle.JOINT_ROUND;
-    }
-    if (jointStyle.equals("miter")) {
-      return EnhancedStrokeStyle.JOINT_ROUND;
-    }
-    if (jointStyle.equals("bevel")) {
-      return EnhancedStrokeStyle.JOINT_ROUND;
-    } else {
-      try {
-        return Byte.parseByte(jointStyle);
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Illegal joint style: " + jointStyle);
-      }
-    }
+  private static JointStyle readJointStyle(Element element) throws InvalidNameException {
+    return JointStyle.lookup(getStringAttribute("joint", element));
   }
 
   private static LineStyle readLineStyle(Element element) {
@@ -1048,16 +968,16 @@ class RecordXMLReader {
     return new LineStyle(width, color);
   }
 
-  private static LineStyle2 readLineStyle2(Element element) {
+  private static LineStyle2 readLineStyle2(Element element) throws InvalidNameException {
     LineStyle2 lineStyle2 = new LineStyle2(getIntAttribute("width", element));
-    byte jointStyle       = readJointStyle(element);
+    JointStyle jointStyle = readJointStyle(element);
     lineStyle2.setJointStyle(jointStyle);
-    if (jointStyle == EnhancedStrokeStyle.JOINT_MITER) {
+    if (JointStyle.MITER.equals(jointStyle)) {
       lineStyle2.setMiterLimit(getDoubleAttribute("miterlimit", element));
     }
     Element capStyleElement = getElement("capstyle", element);
-    lineStyle2.setStartCapStyle(readCapStyle("start", capStyleElement));
-    lineStyle2.setStartCapStyle(readCapStyle("end", capStyleElement));
+    lineStyle2.setStartCapStyle(readStartCapStyle(capStyleElement));
+    lineStyle2.setStartCapStyle(readEndCapStyle(capStyleElement));
     lineStyle2.setScaleStroke(readScaleStroke(element));
     lineStyle2.setClose(getBooleanAttribute("close", element));
     lineStyle2.setPixelHinting(getBooleanAttribute("pixelhinting", element));
@@ -1071,7 +991,7 @@ class RecordXMLReader {
     return lineStyle2;
   }
 
-  private static LineStyleArray readLineStyles(Element element) {
+  private static LineStyleArray readLineStyles(Element element) throws InvalidNameException {
     LineStyleArray styleArray = new LineStyleArray();
     List styleElements        = element.elements();
     for (Iterator it = styleElements.iterator(); it.hasNext();) {
@@ -1085,7 +1005,7 @@ class RecordXMLReader {
     return styleArray;
   }
 
-  private static MorphGradient readMorphGradient(Element parentElement) {
+  private static MorphGradient readMorphGradient(Element parentElement) throws InvalidNameException {
     Element element = parentElement.element("morphgradient");
     boolean focal   = false;
     if (element == null) {
@@ -1132,7 +1052,7 @@ class RecordXMLReader {
     return new MorphLineStyle(startWidth, startColor, endWidth, endColor);
   }
 
-  private static MorphLineStyle2 readMorphLineStyle2(Element element) {
+  private static MorphLineStyle2 readMorphLineStyle2(Element element) throws InvalidNameException {
     Element startElement       = getElement("start", element);
     int startWidth             = getIntAttribute("width", startElement);
     Element endElement         = getElement("end", element);
@@ -1148,14 +1068,14 @@ class RecordXMLReader {
       MorphFillStyle fillStyle = readMorphFillStyle(fillStyleElement);
       lineStyle2 = new MorphLineStyle2(startWidth, endWidth, fillStyle);
     }
-    byte jointStyle = readJointStyle(element);
+    JointStyle jointStyle = readJointStyle(element);
     lineStyle2.setJointStyle(jointStyle);
-    if (jointStyle == EnhancedStrokeStyle.JOINT_MITER) {
+    if (JointStyle.MITER.equals(jointStyle)) {
       lineStyle2.setMiterLimit(getDoubleAttribute("miterlimit", element));
     }
     Element capStyleElement = getElement("capstyle", element);
-    lineStyle2.setStartCapStyle(readCapStyle("start", capStyleElement));
-    lineStyle2.setStartCapStyle(readCapStyle("end", capStyleElement));
+    lineStyle2.setStartCapStyle(readStartCapStyle(capStyleElement));
+    lineStyle2.setStartCapStyle(readEndCapStyle(capStyleElement));
     lineStyle2.setScaleStroke(readScaleStroke(element));
     lineStyle2.setClose(getBooleanAttribute("close", element));
     lineStyle2.setPixelHinting(getBooleanAttribute("pixelhinting", element));
@@ -1188,19 +1108,8 @@ class RecordXMLReader {
     return rgbArray;
   }
 
-  private static byte readScaleStroke(Element element) {
-    String scaleStroke = getStringAttribute("scalestroke", element);
-    if (scaleStroke.equals("none")) {
-      return EnhancedStrokeStyle.SCALE_NONE;
-    } else if (scaleStroke.equals("horizontal")) {
-      return EnhancedStrokeStyle.SCALE_HORIZONTAL;
-    } else if (scaleStroke.equals("vertical")) {
-      return EnhancedStrokeStyle.SCALE_VERTICAL;
-    } else if (scaleStroke.equals("both")) {
-      return EnhancedStrokeStyle.SCALE_BOTH;
-    } else {
-      throw new IllegalArgumentException("Illegal scale stroke: " + scaleStroke);
-    }
+  private static ScaleStrokeMethod readScaleStroke(Element element) throws InvalidNameException {
+    return ScaleStrokeMethod.lookup(getStringAttribute("scalestroke", element));
   }
 
   private static SoundEnvelope[] readSoundEnvelopeRecords(
@@ -1219,21 +1128,8 @@ class RecordXMLReader {
     return records;
   }
 
-  private static byte readSpreadMethod(Element element) {
-    String spread = getStringAttribute("spread", element);
-    if (spread.equals("pad")) {
-      return Gradient.SPREAD_PAD;
-    } else if (spread.equals("reflect")) {
-      return Gradient.SPREAD_REFLECT;
-    } else if (spread.equals("repeat")) {
-      return Gradient.SPREAD_REPEAT;
-    } else {
-      try {
-        return Byte.parseByte(spread);
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Illegal spread: " + spread);
-      }
-    }
+  private static SpreadMethod readSpreadMethod(Element element) throws InvalidNameException {
+    return SpreadMethod.lookup(getStringAttribute("spread", element));
   }
 
   private static ShapeRecord readStraightEdgeRecord(Element element) {
@@ -1242,7 +1138,7 @@ class RecordXMLReader {
     return new StraightEdgeRecord(deltaX, deltaY);
   }
 
-  private static ShapeRecord readStyleChangeRecord(Element element) {
+  private static ShapeRecord readStyleChangeRecord(Element element) throws InvalidNameException {
     StyleChangeRecord record = new StyleChangeRecord();
     Element moveTo           = element.element("moveto");
     if (moveTo != null) {

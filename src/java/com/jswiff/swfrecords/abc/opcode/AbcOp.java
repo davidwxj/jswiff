@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 import com.jswiff.constants.AbcConstants.OpCode;
 import com.jswiff.constants.AbcConstants.OpCodeType;
-import com.jswiff.exception.UnknownCodeException;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -33,7 +33,7 @@ public abstract class AbcOp implements Serializable {
 
   private static final long serialVersionUID = 1L;
   
-  private final OpCode opCode;
+  public final OpCode opCode;
 
   public AbcOp(OpCode opCode, OpCodeType opCodeType) {
     if (!opCode.getType().equals(opCodeType)) {
@@ -42,10 +42,9 @@ public abstract class AbcOp implements Serializable {
     this.opCode = opCode;
   }
 
-  public static AbcOp read(InputBitStream stream) throws IOException {
+  public static AbcOp read(InputBitStream stream) throws InvalidCodeException, IOException {
     short code = stream.readUI8();
-    OpCode opCode = OpCode.lookupOpCode(code);
-    if (opCode == null) throw new UnknownCodeException("Unknown abc byte code operation, opcode = " + code, code);
+    OpCode opCode = OpCode.lookup(code);
     AbcOp op;
     switch(opCode.getType()) {
     case INDEX:
@@ -85,13 +84,19 @@ public abstract class AbcOp implements Serializable {
       op = new AbcOpSimple(opCode);
       break;
     default:
-      throw new AssertionError("Unknown opcode type '" + opCode.getType() + "'");
+      throw new AssertionError("Opcode type '" + opCode.getType() + "' not handled!");
     }
     return op;
   }
-
-  public OpCode getOpcode() {
-    return this.opCode;
+  
+  @Override
+  public String toString() {
+    String[] bits = this.opCode.name().split("_");
+    String niceName = "";
+    for (String bit : bits) {
+      niceName += bit.substring(0, 1).concat(bit.substring(1).toLowerCase());
+    }
+    return niceName;
   }
 
   public abstract void write(OutputBitStream stream) throws IOException;

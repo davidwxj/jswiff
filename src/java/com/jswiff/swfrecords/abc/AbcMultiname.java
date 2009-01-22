@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import com.jswiff.constants.AbcConstants.MultiNameKind;
-import com.jswiff.exception.UnknownCodeException;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -74,11 +74,10 @@ public class AbcMultiname implements Serializable {
     return mn;
   }
   
-  public static AbcMultiname read(InputBitStream stream) throws IOException {
+  public static AbcMultiname read(InputBitStream stream) throws IOException, InvalidCodeException {
     AbcMultiname mn = new AbcMultiname();
     short kind = stream.readUI8();
-    MultiNameKind mnKind = MultiNameKind.getKind(kind);
-    if (mnKind == null) throw new UnknownCodeException("Unknown multiname kind: " + kind, kind);
+    MultiNameKind mnKind = MultiNameKind.lookup(kind);
     switch (mnKind) {
       case Q_NAME:
       case Q_NAME_A:
@@ -163,7 +162,8 @@ public class AbcMultiname implements Serializable {
     case Q_NAME_A:
     case MULTINAME:
     case MULTINAME_A:
-      str = str + ": nameIndex = " + this.nameIndex + ", nameSpaceIndex = " + this.namespaceIndex;
+      str = str + ": nameIndex = " + this.nameIndex
+        + ", nameSpaceIndex = " + this.namespaceIndex;
       break;
     case RTQ_NAME:
     case RTQ_NAME_A:

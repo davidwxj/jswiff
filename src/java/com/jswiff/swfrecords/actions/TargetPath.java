@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class TargetPath extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new TargetPath action.
    */
   public TargetPath() {
-    code = ActionConstants.TARGET_PATH;
+    super(ActionType.TARGET_PATH);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"TargetPath"</code>
-   */
-  public String toString() {
-    return "TargetPath";
-  }
 }

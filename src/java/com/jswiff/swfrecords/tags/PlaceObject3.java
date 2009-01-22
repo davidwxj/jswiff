@@ -23,20 +23,23 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.util.List;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.BlendMode;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.CXformWithAlpha;
 import com.jswiff.swfrecords.ClipActions;
 import com.jswiff.swfrecords.Filter;
 import com.jswiff.swfrecords.Matrix;
 
-
 /**
  * TODO: Comments
  */
 public final class PlaceObject3 extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private boolean move;
   private int depth;
   private int characterId;
@@ -47,7 +50,7 @@ public final class PlaceObject3 extends Tag {
   private int clipDepth;
   private ClipActions clipActions;
   private List<Filter> filters;
-  private short blendMode;
+  private BlendMode blendMode;
   private boolean hasClipActions;
   private boolean hasClipDepth;
   private boolean hasName;
@@ -64,45 +67,48 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Creates a new PlaceObject3 tag.
-   *
-   * @param depth depth the character is placed at
+   * 
+   * @param depth
+   *          depth the character is placed at
    */
   public PlaceObject3(int depth) {
-    code         = TagConstants.PLACE_OBJECT_3;
-    this.depth   = depth;
+    super(TagType.PLACE_OBJECT_3);
+    this.depth = depth;
   }
 
   PlaceObject3() {
-    // empty
+    super(TagType.PLACE_OBJECT_3);
   }
 
   /**
    * TODO: Comments
-   *
-   * @param blendMode TODO: Comments
-   *
+   * 
+   * @param blendMode
+   *          TODO: Comments
+   * 
    * @see BlendMode
    */
-  public void setBlendMode(short blendMode) {
-    this.blendMode   = blendMode;
-    hasBlendMode     = true;
+  public void setBlendMode(BlendMode blendMode) {
+    this.blendMode = blendMode;
+    hasBlendMode = true;
   }
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
-   *
+   * 
    * @see BlendMode
    */
-  public short getBlendMode() {
+  public BlendMode getBlendMode() {
     return blendMode;
   }
 
   /**
    * TODO: Comments
-   *
-   * @param cacheAsBitmap TODO: Comments
+   * 
+   * @param cacheAsBitmap
+   *          TODO: Comments
    */
   public void setCacheAsBitmap(boolean cacheAsBitmap) {
     this.cacheAsBitmap = cacheAsBitmap;
@@ -110,7 +116,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public boolean isCacheAsBitmap() {
@@ -120,19 +126,20 @@ public final class PlaceObject3 extends Tag {
   /**
    * Sets the character ID. If this ID is set, the corresponding character is
    * displayed at the depth specified with the constructor.
-   *
-   * @param characterId The characterId to set.
+   * 
+   * @param characterId
+   *          The characterId to set.
    */
   public void setCharacterId(int characterId) {
-    this.characterId   = characterId;
-    hasCharacter       = true;
+    this.characterId = characterId;
+    hasCharacter = true;
   }
 
   /**
-   * Returns the character ID. If this ID is set, the corresponding character
-   * is displayed at the depth specified with the constructor. Check with
+   * Returns the character ID. If this ID is set, the corresponding character is
+   * displayed at the depth specified with the constructor. Check with
    * <code>hasCharacter()</code> if set.
-   *
+   * 
    * @return Returns the characterId.
    */
   public int getCharacterId() {
@@ -141,18 +148,19 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Sets the event handlers (only for sprite characters).
-   *
-   * @param clipActions event handlers
+   * 
+   * @param clipActions
+   *          event handlers
    */
   public void setClipActions(ClipActions clipActions) {
-    this.clipActions   = clipActions;
-    hasClipActions     = (clipActions != null);
+    this.clipActions = clipActions;
+    hasClipActions = (clipActions != null);
   }
 
   /**
    * Returns the event handlers (only for sprite characters). Check with
    * <code>hasClipActions()</code> if set.
-   *
+   * 
    * @return Returns the clipActions.
    */
   public ClipActions getClipActions() {
@@ -163,19 +171,20 @@ public final class PlaceObject3 extends Tag {
    * Sets the clip depth, indicating that the character is a clipping character
    * which masks characters at depths up to and including the specified clip
    * depth
-   *
-   * @param clipDepth the clip depth
+   * 
+   * @param clipDepth
+   *          the clip depth
    */
   public void setClipDepth(int clipDepth) {
-    this.clipDepth   = clipDepth;
-    hasClipDepth     = true;
+    this.clipDepth = clipDepth;
+    hasClipDepth = true;
   }
 
   /**
    * Returs the clip depth (which indicates that the character is a clipping
    * character masking characters at depths up to and including the specified
    * clip depth). Check with <code>hasclipDepth()</code> if set.
-   *
+   * 
    * @return clip depth of character
    */
   public int getClipDepth() {
@@ -185,19 +194,20 @@ public final class PlaceObject3 extends Tag {
   /**
    * Sets the color transform, allowing color effects to be applied to the
    * character to be displayed.
-   *
-   * @param colorTransform a color transform
+   * 
+   * @param colorTransform
+   *          a color transform
    */
   public void setColorTransform(CXformWithAlpha colorTransform) {
-    this.colorTransform   = colorTransform;
-    hasColorTransform     = (colorTransform != null);
+    this.colorTransform = colorTransform;
+    hasColorTransform = (colorTransform != null);
   }
 
   /**
-   * Returns the color transform which allows color effects to be applied to
-   * the character to be displayed. Check with
-   * <code>hasColorTransform()</code> if set.
-   *
+   * Returns the color transform which allows color effects to be applied to the
+   * character to be displayed. Check with <code>hasColorTransform()</code> if
+   * set.
+   * 
    * @return Returns the colorTransform.
    */
   public CXformWithAlpha getColorTransform() {
@@ -206,8 +216,9 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Sets the depth the character will be displayed at.
-   *
-   * @param depth display depth
+   * 
+   * @param depth
+   *          display depth
    */
   public void setDepth(int depth) {
     this.depth = depth;
@@ -215,7 +226,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Returns the depth the character will be displayed at.
-   *
+   * 
    * @return display depth
    */
   public int getDepth() {
@@ -224,17 +235,18 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param filters TODO: Comments
+   * 
+   * @param filters
+   *          TODO: Comments
    */
   public void setFilters(List<Filter> filters) {
-    this.filters   = filters;
-    hasFilters     = (filters != null);
+    this.filters = filters;
+    hasFilters = (filters != null);
   }
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public List<Filter> getFilters() {
@@ -244,19 +256,20 @@ public final class PlaceObject3 extends Tag {
   /**
    * Sets the tranform matrix, specifying position, scale, rotation etc. of the
    * character to be displayed.
-   *
-   * @param matrix transform matrix
+   * 
+   * @param matrix
+   *          transform matrix
    */
   public void setMatrix(Matrix matrix) {
-    this.matrix   = matrix;
-    hasMatrix     = (matrix != null);
+    this.matrix = matrix;
+    hasMatrix = (matrix != null);
   }
 
   /**
-   * Returns the tranform matrix, which specifies position, scale, rotation
-   * etc. of the character to be displayed. Check with
-   * <code>hasMatrix()</code> if set.
-   *
+   * Returns the tranform matrix, which specifies position, scale, rotation etc.
+   * of the character to be displayed. Check with <code>hasMatrix()</code> if
+   * set.
+   * 
    * @return transform matrix
    */
   public Matrix getMatrix() {
@@ -265,9 +278,9 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * <p>
-   * Sets the move flag. If set, the character at the given depth is removed.
-   * It is replaced either by a modified instance of the removed character or
-   * (if a character ID is specified) by a new character.
+   * Sets the move flag. If set, the character at the given depth is removed. It
+   * is replaced either by a modified instance of the removed character or (if a
+   * character ID is specified) by a new character.
    * </p>
    * 
    * <p>
@@ -282,9 +295,10 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Sets or clears the move flag.
-   *
-   * @param move value of move flag
-   *
+   * 
+   * @param move
+   *          value of move flag
+   * 
    * @see PlaceObject3#setMove()
    */
   public void setMove(boolean move) {
@@ -295,7 +309,7 @@ public final class PlaceObject3 extends Tag {
    * Checks the move flag. If set, the character at the given depth is removed.
    * It is replaced either by a modified instance of the removed character or
    * (if a character ID is specified) by a new character.
-   *
+   * 
    * @return <code>true</code> if move flag set, else <code>false</code>
    */
   public boolean isMove() {
@@ -306,19 +320,20 @@ public final class PlaceObject3 extends Tag {
    * Assigns a name to the instance of the character to be placed, in order to
    * be able to reference this instance by the assigend name (e.g. within
    * <code>With</code>).
-   *
-   * @param name instance name
+   * 
+   * @param name
+   *          instance name
    */
   public void setName(String name) {
-    this.name   = name;
-    hasName     = (name != null);
+    this.name = name;
+    hasName = (name != null);
   }
 
   /**
-   * Returns the name assigned to the instance of the character to be placed,
-   * in order to be able to reference this instance by the assigend name (e.g.
+   * Returns the name assigned to the instance of the character to be placed, in
+   * order to be able to reference this instance by the assigend name (e.g.
    * within <code>With</code>). Check with <code>hasName()</code> if set.
-   *
+   * 
    * @return instance name
    */
   public String getName() {
@@ -326,14 +341,15 @@ public final class PlaceObject3 extends Tag {
   }
 
   /**
-   * Sets the morph ratio which indicates how far the morph has progressed
-   * (only for characters defined with <code>DefineMorphShape</code>). Values
-   * between 0 and 65535 are permitted. A ratio of 0 displays the character at
-   * morph start, 65535 causes the character to be displayed at the end of the
-   * morph. Values between 0 and 65535 cause the Flash Player to interpolate
-   * between start and end shapes.
-   *
-   * @param ratio morph ratio
+   * Sets the morph ratio which indicates how far the morph has progressed (only
+   * for characters defined with <code>DefineMorphShape</code>). Values between
+   * 0 and 65535 are permitted. A ratio of 0 displays the character at morph
+   * start, 65535 causes the character to be displayed at the end of the morph.
+   * Values between 0 and 65535 cause the Flash Player to interpolate between
+   * start and end shapes.
+   * 
+   * @param ratio
+   *          morph ratio
    */
   public void setRatio(int ratio) {
     if (ratio < 0) {
@@ -348,18 +364,18 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * <p>
-   * Sets the morph ratio which indicates how far the morph has progressed
-   * (only for characters defined with <code>DefineMorphShape</code>). Values
-   * between 0 and 65535 are returned. A ratio of 0 displays the character at
-   * morph start, 65535 causes the character to be displayed at the end of the
-   * morph. Values between 0 and 65535 cause the Flash Player to interpolate
-   * between start and end shapes.
+   * Sets the morph ratio which indicates how far the morph has progressed (only
+   * for characters defined with <code>DefineMorphShape</code>). Values between
+   * 0 and 65535 are returned. A ratio of 0 displays the character at morph
+   * start, 65535 causes the character to be displayed at the end of the morph.
+   * Values between 0 and 65535 cause the Flash Player to interpolate between
+   * start and end shapes.
    * </p>
    * 
    * <p>
    * Check with <code>hasRatio()</code> if set.
    * </p>
-   *
+   * 
    * @return Returns the ratio.
    */
   public int getRatio() {
@@ -368,7 +384,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public boolean hasBlendMode() {
@@ -377,7 +393,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks whether the character ID is set.
-   *
+   * 
    * @return <code>true</code> if character ID set, else <code>false</code>
    */
   public boolean hasCharacter() {
@@ -386,7 +402,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks whether clip actions (sprite event handlers) have been specified.
-   *
+   * 
    * @return <code>true</code> if clip actions set, else <code>false</code>
    */
   public boolean hasClipActions() {
@@ -395,7 +411,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks if the value of the clip depth was set.
-   *
+   * 
    * @return <code>true</code> if clip depth set, else <code>false</code>
    */
   public boolean hasClipDepth() {
@@ -404,7 +420,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks whether the color transform is specified.
-   *
+   * 
    * @return <code>true</code> if color transform set, else <code>false</code>
    */
   public boolean hasColorTransform() {
@@ -413,7 +429,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public boolean hasFilters() {
@@ -422,7 +438,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks if a transform matrix is specified.
-   *
+   * 
    * @return <code>true</code> if transform matrix set, else <code>false</code>
    */
   public boolean hasMatrix() {
@@ -431,7 +447,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks if a name is assigned to the character instance to be displayed.
-   *
+   * 
    * @return <code>true</code> if character instance name set, else
    *         <code>false</code>
    */
@@ -441,7 +457,7 @@ public final class PlaceObject3 extends Tag {
 
   /**
    * Checks if the morph ratio is set.
-   *
+   * 
    * @return <code>true</code> if ratio set, else <code>false</code>
    */
   public boolean hasRatio() {
@@ -451,27 +467,27 @@ public final class PlaceObject3 extends Tag {
   public void setHasImage(boolean hasImage) {
     this.hasImage = hasImage;
   }
-  
+
   public boolean hasImage() {
     return hasImage;
   }
-  
+
   public void setHasClassName(boolean hasClassName) {
     this.hasClassName = hasClassName;
   }
-  
+
   public boolean hasClassName() {
     return hasClassName;
   }
-  
+
   public String getClassName() {
     return className;
   }
-  
+
   public void setClassName(String className) {
     this.className = className;
   }
-  
+
   protected void writeData(OutputBitStream outStream) throws IOException {
     outStream.writeBooleanBit(hasClipActions);
     outStream.writeBooleanBit(hasClipDepth);
@@ -513,7 +529,7 @@ public final class PlaceObject3 extends Tag {
       Filter.writeFilters(filters, outStream);
     }
     if (hasBlendMode) {
-      outStream.writeUI8(blendMode);
+      outStream.writeUI8(blendMode.getCode());
     }
     if (cacheAsBitmap) {
       outStream.writeUI8((short) 1);
@@ -523,23 +539,23 @@ public final class PlaceObject3 extends Tag {
     }
   }
 
-  void setData(byte[] data) throws IOException {
+  void setData(byte[] data) throws IOException, InvalidCodeException {
     InputBitStream inStream = new InputBitStream(data);
-    hasClipActions      = inStream.readBooleanBit();
-    hasClipDepth        = inStream.readBooleanBit();
-    hasName             = inStream.readBooleanBit();
-    hasRatio            = inStream.readBooleanBit();
-    hasColorTransform   = inStream.readBooleanBit();
-    hasMatrix           = inStream.readBooleanBit();
-    hasCharacter        = inStream.readBooleanBit();
-    move                = inStream.readBooleanBit();
+    hasClipActions = inStream.readBooleanBit();
+    hasClipDepth = inStream.readBooleanBit();
+    hasName = inStream.readBooleanBit();
+    hasRatio = inStream.readBooleanBit();
+    hasColorTransform = inStream.readBooleanBit();
+    hasMatrix = inStream.readBooleanBit();
+    hasCharacter = inStream.readBooleanBit();
+    move = inStream.readBooleanBit();
     inStream.readUnsignedBits(3);
-    hasImage        = inStream.readBooleanBit();
-    hasClassName    = inStream.readBooleanBit();
-    cacheAsBitmap   = inStream.readBooleanBit();
-    hasBlendMode    = inStream.readBooleanBit();
-    hasFilters      = inStream.readBooleanBit();
-    depth           = inStream.readUI16();
+    hasImage = inStream.readBooleanBit();
+    hasClassName = inStream.readBooleanBit();
+    cacheAsBitmap = inStream.readBooleanBit();
+    hasBlendMode = inStream.readBooleanBit();
+    hasFilters = inStream.readBooleanBit();
+    depth = inStream.readUI16();
     if (hasClassName || hasImage && hasCharacter) {
       className = inStream.readString();
     }
@@ -566,10 +582,8 @@ public final class PlaceObject3 extends Tag {
       filters = Filter.readFilters(inStream);
     }
     if (hasBlendMode) {
-      blendMode = inStream.readUI8();
-      if (blendMode == 0) {
-        blendMode = BlendMode.NORMAL;
-      }
+      short code = inStream.readUI8();
+      blendMode = code == 0 ? BlendMode.NORMAL : BlendMode.lookup(code);
     }
     if (cacheAsBitmap) {
       inStream.readUI8(); // always 1

@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -40,12 +41,14 @@ public final class BlurFilter extends Filter {
    * @param y TODO: Comments
    */
   public BlurFilter(double x, double y) {
+    super(FilterType.BLUR);
     this.x   = x;
     this.y   = y;
     quality = 1;
   }
 
   public BlurFilter(InputBitStream stream) throws IOException {
+    super(FilterType.BLUR);
     x = stream.readFP32();
     y = stream.readFP32();
     quality = (int) stream.readUnsignedBits(5);

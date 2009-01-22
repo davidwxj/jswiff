@@ -23,7 +23,8 @@ package com.jswiff.swfrecords.actions;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -86,6 +87,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 5
  */
 public final class DefineFunction extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   private String name;
   private String[] parameters;
   private ActionBlock body;
@@ -98,7 +102,7 @@ public final class DefineFunction extends Action {
    * @param parameters array of parameter names
    */
   public DefineFunction(String functionName, String[] parameters) {
-    code              = ActionConstants.DEFINE_FUNCTION;
+    super(ActionType.DEFINE_FUNCTION);
     this.name         = functionName;
     this.parameters   = parameters;
     body              = new ActionBlock();
@@ -108,8 +112,8 @@ public final class DefineFunction extends Action {
    * Creates a new DefineFunction action. Data is read from a bit stream.
    */
   DefineFunction(InputBitStream stream, InputBitStream mainStream)
-    throws IOException {
-    code   = ActionConstants.DEFINE_FUNCTION;
+    throws IOException, InvalidCodeException {
+    super(ActionType.DEFINE_FUNCTION);
     name   = stream.readString();
     int numParams = stream.readUI16();
     if (numParams >= 0) {
@@ -196,7 +200,7 @@ public final class DefineFunction extends Action {
    * @return <code>"DefineFunction"</code>, function name
    */
   public String toString() {
-    return "DefineFunction " + name;
+    return super.toString() + " " + name;
   }
 
   protected void writeData(

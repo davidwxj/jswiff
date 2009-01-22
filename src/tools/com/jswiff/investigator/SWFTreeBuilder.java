@@ -25,14 +25,15 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.jswiff.constants.ActionConstants;
 import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.JointStyle;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.AlphaColorMapData;
 import com.jswiff.swfrecords.BevelFilter;
 import com.jswiff.swfrecords.BitmapData;
-import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.BlurFilter;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
@@ -46,7 +47,6 @@ import com.jswiff.swfrecords.ColorMatrixFilter;
 import com.jswiff.swfrecords.ConvolutionFilter;
 import com.jswiff.swfrecords.CurvedEdgeRecord;
 import com.jswiff.swfrecords.DropShadowFilter;
-import com.jswiff.swfrecords.EnhancedStrokeStyle;
 import com.jswiff.swfrecords.FillStyle;
 import com.jswiff.swfrecords.FillStyleArray;
 import com.jswiff.swfrecords.Filter;
@@ -86,7 +86,6 @@ import com.jswiff.swfrecords.StyleChangeRecord;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.abc.AbcConstantPool;
 import com.jswiff.swfrecords.abc.AbcFile;
-import com.jswiff.swfrecords.abc.AbcMultiname;
 import com.jswiff.swfrecords.abc.AbcNamespace;
 import com.jswiff.swfrecords.abc.AbcNamespaceSet;
 import com.jswiff.swfrecords.actions.Action;
@@ -179,6 +178,22 @@ final class SWFTreeBuilder {
   private static int nodes;
   private static List<String> constants;
 
+  @SuppressWarnings("unchecked")
+  private static String getFriendlyConstantName(Enum e) {
+    return getFriendlyConstantName(e, "_");
+  }
+
+  @SuppressWarnings("unchecked")
+  private static String getFriendlyConstantName(Enum e, String r) {
+    String val = "";
+    String[] parts = e.name().split(r);
+    for (int i = 0; i < parts.length; i++) {
+      val = val.concat( parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase() );
+      if (i < parts.length - 1) val = val.concat(" ");
+    }
+    return val;
+  }
+
   static void setNodes(int nodes) {
     SWFTreeBuilder.nodes = nodes;
   }
@@ -188,199 +203,202 @@ final class SWFTreeBuilder {
   }
 
   static void addNode(DefaultMutableTreeNode node, Tag tag) {
-    switch (tag.getCode()) {
-    	case TagConstants.DEBUG_ID:
-        addNode(node, (DebugId) tag);
-        break;
-    	case TagConstants.DEFINE_BINARY_DATA:
-        addNode(node, (DefineBinaryData) tag);
-        break;
-      case TagConstants.DEFINE_BITS:
-        addNode(node, (DefineBits) tag);
-        break;
-      case TagConstants.DEFINE_BITS_JPEG_2:
-        addNode(node, (DefineBitsJPEG2) tag);
-        break;
-      case TagConstants.DEFINE_BITS_JPEG_3:
-        addNode(node, (DefineBitsJPEG3) tag);
-        break;
-      case TagConstants.DEFINE_BITS_LOSSLESS:
-        addNode(node, (DefineBitsLossless) tag);
-        break;
-      case TagConstants.DEFINE_BITS_LOSSLESS_2:
-        addNode(node, (DefineBitsLossless2) tag);
-        break;
-      case TagConstants.DEFINE_BUTTON:
-        addNode(node, (DefineButton) tag);
-        break;
-      case TagConstants.DEFINE_BUTTON_2:
-        addNode(node, (DefineButton2) tag);
-        break;
-      case TagConstants.DEFINE_BUTTON_C_XFORM:
-        addNode(node, (DefineButtonCXform) tag);
-        break;
-      case TagConstants.DEFINE_BUTTON_SOUND:
-        addNode(node, (DefineButtonSound) tag);
-        break;
-      case TagConstants.DEFINE_EDIT_TEXT:
-        addNode(node, (DefineEditText) tag);
-        break;
-      case TagConstants.DEFINE_FONT:
-        addNode(node, (DefineFont) tag);
-        break;
-      case TagConstants.DEFINE_FONT_2:
-        addNode(node, (DefineFont2) tag);
-        break;
-      case TagConstants.DEFINE_FONT_3:
-        addNode(node, (DefineFont3) tag);
-        break;
-      case TagConstants.DEFINE_FONT_INFO:
-        addNode(node, (DefineFontInfo) tag);
-        break;
-      case TagConstants.DEFINE_FONT_INFO_2:
-        addNode(node, (DefineFontInfo2) tag);
-        break;
-      case TagConstants.DEFINE_FONT_NAME:
-        addNode(node, (DefineFontName) tag);
-        break;
-      case TagConstants.FLASHTYPE_SETTINGS:
-        addNode(node, (FlashTypeSettings) tag);
-        break;
-      case TagConstants.DEFINE_FONT_ALIGNMENT:
-        addNode(node, (DefineFontAlignment) tag);
-        break;
-      case TagConstants.DEFINE_MORPH_SHAPE:
-        addNode(node, (DefineMorphShape) tag);
-        break;
-      case TagConstants.DEFINE_MORPH_SHAPE_2:
-        addNode(node, (DefineMorphShape2) tag);
-        break;
-      case TagConstants.DEFINE_SCENE_FRAME_DATA:
-        addNode(node, (DefineSceneFrameData) tag);
-        break;
-      case TagConstants.DEFINE_SHAPE:
-        addNode(node, (DefineShape) tag);
-        break;
-      case TagConstants.DEFINE_SHAPE_2:
-        addNode(node, (DefineShape2) tag);
-        break;
-      case TagConstants.DEFINE_SHAPE_3:
-        addNode(node, (DefineShape3) tag);
-        break;
-      case TagConstants.DEFINE_SHAPE_4:
-        addNode(node, (DefineShape4) tag);
-        break;
-      case TagConstants.DEFINE_SOUND:
-        addNode(node, (DefineSound) tag);
-        break;
-      case TagConstants.DEFINE_SPRITE:
-        addNode(node, (DefineSprite) tag);
-        break;
-      case TagConstants.DEFINE_TEXT:
-        addNode(node, (DefineText) tag);
-        break;
-      case TagConstants.DEFINE_TEXT_2:
-        addNode(node, (DefineText2) tag);
-        break;
-      case TagConstants.DEFINE_VIDEO_STREAM:
-        addNode(node, (DefineVideoStream) tag);
-        break;
-      case TagConstants.DO_ABC:
-        addNode(node, (DoAbc) tag);
-        break;
-      case TagConstants.DO_ABC_DEFINE:
-        addNode(node, (DoAbcDefine) tag);
-        break;
-      case TagConstants.DO_ACTION:
-        addNode(node, (DoAction) tag);
-        break;
-      case TagConstants.DO_INIT_ACTION:
-        addNode(node, (DoInitAction) tag);
-        break;
-      case TagConstants.ENABLE_DEBUGGER_2:
-        addNode(node, (EnableDebugger2) tag);
-        break;
-      case TagConstants.ENABLE_DEBUGGER:
-        addNode(node, (EnableDebugger) tag);
-        break;
-      case TagConstants.EXPORT_ASSETS:
-        addNode(node, (ExportAssets) tag);
-        break;
-      case TagConstants.FILE_ATTRIBUTES:
-        addNode(node, (FileAttributes) tag);
-        break;
-      case TagConstants.FRAME_LABEL:
-        addNode(node, (FrameLabel) tag);
-        break;
-      case TagConstants.IMPORT_ASSETS:
-      case TagConstants.IMPORT_ASSETS_2:
-        addNode(node, (ImportAssets) tag);
-        break;
-      case TagConstants.JPEG_TABLES:
-        addNode(node, (JPEGTables) tag);
-        break;
-      case TagConstants.METADATA:
-        addNode(node, (Metadata) tag);
-        break;
-      case TagConstants.PLACE_OBJECT:
-        addNode(node, (PlaceObject) tag);
-        break;
-      case TagConstants.PLACE_OBJECT_2:
-        addNode(node, (PlaceObject2) tag);
-        break;
-      case TagConstants.PLACE_OBJECT_3:
-        addNode(node, (PlaceObject3) tag);
-        break;
-      case TagConstants.PRODUCT_INFO:
-        addNode(node, (ProductInfo) tag);
-        break;
-      case TagConstants.PROTECT:
-        addNode(node, (Protect) tag);
-        break;
-      case TagConstants.REMOVE_OBJECT:
-        addNode(node, (RemoveObject) tag);
-        break;
-      case TagConstants.REMOVE_OBJECT_2:
-        addNode(node, (RemoveObject2) tag);
-        break;
-      case TagConstants.SCRIPT_LIMITS:
-        addNode(node, (ScriptLimits) tag);
-        break;
-      case TagConstants.SET_BACKGROUND_COLOR:
-        addNode(node, (SetBackgroundColor) tag);
-        break;
-      case TagConstants.SET_TAB_INDEX:
-        addNode(node, (SetTabIndex) tag);
-        break;
-      case TagConstants.SHOW_FRAME:
-        addNode(node, (ShowFrame) tag);
-        break;
-      case TagConstants.SCALE_9_GRID:
-        addNode(node, (Scale9Grid) tag);
-        break;
-      case TagConstants.SOUND_STREAM_BLOCK:
-        addNode(node, (SoundStreamBlock) tag);
-        break;
-      case TagConstants.SOUND_STREAM_HEAD:
-        addNode(node, (SoundStreamHead) tag);
-        break;
-      case TagConstants.SOUND_STREAM_HEAD_2:
-        addNode(node, (SoundStreamHead2) tag);
-        break;
-      case TagConstants.START_SOUND:
-        addNode(node, (StartSound) tag);
-        break;
-      case TagConstants.SYMBOL_CLASS:
-        addNode(node, (SymbolClass) tag);
-        break;
-      case TagConstants.VIDEO_FRAME:
-        addNode(node, (VideoFrame) tag);
-        break;
-      case TagConstants.MALFORMED:
-        addNode(node, (MalformedTag) tag);
-        break;
-      default:
-        addNode(node, (UnknownTag) tag);
+    switch (tag.tagType()) {
+    case DEBUG_ID:
+      addNode(node, (DebugId) tag);
+      break;
+    case DEFINE_BINARY_DATA:
+      addNode(node, (DefineBinaryData) tag);
+      break;
+    case DEFINE_BITS:
+      addNode(node, (DefineBits) tag);
+      break;
+    case DEFINE_BITS_JPEG_2:
+      addNode(node, (DefineBitsJPEG2) tag);
+      break;
+    case DEFINE_BITS_JPEG_3:
+      addNode(node, (DefineBitsJPEG3) tag);
+      break;
+    case DEFINE_BITS_LOSSLESS:
+      addNode(node, (DefineBitsLossless) tag);
+      break;
+    case DEFINE_BITS_LOSSLESS_2:
+      addNode(node, (DefineBitsLossless2) tag);
+      break;
+    case DEFINE_BUTTON:
+      addNode(node, (DefineButton) tag);
+      break;
+    case DEFINE_BUTTON_2:
+      addNode(node, (DefineButton2) tag);
+      break;
+    case DEFINE_BUTTON_C_XFORM:
+      addNode(node, (DefineButtonCXform) tag);
+      break;
+    case DEFINE_BUTTON_SOUND:
+      addNode(node, (DefineButtonSound) tag);
+      break;
+    case DEFINE_EDIT_TEXT:
+      addNode(node, (DefineEditText) tag);
+      break;
+    case DEFINE_FONT:
+      addNode(node, (DefineFont) tag);
+      break;
+    case DEFINE_FONT_2:
+      addNode(node, (DefineFont2) tag);
+      break;
+    case DEFINE_FONT_3:
+      addNode(node, (DefineFont3) tag);
+      break;
+    case DEFINE_FONT_INFO:
+      addNode(node, (DefineFontInfo) tag);
+      break;
+    case DEFINE_FONT_INFO_2:
+      addNode(node, (DefineFontInfo2) tag);
+      break;
+    case DEFINE_FONT_NAME:
+      addNode(node, (DefineFontName) tag);
+      break;
+    case FLASHTYPE_SETTINGS:
+      addNode(node, (FlashTypeSettings) tag);
+      break;
+    case DEFINE_FONT_ALIGNMENT:
+      addNode(node, (DefineFontAlignment) tag);
+      break;
+    case DEFINE_MORPH_SHAPE:
+      addNode(node, (DefineMorphShape) tag);
+      break;
+    case DEFINE_MORPH_SHAPE_2:
+      addNode(node, (DefineMorphShape2) tag);
+      break;
+    case DEFINE_SCENE_FRAME_DATA:
+      addNode(node, (DefineSceneFrameData) tag);
+      break;
+    case DEFINE_SHAPE:
+      addNode(node, (DefineShape) tag);
+      break;
+    case DEFINE_SHAPE_2:
+      addNode(node, (DefineShape2) tag);
+      break;
+    case DEFINE_SHAPE_3:
+      addNode(node, (DefineShape3) tag);
+      break;
+    case DEFINE_SHAPE_4:
+      addNode(node, (DefineShape4) tag);
+      break;
+    case DEFINE_SOUND:
+      addNode(node, (DefineSound) tag);
+      break;
+    case DEFINE_SPRITE:
+      addNode(node, (DefineSprite) tag);
+      break;
+    case DEFINE_TEXT:
+      addNode(node, (DefineText) tag);
+      break;
+    case DEFINE_TEXT_2:
+      addNode(node, (DefineText2) tag);
+      break;
+    case DEFINE_VIDEO_STREAM:
+      addNode(node, (DefineVideoStream) tag);
+      break;
+    case DO_ABC:
+      addNode(node, (DoAbc) tag);
+      break;
+    case DO_ABC_DEFINE:
+      addNode(node, (DoAbcDefine) tag);
+      break;
+    case DO_ACTION:
+      addNode(node, (DoAction) tag);
+      break;
+    case DO_INIT_ACTION:
+      addNode(node, (DoInitAction) tag);
+      break;
+    case ENABLE_DEBUGGER_2:
+      addNode(node, (EnableDebugger2) tag);
+      break;
+    case ENABLE_DEBUGGER:
+      addNode(node, (EnableDebugger) tag);
+      break;
+    case EXPORT_ASSETS:
+      addNode(node, (ExportAssets) tag);
+      break;
+    case FILE_ATTRIBUTES:
+      addNode(node, (FileAttributes) tag);
+      break;
+    case FRAME_LABEL:
+      addNode(node, (FrameLabel) tag);
+      break;
+    case IMPORT_ASSETS:
+    case IMPORT_ASSETS_2:
+      addNode(node, (ImportAssets) tag);
+      break;
+    case JPEG_TABLES:
+      addNode(node, (JPEGTables) tag);
+      break;
+    case METADATA:
+      addNode(node, (Metadata) tag);
+      break;
+    case PLACE_OBJECT:
+      addNode(node, (PlaceObject) tag);
+      break;
+    case PLACE_OBJECT_2:
+      addNode(node, (PlaceObject2) tag);
+      break;
+    case PLACE_OBJECT_3:
+      addNode(node, (PlaceObject3) tag);
+      break;
+    case PRODUCT_INFO:
+      addNode(node, (ProductInfo) tag);
+      break;
+    case PROTECT:
+      addNode(node, (Protect) tag);
+      break;
+    case REMOVE_OBJECT:
+      addNode(node, (RemoveObject) tag);
+      break;
+    case REMOVE_OBJECT_2:
+      addNode(node, (RemoveObject2) tag);
+      break;
+    case SCRIPT_LIMITS:
+      addNode(node, (ScriptLimits) tag);
+      break;
+    case SET_BACKGROUND_COLOR:
+      addNode(node, (SetBackgroundColor) tag);
+      break;
+    case SET_TAB_INDEX:
+      addNode(node, (SetTabIndex) tag);
+      break;
+    case SHOW_FRAME:
+      addNode(node, (ShowFrame) tag);
+      break;
+    case SCALE_9_GRID:
+      addNode(node, (Scale9Grid) tag);
+      break;
+    case SOUND_STREAM_BLOCK:
+      addNode(node, (SoundStreamBlock) tag);
+      break;
+    case SOUND_STREAM_HEAD:
+      addNode(node, (SoundStreamHead) tag);
+      break;
+    case SOUND_STREAM_HEAD_2:
+      addNode(node, (SoundStreamHead2) tag);
+      break;
+    case START_SOUND:
+      addNode(node, (StartSound) tag);
+      break;
+    case SYMBOL_CLASS:
+      addNode(node, (SymbolClass) tag);
+      break;
+    case VIDEO_FRAME:
+      addNode(node, (VideoFrame) tag);
+      break;
+    case MALFORMED:
+      addNode(node, (MalformedTag) tag);
+      break;
+    case UNKNOWN_TAG:
+      addNode(node, (UnknownTag) tag);
+      break;
+    default:
+      throw new AssertionError("Tag type '" + tag.tagType().name() + "' not handled!");
     }
   }
 
@@ -396,53 +414,16 @@ final class SWFTreeBuilder {
     // addLeaf(node, " ");
   }
 
-  private static String getCapStyleString(byte capStyle) {
-    switch (capStyle) {
-      case LineStyle2.CAPS_NONE:
-        return "none";
-      case LineStyle2.CAPS_ROUND:
-        return "round";
-      case LineStyle2.CAPS_SQUARE:
-        return "square";
-      default:
-        return "illegal value: " + capStyle;
-    }
-  }
-
   private static String getGridFitString(byte gridFit) {
     switch (gridFit) {
-      case FlashTypeSettings.GRID_FIT_NONE:
-        return "none";
-      case FlashTypeSettings.GRID_FIT_PIXEL:
-        return "pixel";
-      case FlashTypeSettings.GRID_FIT_SUBPIXEL:
-        return "subpixel";
-      default:
-        return "unknown value: " + gridFit;
-    }
-  }
-
-  private static String getInterpolationMethodString(byte interpolationMethod) {
-    switch (interpolationMethod) {
-      case Gradient.INTERPOLATION_RGB:
-        return "RGB";
-      case Gradient.INTERPOLATION_LINEAR_RGB:
-        return "linear RGB";
-      default:
-        return "unkown value: " + interpolationMethod;
-    }
-  }
-
-  private static String getJointStyleString(byte jointStyle) {
-    switch (jointStyle) {
-      case LineStyle2.JOINT_BEVEL:
-        return "bevel";
-      case LineStyle2.JOINT_MITER:
-        return "miter";
-      case LineStyle2.JOINT_ROUND:
-        return "round";
-      default:
-        return "illegal value: " + jointStyle;
+    case FlashTypeSettings.GRID_FIT_NONE:
+      return "none";
+    case FlashTypeSettings.GRID_FIT_PIXEL:
+      return "pixel";
+    case FlashTypeSettings.GRID_FIT_SUBPIXEL:
+      return "subpixel";
+    default:
+      return "unknown value: " + gridFit;
     }
   }
 
@@ -450,79 +431,64 @@ final class SWFTreeBuilder {
     String result = "Push";
     for (StackValue value : push.getValues()) {
       switch (value.getType()) {
-        case Push.StackValue.TYPE_STRING:
-          result += (" string: '" + value.getString() + "'");
-          break;
-        case Push.StackValue.TYPE_FLOAT:
-          result += (" float: " + value.getFloat());
-          break;
-        case Push.StackValue.TYPE_REGISTER:
-          result += (" register: " + value.getRegisterNumber());
-          break;
-        case Push.StackValue.TYPE_BOOLEAN:
-          result += (" boolean: " + value.getBoolean());
-          break;
-        case Push.StackValue.TYPE_DOUBLE:
-          result += (" double: " + value.getDouble());
-          break;
-        case Push.StackValue.TYPE_INTEGER:
-          result += (" integer: " + value.getInteger());
-          break;
-        case Push.StackValue.TYPE_CONSTANT_8:
-          int index8 = value.getConstant8();
-          result += (" c8[" + index8 + "]: '" + constants.get(index8) + "'");
-          break;
-        case Push.StackValue.TYPE_CONSTANT_16:
-          int index16 = value.getConstant16();
-          result += (" c8[" + index16 + "]: '" + constants.get(index16) + "'");
-          break;
-        case Push.StackValue.TYPE_UNDEFINED:
-          result += " <b>undefined</b>";
-          break;
-        case Push.StackValue.TYPE_NULL:
-          result += " <b>null</b>";
-          break;
+      case Push.StackValue.TYPE_STRING:
+        result += (" string: '" + value.getString() + "'");
+        break;
+      case Push.StackValue.TYPE_FLOAT:
+        result += (" float: " + value.getFloat());
+        break;
+      case Push.StackValue.TYPE_REGISTER:
+        result += (" register: " + value.getRegisterNumber());
+        break;
+      case Push.StackValue.TYPE_BOOLEAN:
+        result += (" boolean: " + value.getBoolean());
+        break;
+      case Push.StackValue.TYPE_DOUBLE:
+        result += (" double: " + value.getDouble());
+        break;
+      case Push.StackValue.TYPE_INTEGER:
+        result += (" integer: " + value.getInteger());
+        break;
+      case Push.StackValue.TYPE_CONSTANT_8:
+        int index8 = value.getConstant8();
+        result += (" c8[" + index8 + "]: '" + constants.get(index8) + "'");
+        break;
+      case Push.StackValue.TYPE_CONSTANT_16:
+        int index16 = value.getConstant16();
+        result += (" c8[" + index16 + "]: '" + constants.get(index16) + "'");
+        break;
+      case Push.StackValue.TYPE_UNDEFINED:
+        result += " <b>undefined</b>";
+        break;
+      case Push.StackValue.TYPE_NULL:
+        result += " <b>null</b>";
+        break;
       }
       result += ";";
     }
     return result;
   }
 
-  private static String getScaleStrokeString(byte scaleStroke) {
-    switch (scaleStroke) {
-      case LineStyle2.SCALE_NONE:
-        return "none";
-      case LineStyle2.SCALE_HORIZONTAL:
-        return "horizontal";
-      case LineStyle2.SCALE_VERTICAL:
-        return "vertical";
-      case LineStyle2.SCALE_BOTH:
-        return "both";
-      default:
-        return "illegal value: " + scaleStroke;
-    }
-  }
-
   private static String getSoundFormatString(byte format) {
     String result = null;
     switch (format) {
-      case SoundStreamHead2.FORMAT_ADPCM:
-        result = "ADPCM";
-        break;
-      case SoundStreamHead2.FORMAT_MP3:
-        result = "mp3";
-        break;
-      case SoundStreamHead2.FORMAT_NELLYMOSER:
-        result = "Nellymoser";
-        break;
-      case SoundStreamHead2.FORMAT_UNCOMPRESSED:
-        result = "uncompressed";
-        break;
-      case SoundStreamHead2.FORMAT_UNCOMPRESSED_LITTLE_ENDIAN:
-        result = "uncompresed little-endian";
-        break;
-      default:
-        result = "unknown";
+    case SoundStreamHead2.FORMAT_ADPCM:
+      result = "ADPCM";
+      break;
+    case SoundStreamHead2.FORMAT_MP3:
+      result = "mp3";
+      break;
+    case SoundStreamHead2.FORMAT_NELLYMOSER:
+      result = "Nellymoser";
+      break;
+    case SoundStreamHead2.FORMAT_UNCOMPRESSED:
+      result = "uncompressed";
+      break;
+    case SoundStreamHead2.FORMAT_UNCOMPRESSED_LITTLE_ENDIAN:
+      result = "uncompresed little-endian";
+      break;
+    default:
+      result = "unknown";
     }
     return result;
   }
@@ -530,47 +496,34 @@ final class SWFTreeBuilder {
   private static String getSoundRateString(byte rate) {
     String result = null;
     switch (rate) {
-      case SoundStreamHead.RATE_5500_HZ:
-        result = "5.5 kHz";
-        break;
-      case SoundStreamHead.RATE_11000_HZ:
-        result = "11 kHz";
-        break;
-      case SoundStreamHead.RATE_22000_HZ:
-        result = "22 kHz";
-        break;
-      case SoundStreamHead.RATE_44000_HZ:
-        result = "44 kHz";
-        break;
-      default:
-        result = "unknown";
+    case SoundStreamHead.RATE_5500_HZ:
+      result = "5.5 kHz";
+      break;
+    case SoundStreamHead.RATE_11000_HZ:
+      result = "11 kHz";
+      break;
+    case SoundStreamHead.RATE_22000_HZ:
+      result = "22 kHz";
+      break;
+    case SoundStreamHead.RATE_44000_HZ:
+      result = "44 kHz";
+      break;
+    default:
+      result = "unknown";
     }
     return result;
   }
 
-  private static String getSpreadMethodString(byte spreadMethod) {
-    switch (spreadMethod) {
-      case Gradient.SPREAD_PAD:
-        return "pad";
-      case Gradient.SPREAD_REFLECT:
-        return "reflect";
-      case Gradient.SPREAD_REPEAT:
-        return "repeat";
-      default:
-        return "unknown value: " + spreadMethod;
-    }
-  }
-
   private static String getThicknessString(byte thickness) {
     switch (thickness) {
-      case DefineFontAlignment.THIN:
-        return "thin";
-      case DefineFontAlignment.MEDIUM:
-        return "medium";
-      case DefineFontAlignment.THICK:
-        return "thick";
-      default:
-        return "unknown value: " + thickness;
+    case DefineFontAlignment.THIN:
+      return "thin";
+    case DefineFontAlignment.MEDIUM:
+      return "medium";
+    case DefineFontAlignment.THICK:
+      return "thick";
+    default:
+      return "unknown value: " + thickness;
     }
   }
 
@@ -582,10 +535,12 @@ final class SWFTreeBuilder {
   private static void addNode(DefaultMutableTreeNode node, MalformedTag tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node,
-        "<html><body bgcolor=\"#FF0000\"><font color=\"#FFFFFF\">Malformed tag</font></body></html>");
-    short code                     = tag.getTagHeader().getCode();
-    addLeaf(
-      tagNode, "code: " + code + " (" + TagConstants.getTagName(code) + ")");
+    "<html><body bgcolor=\"#FF0000\"><font color=\"#FFFFFF\">Malformed tag</font></body></html>");
+    TagType t;
+    try {
+      t = TagType.lookup(tag.getTagHeader().getCode());
+      addLeaf(tagNode, "code: " + t.getCode() + " (" + t.toString() + ")");
+    } catch (InvalidCodeException e) { };
     addLeaf(tagNode, "data size: " + tag.getTagHeader().getLength() + " bytes");
     addLeaf(tagNode, "error: " + tag.getException().getMessage());
   }
@@ -610,57 +565,57 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
     addLeaf(tagNode, "jpegData: " + " byte[" + tag.getJpegData().length + "]");
     addLeaf(
-      tagNode,
-      "bitmapAlphaData: " + " byte[" + tag.getBitmapAlphaData().length + "]");
+        tagNode,
+        "bitmapAlphaData: " + " byte[" + tag.getBitmapAlphaData().length + "]");
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineBitsLossless tag) {
+      DefaultMutableTreeNode node, DefineBitsLossless tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineBitsLossless"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
     short format        = tag.getFormat();
     String formatString = "";
     switch (format) {
-      case DefineBitsLossless.FORMAT_8_BIT_COLORMAPPED:
-        formatString = "8-bit colormapped image";
-        break;
-      case DefineBitsLossless.FORMAT_15_BIT_RGB:
-        formatString = "15-bit RGB image";
-        break;
-      case DefineBitsLossless.FORMAT_24_BIT_RGB:
-        formatString = "24-bit RGB image";
-        break;
+    case DefineBitsLossless.FORMAT_8_BIT_COLORMAPPED:
+      formatString = "8-bit colormapped image";
+      break;
+    case DefineBitsLossless.FORMAT_15_BIT_RGB:
+      formatString = "15-bit RGB image";
+      break;
+    case DefineBitsLossless.FORMAT_24_BIT_RGB:
+      formatString = "24-bit RGB image";
+      break;
     }
     addLeaf(tagNode, "format: " + formatString);
     addLeaf(tagNode, "width: " + tag.getWidth());
     addLeaf(tagNode, "height: " + tag.getHeight());
     if (format == DefineBitsLossless.FORMAT_8_BIT_COLORMAPPED) {
       addNode(
-        tagNode, "zlibBitmapData: ", (ColorMapData) tag.getZlibBitmapData());
+          tagNode, "zlibBitmapData: ", (ColorMapData) tag.getZlibBitmapData());
     } else {
       addNode(
-        tagNode, "zlibBitmapData: ", (BitmapData) tag.getZlibBitmapData(),
-        format);
+          tagNode, "zlibBitmapData: ", (BitmapData) tag.getZlibBitmapData(),
+          format);
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, BitmapData data, short format) {
+      DefaultMutableTreeNode node, String var, BitmapData data, short format) {
     DefaultMutableTreeNode newNode = addParentNode(node, var + "BitmapData");
     if (format == DefineBitsLossless.FORMAT_15_BIT_RGB) {
       addLeaf(
-        newNode,
-        "bitmapPixelData: Pix15[" + data.getBitmapPixelData().length + "]");
+          newNode,
+          "bitmapPixelData: Pix15[" + data.getBitmapPixelData().length + "]");
     } else {
       addLeaf(
-        newNode,
-        "bitmapPixelData: Pix24[" + data.getBitmapPixelData().length + "]");
+          newNode,
+          "bitmapPixelData: Pix24[" + data.getBitmapPixelData().length + "]");
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ColorMapData data) {
+      DefaultMutableTreeNode node, String var, ColorMapData data) {
     DefaultMutableTreeNode newNode        = addParentNode(
         node, var + "ColorMapData");
     RGB[] colorTable                      = data.getColorTableRGB();
@@ -670,12 +625,12 @@ final class SWFTreeBuilder {
       addLeaf(colorTableNode, colorTable[i].toString());
     }
     addLeaf(
-      newNode,
-      "colorMapPixelData: short[" + data.getColorMapPixelData().length + "]");
+        newNode,
+        "colorMapPixelData: short[" + data.getColorMapPixelData().length + "]");
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, AlphaColorMapData data) {
+      DefaultMutableTreeNode node, String var, AlphaColorMapData data) {
     DefaultMutableTreeNode newNode        = addParentNode(
         node, var + "AlphaColorMapData");
     RGBA[] colorTable                     = data.getColorTableRGBA();
@@ -685,39 +640,39 @@ final class SWFTreeBuilder {
       addLeaf(colorTableNode, i + ": " + colorTable[i].toString());
     }
     addLeaf(
-      newNode,
-      "colorMapPixelData: short[" + data.getColorMapPixelData().length + "]");
+        newNode,
+        "colorMapPixelData: short[" + data.getColorMapPixelData().length + "]");
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineBitsLossless2 tag) {
+      DefaultMutableTreeNode node, DefineBitsLossless2 tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineBitsLossless2"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
     short format        = tag.getFormat();
     String formatString = "";
     switch (format) {
-      case DefineBitsLossless2.FORMAT_8_BIT_COLORMAPPED:
-        formatString = "8-bit colormapped image";
-        break;
-      case DefineBitsLossless2.FORMAT_32_BIT_RGBA:
-        formatString = "32-bit RGBA image";
-        break;
+    case DefineBitsLossless2.FORMAT_8_BIT_COLORMAPPED:
+      formatString = "8-bit colormapped image";
+      break;
+    case DefineBitsLossless2.FORMAT_32_BIT_RGBA:
+      formatString = "32-bit RGBA image";
+      break;
     }
     addLeaf(tagNode, "format: " + formatString);
     addLeaf(tagNode, "width: " + tag.getWidth());
     addLeaf(tagNode, "height: " + tag.getHeight());
     if (format == DefineBitsLossless.FORMAT_8_BIT_COLORMAPPED) {
       addNode(
-        tagNode, "zlibBitmapData: ", (AlphaColorMapData) tag.getZlibBitmapData());
+          tagNode, "zlibBitmapData: ", (AlphaColorMapData) tag.getZlibBitmapData());
     } else {
       DefaultMutableTreeNode zlibNode = addParentNode(
           tagNode, "zlibBitmapData: AlphaBitMapData");
       addLeaf(
-        zlibNode,
-        "bitmapPixelData: RGBA[" +
-        ((AlphaBitmapData) (tag.getZlibBitmapData())).getBitmapPixelData().length +
-        "]");
+          zlibNode,
+          "bitmapPixelData: RGBA[" +
+          ((AlphaBitmapData) (tag.getZlibBitmapData())).getBitmapPixelData().length +
+      "]");
     }
   }
 
@@ -741,7 +696,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ButtonCondAction[] actions) {
+      DefaultMutableTreeNode node, String var, ButtonCondAction[] actions) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "ButtonCondAction[" + actions.length + "]");
     for (int i = 0; i < actions.length; i++) {
@@ -750,13 +705,13 @@ final class SWFTreeBuilder {
       addLeaf(actionNode, "idleToOverDown: " + actions[i].isIdleToOverDown());
       addLeaf(actionNode, "outDownToIdle: " + actions[i].isOutDownToIdle());
       addLeaf(
-        actionNode, "outDownToOverDown: " + actions[i].isOutDownToOverDown());
+          actionNode, "outDownToOverDown: " + actions[i].isOutDownToOverDown());
       addLeaf(
-        actionNode, "overDownToOutDown: " + actions[i].isOverDownToOutDown());
+          actionNode, "overDownToOutDown: " + actions[i].isOverDownToOutDown());
       addLeaf(
-        actionNode, "overDownToOverUp: " + actions[i].isOverDownToOverUp());
+          actionNode, "overDownToOverUp: " + actions[i].isOverDownToOverUp());
       addLeaf(
-        actionNode, "overUpToOverDown: " + actions[i].isOverUpToOverDown());
+          actionNode, "overUpToOverDown: " + actions[i].isOverUpToOverDown());
       addLeaf(actionNode, "overUpToIdle: " + actions[i].isOverUpToIdle());
       addLeaf(actionNode, "idleToOverUp: " + actions[i].isIdleToOverUp());
       addLeaf(actionNode, "keyPress: " + actions[i].getKeyPress());
@@ -766,7 +721,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ButtonRecord[] characters) {
+      DefaultMutableTreeNode node, String var, ButtonRecord[] characters) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "ButtonRecord[" + characters.length + "]");
     for (int i = 0; i < characters.length; i++) {
@@ -782,13 +737,13 @@ final class SWFTreeBuilder {
       CXformWithAlpha colorTransform = characters[i].getColorTransform();
       if (colorTransform != null) {
         addNode(
-          recordNode, "colorTransform: ", characters[i].getColorTransform());
+            recordNode, "colorTransform: ", characters[i].getColorTransform());
       }
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineButtonCXform tag) {
+      DefaultMutableTreeNode node, DefineButtonCXform tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineButtonCXform"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
@@ -796,35 +751,35 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineButtonSound tag) {
+      DefaultMutableTreeNode node, DefineButtonSound tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineButtonSound"));
     addLeaf(tagNode, "buttonId: " + tag.getButtonId());
     if (tag.getOverUpToIdleSoundId() != 0) {
       addLeaf(tagNode, "overUpToIdleSoundId: " + tag.getOverUpToIdleSoundId());
       addNode(
-        tagNode, "overUpToIdleSoundInfo: ", tag.getOverUpToIdleSoundInfo());
+          tagNode, "overUpToIdleSoundInfo: ", tag.getOverUpToIdleSoundInfo());
     }
     if (tag.getIdleToOverUpSoundId() != 0) {
       addLeaf(tagNode, "idleToOverUpSoundId: " + tag.getIdleToOverUpSoundId());
       addNode(
-        tagNode, "idleToOverUpSoundInfo: ", tag.getIdleToOverUpSoundInfo());
+          tagNode, "idleToOverUpSoundInfo: ", tag.getIdleToOverUpSoundInfo());
     }
     if (tag.getOverUpToOverDownSoundId() != 0) {
       addLeaf(
-        tagNode, "overUpToOverDownSoundId: " +
-        tag.getOverUpToOverDownSoundId());
+          tagNode, "overUpToOverDownSoundId: " +
+          tag.getOverUpToOverDownSoundId());
       addNode(
-        tagNode, "overUpToOverDownSoundInfo: ",
-        tag.getOverUpToOverDownSoundInfo());
+          tagNode, "overUpToOverDownSoundInfo: ",
+          tag.getOverUpToOverDownSoundInfo());
     }
     if (tag.getOverDownToOverUpSoundId() != 0) {
       addLeaf(
-        tagNode, "overDownToOverUpSoundId: " +
-        tag.getOverDownToOverUpSoundId());
+          tagNode, "overDownToOverUpSoundId: " +
+          tag.getOverDownToOverUpSoundId());
       addNode(
-        tagNode, "overDownToOverUpSoundInfo: ",
-        tag.getOverDownToOverUpSoundInfo());
+          tagNode, "overDownToOverUpSoundInfo: ",
+          tag.getOverDownToOverUpSoundInfo());
     }
   }
 
@@ -931,7 +886,7 @@ final class SWFTreeBuilder {
       if ((kerningTable != null) && (kerningTable.length > 0)) {
         DefaultMutableTreeNode kerningTableNode = addParentNode(
             tagNode, "kerningTable: KerningRecord[" + kerningTable.length +
-            "]");
+        "]");
         for (int i = 0; i < kerningTable.length; i++) {
           KerningRecord kerningRecord              = kerningTable[i];
           DefaultMutableTreeNode kerningRecordNode = addParentNode(
@@ -939,7 +894,7 @@ final class SWFTreeBuilder {
           addLeaf(kerningRecordNode, "left: " + kerningRecord.getLeft());
           addLeaf(kerningRecordNode, "right: " + kerningRecord.getRight());
           addLeaf(
-            kerningRecordNode, "adjustment: " + kerningRecord.getAdjustment());
+              kerningRecordNode, "adjustment: " + kerningRecord.getAdjustment());
         }
       }
     }
@@ -997,7 +952,7 @@ final class SWFTreeBuilder {
       if ((kerningTable != null) && (kerningTable.length > 0)) {
         DefaultMutableTreeNode kerningTableNode = addParentNode(
             tagNode, "kerningTable: KerningRecord[" + kerningTable.length +
-            "]");
+        "]");
         for (int i = 0; i < kerningTable.length; i++) {
           KerningRecord kerningRecord              = kerningTable[i];
           DefaultMutableTreeNode kerningRecordNode = addParentNode(
@@ -1005,7 +960,7 @@ final class SWFTreeBuilder {
           addLeaf(kerningRecordNode, "left: " + kerningRecord.getLeft());
           addLeaf(kerningRecordNode, "right: " + kerningRecord.getRight());
           addLeaf(
-            kerningRecordNode, "adjustment: " + kerningRecord.getAdjustment());
+              kerningRecordNode, "adjustment: " + kerningRecord.getAdjustment());
         }
       }
     }
@@ -1045,7 +1000,7 @@ final class SWFTreeBuilder {
       addLeaf(codeTableNode, "code " + i + ": " + table[i]);
     }
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, DefineFontName tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineFontName"));
@@ -1055,7 +1010,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, FlashTypeSettings tag) {
+      DefaultMutableTreeNode node, FlashTypeSettings tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("FlashTypeSettings"));
     addLeaf(tagNode, "textId: " + tag.getTextId());
@@ -1066,7 +1021,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineFontAlignment tag) {
+      DefaultMutableTreeNode node, DefineFontAlignment tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineFontAlignment"));
     addLeaf(tagNode, "fontId: " + tag.getFontId());
@@ -1076,7 +1031,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, AlignmentZone[] alignmentZones) {
+      DefaultMutableTreeNode node, AlignmentZone[] alignmentZones) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, "alignmentZones: AlignmentZone[" + alignmentZones.length + "]");
     for (int i = 0; i < alignmentZones.length; i++) {
@@ -1085,18 +1040,18 @@ final class SWFTreeBuilder {
           newNode, "AlignmentZone " + i);
       if (zone.hasX()) {
         addLeaf(
-          zoneNode, "x: left=" + zone.getLeft() + " width=" + zone.getWidth());
+            zoneNode, "x: left=" + zone.getLeft() + " width=" + zone.getWidth());
       }
       if (zone.hasY()) {
         addLeaf(
-          zoneNode,
-          "y: baseline=" + zone.getBaseline() + " height=" + zone.getHeight());
+            zoneNode,
+            "y: baseline=" + zone.getBaseline() + " height=" + zone.getHeight());
       }
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineMorphShape tag) {
+      DefaultMutableTreeNode node, DefineMorphShape tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineMorphShape"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
@@ -1121,7 +1076,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineMorphShape2 tag) {
+      DefaultMutableTreeNode node, DefineMorphShape2 tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineMorphShape2"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
@@ -1165,9 +1120,9 @@ final class SWFTreeBuilder {
       addLeaf(frameDataElement, "frame number: " + frameData.getFrameNumber() + ", frame label: " + frameData.getFrameLabel());
     }
   }
-  
+
   private static void addNode(
-    DefaultMutableTreeNode node, String var, Shape shape) {
+      DefaultMutableTreeNode node, String var, Shape shape) {
     DefaultMutableTreeNode newNode = addParentNode(node, var + "Shape");
     ShapeRecord[] shapeRecords     = shape.getShapeRecords();
     if (shapeRecords.length > 0) {
@@ -1180,10 +1135,10 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, MorphLineStyles morphLineStyles) {
+      DefaultMutableTreeNode node, String var, MorphLineStyles morphLineStyles) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "MorphLineStyles (" + morphLineStyles.getSize() +
-        " styles)");
+    " styles)");
     for (int i = 1; i <= morphLineStyles.getSize(); i++) {
       DefaultMutableTreeNode styleNode = addParentNode(
           newNode, "MorphLineStyle " + i);
@@ -1197,7 +1152,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode styleNode, MorphLineStyle style) {
+      DefaultMutableTreeNode styleNode, MorphLineStyle style) {
     addLeaf(styleNode, "startWidth: " + style.getStartWidth());
     addLeaf(styleNode, "endWidth: " + style.getEndWidth());
     addLeaf(styleNode, "startColor: " + style.getStartColor());
@@ -1205,24 +1160,22 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode styleNode, MorphLineStyle2 style) {
+      DefaultMutableTreeNode styleNode, MorphLineStyle2 style) {
     addLeaf(styleNode, "startWidth: " + style.getStartWidth());
     addLeaf(styleNode, "endWidth: " + style.getEndWidth());
-    addLeaf(
-      styleNode, "startCapStyle: " +
-      getCapStyleString(style.getStartCapStyle()));
-    addLeaf(
-      styleNode, "endCapStyle: " + getCapStyleString(style.getEndCapStyle()));
-    byte jointStyle = style.getJointStyle();
-    addLeaf(styleNode, "jointStyle: " + getJointStyleString(jointStyle));
-    if (jointStyle == EnhancedStrokeStyle.JOINT_MITER) {
+    addLeaf(styleNode, "startCapStyle: " 
+        + getFriendlyConstantName(style.getStartCapStyle()));
+    addLeaf(styleNode, "endCapStyle: " 
+        + getFriendlyConstantName(style.getEndCapStyle()));
+    JointStyle jointStyle = style.getJointStyle();
+    addLeaf(styleNode, "jointStyle: " + getFriendlyConstantName(jointStyle));
+    if (JointStyle.MITER.equals(jointStyle)) {
       addLeaf(styleNode, "miterLimit: " + style.getMiterLimit());
     }
     addLeaf(styleNode, "pixelHinting: " + style.isPixelHinting());
     addLeaf(styleNode, "close: " + style.isClose());
-    addLeaf(
-      styleNode, "scaleStroke: " +
-      getScaleStrokeString(style.getScaleStroke()));
+    addLeaf(styleNode, "scaleStroke: " 
+        + getFriendlyConstantName(style.getScaleStroke()));
     MorphFillStyle fillStyle = style.getFillStyle();
     if (fillStyle == null) {
       addLeaf(styleNode, "startColor: " + style.getStartColor());
@@ -1233,108 +1186,60 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, MorphFillStyles morphFillStyles) {
+      DefaultMutableTreeNode node, String var, MorphFillStyles morphFillStyles) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "MorphFillStyles (" + morphFillStyles.getSize() +
-        " styles)");
+    " styles)");
     for (int i = 1; i <= morphFillStyles.getSize(); i++) {
       addNode(newNode, morphFillStyles.getStyle(i), i);
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, MorphFillStyle fillStyle, int index) {
+      DefaultMutableTreeNode node, MorphFillStyle fillStyle, int index) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, "MorphFillStyle " + index);
-    short type                     = fillStyle.getType();
-    switch (type) {
-      case MorphFillStyle.TYPE_SOLID:
-        addLeaf(newNode, "type: solid");
-        addLeaf(newNode, "startColor: " + fillStyle.getStartColor());
-        addLeaf(newNode, "endColor: " + fillStyle.getEndColor());
-        break;
-      case MorphFillStyle.TYPE_LINEAR_GRADIENT:
-        addLeaf(newNode, "type: linear gradient");
-        addLeaf(
-          newNode, "startGradientMatrix: " +
-          fillStyle.getStartGradientMatrix());
-        addLeaf(
-          newNode, "endGradientMatrix: " + fillStyle.getStartGradientMatrix());
-        addNode(newNode, fillStyle.getGradient());
-        break;
-      case MorphFillStyle.TYPE_RADIAL_GRADIENT:
-        addLeaf(newNode, "type: radial gradient");
-        addLeaf(
-          newNode, "startGradientMatrix: " +
-          fillStyle.getStartGradientMatrix());
-        addLeaf(
-          newNode, "endGradientMatrix: " + fillStyle.getStartGradientMatrix());
-        addNode(newNode, fillStyle.getGradient());
-        break;
-      case MorphFillStyle.TYPE_FOCAL_RADIAL_GRADIENT:
-        addLeaf(newNode, "type: focal radial gradient");
-        addLeaf(
-          newNode, "startGradientMatrix: " +
-          fillStyle.getStartGradientMatrix());
-        addLeaf(
-          newNode, "endGradientMatrix: " + fillStyle.getStartGradientMatrix());
-        addNode(newNode, fillStyle.getGradient());
-        break;
-      case MorphFillStyle.TYPE_TILED_BITMAP:
-        addLeaf(newNode, "type: repeating bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(
-          newNode, "startBitmapMatrix: " + fillStyle.getStartBitmapMatrix());
-        addLeaf(newNode, "endBitmapMatrix: " + fillStyle.getEndBitmapMatrix());
-        break;
-      case MorphFillStyle.TYPE_CLIPPED_BITMAP:
-        addLeaf(newNode, "type: clipped bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(
-          newNode, "startBitmapMatrix: " + fillStyle.getStartBitmapMatrix());
-        addLeaf(newNode, "endBitmapMatrix: " + fillStyle.getEndBitmapMatrix());
-        break;
-      case MorphFillStyle.TYPE_NONSMOOTHED_TILED_BITMAP:
-        addLeaf(newNode, "type: non-smoothed repeating bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(
-          newNode, "startBitmapMatrix: " + fillStyle.getStartBitmapMatrix());
-        addLeaf(newNode, "endBitmapMatrix: " + fillStyle.getEndBitmapMatrix());
-        break;
-      case MorphFillStyle.TYPE_NONSMOOTHED_CLIPPED_BITMAP:
-        addLeaf(newNode, "type: non-smoothed clipped bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(
-          newNode, "startBitmapMatrix: " + fillStyle.getStartBitmapMatrix());
-        addLeaf(newNode, "endBitmapMatrix: " + fillStyle.getEndBitmapMatrix());
-        break;
-      default:
-        addLeaf(newNode, "unknown type: " + type);
+    TagConstants.FillType type = fillStyle.getType();
+    addLeaf(newNode, "type: " + getFriendlyConstantName(type));
+    switch (type.getGroup()) {
+    case SOLID:
+      addLeaf(newNode, "startColor: " + fillStyle.getStartColor());
+      addLeaf(newNode, "endColor: " + fillStyle.getEndColor());
+      break;
+    case GRADIENT:
+      addLeaf(newNode, "startGradientMatrix: " + fillStyle.getStartGradientMatrix());
+      addLeaf(newNode, "endGradientMatrix: " + fillStyle.getEndGradientMatrix());
+      addNode(newNode, fillStyle.getGradient());
+      break;
+    case BITMAP:
+      addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
+      addLeaf(newNode, "startBitmapMatrix: " + fillStyle.getStartBitmapMatrix());
+      addLeaf(newNode, "endBitmapMatrix: " + fillStyle.getEndBitmapMatrix());
+      break;
+    default:
+      addLeaf(newNode, "unknown type: " + type);
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, MorphGradient gradient) {
+      DefaultMutableTreeNode node, MorphGradient gradient) {
     DefaultMutableTreeNode morphGradNode = addParentNode(
         node,
         ((gradient instanceof FocalMorphGradient) ? "FocalMorphGradient"
-                                                  : "MorphGradient"));
-    addLeaf(
-      morphGradNode,
-      "spreadMethod: " + getSpreadMethodString(gradient.getSpreadMethod()));
-    addLeaf(
-      morphGradNode,
-      "interpolationMethod: " +
-      getInterpolationMethodString(gradient.getInterpolationMethod()));
+            : "MorphGradient"));
+    addLeaf(morphGradNode, "spreadMethod: " 
+        + getFriendlyConstantName(gradient.getSpreadMethod()));
+    addLeaf(morphGradNode, "interpolationMethod: " 
+        + getFriendlyConstantName(gradient.getInterpolationMethod()));
     if (gradient instanceof FocalMorphGradient) {
       FocalMorphGradient focalMorphGradient = (FocalMorphGradient) gradient;
       addLeaf(
-        morphGradNode,
-        "startFocalPointRatio: " +
-        (focalMorphGradient).getStartFocalPointRatio());
+          morphGradNode,
+          "startFocalPointRatio: " +
+          (focalMorphGradient).getStartFocalPointRatio());
       addLeaf(
-        morphGradNode,
-        "endFocalPointRatio: " + (focalMorphGradient).getEndFocalPointRatio());
+          morphGradNode,
+          "endFocalPointRatio: " + (focalMorphGradient).getEndFocalPointRatio());
     }
     MorphGradRecord[] records = gradient.getGradientRecords();
     for (int i = 0; i < records.length; i++) {
@@ -1381,7 +1286,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ShapeWithStyle shapeWithStyle) {
+      DefaultMutableTreeNode node, String var, ShapeWithStyle shapeWithStyle) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "ShapeWithStyle");
     addNode(newNode, "fillStyles: ", shapeWithStyle.getFillStyles());
@@ -1407,14 +1312,14 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, StraightEdgeRecord record) {
+      DefaultMutableTreeNode node, StraightEdgeRecord record) {
     DefaultMutableTreeNode newNode = addParentNode(node, "StraightEdgeRecord");
     addLeaf(newNode, "deltaX: " + record.getDeltaX());
     addLeaf(newNode, "deltaY: " + record.getDeltaY());
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, CurvedEdgeRecord record) {
+      DefaultMutableTreeNode node, CurvedEdgeRecord record) {
     DefaultMutableTreeNode newNode = addParentNode(node, "CurvedEdgeRecord");
     addLeaf(newNode, "controlDeltaX: " + record.getControlDeltaX());
     addLeaf(newNode, "controlDeltaX: " + record.getControlDeltaY());
@@ -1423,7 +1328,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, StyleChangeRecord record) {
+      DefaultMutableTreeNode node, StyleChangeRecord record) {
     DefaultMutableTreeNode newNode = addParentNode(node, "StyleChangeRecord");
     if (record.hasMoveTo()) {
       addLeaf(newNode, "moveToX: " + record.getMoveToX());
@@ -1447,7 +1352,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, FillStyleArray fillStyleArray) {
+      DefaultMutableTreeNode node, String var, FillStyleArray fillStyleArray) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "FillStyleArray (" + fillStyleArray.getSize() + " styles)");
     for (int i = 1; i <= fillStyleArray.getSize(); i++) {
@@ -1456,84 +1361,55 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, FillStyle fillStyle, int index) {
+      DefaultMutableTreeNode node, FillStyle fillStyle, int index) {
     DefaultMutableTreeNode newNode;
     if (index > 0) {
       newNode = addParentNode(node, "FillStyle " + index);
     } else {
       newNode = addParentNode(node, "FillStyle");
     }
-    switch (fillStyle.getType()) {
-      case FillStyle.TYPE_SOLID:
-        addLeaf(newNode, "type: solid");
-        addLeaf(newNode, "color: " + fillStyle.getColor());
-        break;
-      case FillStyle.TYPE_LINEAR_GRADIENT:
-        addLeaf(newNode, "type: linear gradient");
-        addLeaf(newNode, "gradientMatrix: " + fillStyle.getGradientMatrix());
-        addNode(newNode, "gradient", fillStyle.getGradient());
-        break;
-      case FillStyle.TYPE_RADIAL_GRADIENT:
-        addLeaf(newNode, "type: radial gradient");
-        addLeaf(newNode, "gradientMatrix: " + fillStyle.getGradientMatrix());
-        addNode(newNode, "gradient", fillStyle.getGradient());
-        break;
-      case FillStyle.TYPE_FOCAL_RADIAL_GRADIENT:
-        addLeaf(newNode, "type: focal radial gradient");
-        addLeaf(newNode, "gradientMatrix: " + fillStyle.getGradientMatrix());
-        addNode(newNode, "gradient", fillStyle.getGradient());
-        break;
-      case FillStyle.TYPE_TILED_BITMAP:
-        addLeaf(newNode, "type: repeating bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(newNode, "bitmapMatrix: " + fillStyle.getBitmapMatrix());
-        break;
-      case FillStyle.TYPE_CLIPPED_BITMAP:
-        addLeaf(newNode, "type: clipped bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(newNode, "bitmapMatrix: " + fillStyle.getBitmapMatrix());
-        break;
-      case FillStyle.TYPE_NONSMOOTHED_TILED_BITMAP:
-        addLeaf(newNode, "type: non-smoothed repeating bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(newNode, "bitmapMatrix: " + fillStyle.getBitmapMatrix());
-        break;
-      case FillStyle.TYPE_NONSMOOTHED_CLIPPED_BITMAP:
-        addLeaf(newNode, "type: non-smoothed clipped bitmap");
-        addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
-        addLeaf(newNode, "bitmapMatrix: " + fillStyle.getBitmapMatrix());
-        break;
-      default:
-        addLeaf(newNode, "unknown fill type: " + fillStyle.getType());
+    addLeaf(newNode, "type: ".concat(getFriendlyConstantName(fillStyle.getType())));
+    switch (fillStyle.getType().getGroup()) {
+    case SOLID:
+      addLeaf(newNode, "color: " + fillStyle.getColor());
+      break;
+    case GRADIENT:
+      addLeaf(newNode, "gradientMatrix: " + fillStyle.getGradientMatrix());
+      addNode(newNode, fillStyle.getGradient());
+      break;
+    case BITMAP:
+      addLeaf(newNode, "bitmapId: " + fillStyle.getBitmapId());
+      addLeaf(newNode, "bitmapMatrix: " + fillStyle.getBitmapMatrix());
+      break;
+    default:
+      addLeaf(newNode, "unknown fill type: " + fillStyle.getType());
     }
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, LineStyle lineStyle, int index) {
+      DefaultMutableTreeNode node, LineStyle lineStyle, int index) {
     DefaultMutableTreeNode newNode = addParentNode(node, "LineStyle " + index);
     addLeaf(newNode, "width: " + lineStyle.getWidth());
     addLeaf(newNode, "color: " + lineStyle.getColor());
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, LineStyle2 lineStyle, int index) {
+      DefaultMutableTreeNode node, LineStyle2 lineStyle, int index) {
     DefaultMutableTreeNode newNode = addParentNode(node, "LineStyle2 " + index);
     addLeaf(newNode, "width: " + lineStyle.getWidth());
-    addLeaf(
-      newNode,
-      "startCapStyle: " + getCapStyleString(lineStyle.getStartCapStyle()));
-    addLeaf(
-      newNode, "endCapStyle: " + getCapStyleString(lineStyle.getEndCapStyle()));
-    byte jointStyle = lineStyle.getJointStyle();
-    addLeaf(newNode, "jointStyle: " + getJointStyleString(jointStyle));
-    if (jointStyle == EnhancedStrokeStyle.JOINT_MITER) {
+    addLeaf(newNode, "startCapStyle: " 
+        + getFriendlyConstantName(lineStyle.getStartCapStyle()));
+    addLeaf(newNode, "endCapStyle: " 
+        + getFriendlyConstantName(lineStyle.getEndCapStyle()));
+    JointStyle jointStyle = lineStyle.getJointStyle();
+    addLeaf(newNode, "jointStyle: " + getFriendlyConstantName(jointStyle));
+    if (JointStyle.MITER.equals(jointStyle)) {
       addLeaf(newNode, "miterLimit: " + lineStyle.getMiterLimit());
     }
     addLeaf(newNode, "pixelHinting: " + lineStyle.isPixelHinting());
     addLeaf(newNode, "close: " + lineStyle.isClose());
-    addLeaf(
-      newNode,
-      "scaleStroke: " + getScaleStrokeString(lineStyle.getScaleStroke()));
+    addLeaf(newNode, "scaleStroke: " 
+        + getFriendlyConstantName(lineStyle.getScaleStroke()));
     FillStyle fillStyle = lineStyle.getFillStyle();
     if (fillStyle == null) {
       addLeaf(newNode, "color: " + lineStyle.getColor());
@@ -1543,21 +1419,18 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, Gradient gradient) {
+      DefaultMutableTreeNode node, Gradient gradient) {
     DefaultMutableTreeNode newNode = addParentNode(
         node,
         ((gradient instanceof FocalGradient) ? "FocalGradient" : "Gradient"));
-    addLeaf(
-      newNode,
-      "spreadMethod: " + getSpreadMethodString(gradient.getSpreadMethod()));
-    addLeaf(
-      newNode,
-      "interpolationMethod: " +
-      getInterpolationMethodString(gradient.getInterpolationMethod()));
+    addLeaf(newNode, "spreadMethod: " 
+        + getFriendlyConstantName(gradient.getSpreadMethod()));
+    addLeaf(newNode, "interpolationMethod: "
+        + getFriendlyConstantName(gradient.getInterpolationMethod()));
     if (gradient instanceof FocalGradient) {
       addLeaf(
-        newNode,
-        "focalPointRatio: " + ((FocalGradient) gradient).getFocalPointRatio());
+          newNode,
+          "focalPointRatio: " + ((FocalGradient) gradient).getFocalPointRatio());
     }
     GradRecord[] records = gradient.getGradientRecords();
     for (int i = 0; i < records.length; i++) {
@@ -1572,7 +1445,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, LineStyleArray lineStyleArray) {
+      DefaultMutableTreeNode node, String var, LineStyleArray lineStyleArray) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "LineStyleArray (" + lineStyleArray.getSize() + " styles)");
     for (int i = 1; i <= lineStyleArray.getSize(); i++) {
@@ -1591,7 +1464,7 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
     byte format = tag.getFormat();
     addLeaf(
-      tagNode, "format: " + format + " (" + getSoundFormatString(format) + ")");
+        tagNode, "format: " + format + " (" + getSoundFormatString(format) + ")");
     byte rate = tag.getRate();
     addLeaf(tagNode, "rate: " + rate + " (" + getSoundRateString(rate) + ")");
     int sampleSize = (tag.is16BitSample()) ? 16 : 8;
@@ -1600,7 +1473,7 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "type: " + type);
     addLeaf(tagNode, "sampleCount: " + tag.getSampleCount());
     addLeaf(
-      tagNode, "soundData: " + " byte[" + tag.getSoundData().length + "]");
+        tagNode, "soundData: " + " byte[" + tag.getSoundData().length + "]");
   }
 
   private static void addNode(DefaultMutableTreeNode node, DefineSprite tag) {
@@ -1635,7 +1508,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, TextRecord[] textRecords) {
+      DefaultMutableTreeNode node, String var, TextRecord[] textRecords) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "TextRecord[" + textRecords.length + "]");
     for (int i = 0; i < textRecords.length; i++) {
@@ -1659,7 +1532,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, GlyphEntry[] glyphEntries) {
+      DefaultMutableTreeNode node, String var, GlyphEntry[] glyphEntries) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "GlyphEntry[" + glyphEntries.length + "]");
     for (int i = 0; i < glyphEntries.length; i++) {
@@ -1671,7 +1544,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineVideoStream tag) {
+      DefaultMutableTreeNode node, DefineVideoStream tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatDefTag("DefineVideoStream"));
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
@@ -1680,38 +1553,38 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "height: " + tag.getHeight());
     String deblocking = "unknown value";
     switch (tag.getDeblocking()) {
-      case DefineVideoStream.DEBLOCKING_OFF:
-        deblocking = "off";
-        break;
-      case DefineVideoStream.DEBLOCKING_ON:
-        deblocking = "on";
-        break;
-      case DefineVideoStream.DEBLOCKING_PACKET:
-        deblocking = "use video packet setting";
-        break;
+    case DefineVideoStream.DEBLOCKING_OFF:
+      deblocking = "off";
+      break;
+    case DefineVideoStream.DEBLOCKING_ON:
+      deblocking = "on";
+      break;
+    case DefineVideoStream.DEBLOCKING_PACKET:
+      deblocking = "use video packet setting";
+      break;
     }
     addLeaf(tagNode, "deblocking: " + deblocking);
     addLeaf(tagNode, "smoothing: " + (tag.isSmoothing() ? "on" : "off"));
     String codec  = "unknown codec";
     short codecId = tag.getCodecId();
     switch (codecId) {
-      case DefineVideoStream.CODEC_SORENSON_H263:
-        codec = "Sorenson H.263";
-        break;
-      case DefineVideoStream.CODEC_SCREEN_VIDEO:
-        codec = "Screen Video";
-        break;
-      case DefineVideoStream.CODEC_VP6:
-        codec = "On2 VP6";
-        break;
-      case DefineVideoStream.CODEC_VP6_ALPHA:
-        codec = "On2 VP6 with alpha";
-        break;
-      case DefineVideoStream.CODEC_SCREEN_VIDEO_V2:
-        codec = "Screen Video V2";
-        break;
-      default:
-        codec = "unknown codec: " + codecId;
+    case DefineVideoStream.CODEC_SORENSON_H263:
+      codec = "Sorenson H.263";
+      break;
+    case DefineVideoStream.CODEC_SCREEN_VIDEO:
+      codec = "Screen Video";
+      break;
+    case DefineVideoStream.CODEC_VP6:
+      codec = "On2 VP6";
+      break;
+    case DefineVideoStream.CODEC_VP6_ALPHA:
+      codec = "On2 VP6 with alpha";
+      break;
+    case DefineVideoStream.CODEC_SCREEN_VIDEO_V2:
+      codec = "Screen Video V2";
+      break;
+    default:
+      codec = "unknown codec: " + codecId;
     }
     addLeaf(tagNode, "codec: " + codec);
   }
@@ -1721,13 +1594,13 @@ final class SWFTreeBuilder {
         node, formatControlTag("DoAction"));
     addNode(tagNode, "actions: ", tag.getActions());
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, DoAbc tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("DoAbc"));
     addNode(tagNode, tag.getAbcFile());
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, DoAbcDefine tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("DoAbcDefine"));
@@ -1770,9 +1643,9 @@ final class SWFTreeBuilder {
     ExportMapping[] exportMappings = tag.getExportMappings();
     for (int i = 0; i < exportMappings.length; i++) {
       addLeaf(
-        tagNode,
-        "characterId: " + exportMappings[i].getCharacterId() + ", name: " +
-        exportMappings[i].getName());
+          tagNode,
+          "characterId: " + exportMappings[i].getCharacterId() + ", name: " +
+          exportMappings[i].getName());
     }
   }
 
@@ -1795,16 +1668,16 @@ final class SWFTreeBuilder {
     DefaultMutableTreeNode tagNode = addParentNode(
         node,
         formatControlTag(
-          (tag instanceof ImportAssets2) ? "ImportAssets2" : "ImportAssets"));
+            (tag instanceof ImportAssets2) ? "ImportAssets2" : "ImportAssets"));
     addLeaf(tagNode, "url: " + tag.getUrl());
     ImportMapping[] importMappings      = tag.getImportMappings();
     DefaultMutableTreeNode mappingsNode = addParentNode(
         tagNode, "importMappings[" + importMappings.length + "]");
     for (int i = 0; i < importMappings.length; i++) {
       addLeaf(
-        mappingsNode,
-        "name: " + importMappings[i].getName() + ", characterId: " +
-        importMappings[i].getCharacterId());
+          mappingsNode,
+          "name: " + importMappings[i].getName() + ", characterId: " +
+          importMappings[i].getCharacterId());
     }
   }
 
@@ -1832,7 +1705,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, CXform cXform) {
+      DefaultMutableTreeNode node, String var, CXform cXform) {
     DefaultMutableTreeNode newNode = addParentNode(node, var + "CXform");
     if (cXform.hasMultTerms()) {
       addLeaf(newNode, "redMultTerm: " + cXform.getRedMultTerm());
@@ -1851,7 +1724,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, CXformWithAlpha xform) {
+      DefaultMutableTreeNode node, String var, CXformWithAlpha xform) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "CXformWithAlpha");
     if (xform.hasMultTerms()) {
@@ -1940,8 +1813,7 @@ final class SWFTreeBuilder {
       }
     }
     if (tag.hasBlendMode()) {
-      short blendMode = tag.getBlendMode();
-      addLeaf(tagNode, "blendMode: " + BlendMode.getDescription(blendMode));
+      addLeaf(tagNode, "blendMode: " + tag.getBlendMode().toString());
     }
     if (tag.hasClipActions()) {
       addNode(tagNode, "clipActions: ", tag.getClipActions());
@@ -1976,7 +1848,7 @@ final class SWFTreeBuilder {
       addLeaf(filterNode, "bias: " + convolutionFilter.getBias());
       addLeaf(filterNode, "clamp: " + convolutionFilter.isClamp());
       addLeaf(
-        filterNode, "preserveAlpha: " + convolutionFilter.isPreserveAlpha());
+          filterNode, "preserveAlpha: " + convolutionFilter.isPreserveAlpha());
     } else if (filter instanceof BlurFilter) {
       BlurFilter blurFilter = (BlurFilter) filter;
       filterNode = addParentNode(node, "BlurFilter");
@@ -2030,8 +1902,8 @@ final class SWFTreeBuilder {
           filterNode, "control points[" + controlPointsCount + "]");
       for (int i = 0; i < controlPointsCount; i++) {
         addLeaf(
-          controlPointsNode,
-          "color " + i + ": " + colors[i] + " ratio: " + ratios[i]);
+            controlPointsNode,
+            "color " + i + ": " + colors[i] + " ratio: " + ratios[i]);
       }
       addLeaf(filterNode, "x: " + gradientGlowFilter.getX());
       addLeaf(filterNode, "y: " + gradientGlowFilter.getY());
@@ -2052,8 +1924,8 @@ final class SWFTreeBuilder {
           filterNode, "control points[" + controlPointsCount + "]");
       for (int i = 0; i < controlPointsCount; i++) {
         addLeaf(
-          controlPointsNode,
-          "color " + i + ": " + colors[i] + " ratio: " + ratios[i]);
+            controlPointsNode,
+            "color " + i + ": " + colors[i] + " ratio: " + ratios[i]);
       }
       addLeaf(filterNode, "x: " + gradientBevelFilter.getX());
       addLeaf(filterNode, "y: " + gradientBevelFilter.getY());
@@ -2068,7 +1940,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ClipActions clipActions) {
+      DefaultMutableTreeNode node, String var, ClipActions clipActions) {
     DefaultMutableTreeNode newNode = addParentNode(node, var + "ClipActions");
     addNode(newNode, "allEventFlags: ", clipActions.getEventFlags());
     List<ClipActionRecord> records = clipActions.getClipActionRecords();
@@ -2078,7 +1950,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, ClipActionRecord clipActionRecord) {
+      DefaultMutableTreeNode node, ClipActionRecord clipActionRecord) {
     DefaultMutableTreeNode newNode = addParentNode(node, "ClipActionRecord");
     addNode(newNode, "eventFlags: ", clipActionRecord.getEventFlags());
     if (clipActionRecord.getEventFlags().isKeyPress()) {
@@ -2088,7 +1960,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ActionBlock actionBlock) {
+      DefaultMutableTreeNode node, String var, ActionBlock actionBlock) {
     List<Action> actionRecords = actionBlock.getActions();
     DefaultMutableTreeNode newNode = addParentNode(
         node,
@@ -2098,56 +1970,56 @@ final class SWFTreeBuilder {
       addNode(newNode, actionRecords.get(i));
     }
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, Action action) {
     String actionDescription = "<html>";
     if (action.getLabel() != null) {
       actionDescription += ("<code>" + action.getLabel() + "</code> @ ");
     }
     actionDescription += (action.getOffset() + " (" + action.getSize() + "): ");
-    switch (action.getCode()) {
-      case ActionConstants.PUSH:
-        actionDescription += getPushDescription((Push) action);
-        break;
-      case ActionConstants.TRY:
-        actionDescription += "Try";
-        break;
-      case ActionConstants.IF:
-        actionDescription += ("If branchLabel: <code>" +
-        ((If) action).getBranchLabel() + "</code> " + "branchOffset: " +
-        ((If) action).getBranchOffset());
-        break;
-      case ActionConstants.JUMP:
-        actionDescription += ("Jump branchLabel: <code>" +
-        ((Jump) action).getBranchLabel() + "</code> " + "branchOffset: " +
-        ((Jump) action).getBranchOffset());
-        break;
-      default:
-        actionDescription += action.toString();
+    switch (action.actionType()) {
+    case PUSH:
+      actionDescription += getPushDescription((Push) action);
+      break;
+    case TRY:
+      actionDescription += "Try";
+      break;
+    case IF:
+      actionDescription += ("If branchLabel: <code>" +
+          ((If) action).getBranchLabel() + "</code> " + "branchOffset: " +
+          ((If) action).getBranchOffset());
+      break;
+    case JUMP:
+      actionDescription += ("Jump branchLabel: <code>" +
+          ((Jump) action).getBranchLabel() + "</code> " + "branchOffset: " +
+          ((Jump) action).getBranchOffset());
+      break;
+    default:
+      actionDescription += action.toString();
     }
     actionDescription += "</html>";
     DefaultMutableTreeNode actionNode = addParentNode(node, actionDescription);
-    switch (action.getCode()) {
-      case ActionConstants.CONSTANT_POOL:
-        ConstantPool constantPool = (ConstantPool) action;
-        constants = constantPool.getConstants();
-        String constStr = "c" + ((constants.size() > 255) ? "16" : "8") + "[";
-        for (int i = 0; i < constants.size(); i++) {
-          addLeaf(actionNode, constStr + i + "]: " + constants.get(i));
-        }
-        break;
-      case ActionConstants.WITH:
-        addNode(actionNode, (With) action);
-        break;
-      case ActionConstants.TRY:
-        addNode(actionNode, (Try) action);
-        break;
-      case ActionConstants.DEFINE_FUNCTION:
-        addNode(actionNode, (DefineFunction) action);
-        break;
-      case ActionConstants.DEFINE_FUNCTION_2:
-        addNode(actionNode, (DefineFunction2) action);
-        break;
+    switch (action.actionType()) {
+    case CONSTANT_POOL:
+      ConstantPool constantPool = (ConstantPool) action;
+      constants = constantPool.getConstants();
+      String constStr = "c" + ((constants.size() > 255) ? "16" : "8") + "[";
+      for (int i = 0; i < constants.size(); i++) {
+        addLeaf(actionNode, constStr + i + "]: " + constants.get(i));
+      }
+      break;
+    case WITH:
+      addNode(actionNode, (With) action);
+      break;
+    case TRY:
+      addNode(actionNode, (Try) action);
+      break;
+    case DEFINE_FUNCTION:
+      addNode(actionNode, (DefineFunction) action);
+      break;
+    case DEFINE_FUNCTION_2:
+      addNode(actionNode, (DefineFunction2) action);
+      break;
     }
   }
 
@@ -2173,19 +2045,19 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, AbcFile abcFile) {
+      DefaultMutableTreeNode node, AbcFile abcFile) {
     DefaultMutableTreeNode abcFileNode = addParentNode(node, "abc block: AbcFile");
     addLeaf(abcFileNode, "Version: " + abcFile.getMajorVersion() + "." + abcFile.getMinorVersion());
     AbcConstantPool constantPool = abcFile.getConstantPool();
     addNode(abcFileNode, constantPool);
-    DefaultMutableTreeNode methodsNode = addParentNode(abcFileNode, "Methods");
-    DefaultMutableTreeNode metadataNode = addParentNode(abcFileNode, "Metadata Entries");
-    DefaultMutableTreeNode instancesNode = addParentNode(abcFileNode, "Instances");
-    DefaultMutableTreeNode classesNode = addParentNode(abcFileNode, "Classes");
-    DefaultMutableTreeNode scriptsNode = addParentNode(abcFileNode, "Scripts");
-    DefaultMutableTreeNode methodBodiesNode = addParentNode(abcFileNode, "Method Bodies");
+    addParentNode(abcFileNode, "Methods");
+    addParentNode(abcFileNode, "Metadata Entries");
+    addParentNode(abcFileNode, "Instances");
+    addParentNode(abcFileNode, "Classes");
+    addParentNode(abcFileNode, "Scripts");
+    addParentNode(abcFileNode, "Method Bodies");
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, AbcConstantPool constantPool) {
     DefaultMutableTreeNode constantPoolNode = addParentNode(node, "Constant pool");
     DefaultMutableTreeNode intsNode = addParentNode(constantPoolNode, "Integer values");
@@ -2229,8 +2101,8 @@ final class SWFTreeBuilder {
         addLeaf(nsSetNode, "namespaces[" + namespaceIndex + "]: " + getNamespaceDescription(strings, namespaces.get(namespaceIndex)));
       }
     }
-    DefaultMutableTreeNode multinamesNode = addParentNode(constantPoolNode, "Multinames");
-    List<AbcMultiname> multinames = constantPool.getMultinames();
+    //DefaultMutableTreeNode multinamesNode = addParentNode(constantPoolNode, "Multinames");
+    //List<AbcMultiname> multinames = constantPool.getMultinames();
   }
 
   private static String getNamespaceDescription(List<String> strings, AbcNamespace ns) {
@@ -2239,9 +2111,9 @@ final class SWFTreeBuilder {
     String nsDescription = "Namespace kind: " + kind + " name: strings[" + nameIndex + "]=\"" + strings.get(nameIndex) + "\"";
     return nsDescription;
   }
-  
+
   private static void addNode(
-    DefaultMutableTreeNode node, DefineFunction defineFunction) {
+      DefaultMutableTreeNode node, DefineFunction defineFunction) {
     String[] parameters = defineFunction.getParameters();
     String paramList    = "";
     for (int i = 0; i < parameters.length; i++) {
@@ -2255,7 +2127,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, DefineFunction2 defineFunction2) {
+      DefaultMutableTreeNode node, DefineFunction2 defineFunction2) {
     DefaultMutableTreeNode headerNode = addParentNode(node, "header");
     RegisterParam[] regParameters     = defineFunction2.getParameters();
     DefaultMutableTreeNode paramsNode = addParentNode(
@@ -2271,10 +2143,10 @@ final class SWFTreeBuilder {
     addLeaf(headerNode, "suppressThis: " + defineFunction2.suppressesThis());
     addLeaf(headerNode, "preloadThis: " + defineFunction2.preloadsThis());
     addLeaf(
-      headerNode, "suppressArguments: " +
-      defineFunction2.suppressesArguments());
+        headerNode, "suppressArguments: " +
+        defineFunction2.suppressesArguments());
     addLeaf(
-      headerNode, "preloadArguments: " + defineFunction2.preloadsArguments());
+        headerNode, "preloadArguments: " + defineFunction2.preloadsArguments());
     addLeaf(headerNode, "suppressSuper: " + defineFunction2.suppressesSuper());
     addLeaf(headerNode, "preloadSuper: " + defineFunction2.preloadsSuper());
     addLeaf(headerNode, "preloadRoot: " + defineFunction2.preloadsRoot());
@@ -2284,7 +2156,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, ClipEventFlags clipEventFlags) {
+      DefaultMutableTreeNode node, String var, ClipEventFlags clipEventFlags) {
     DefaultMutableTreeNode newNode = addParentNode(
         node, var + "ClipEventFlags");
     if (clipEventFlags == null) return;
@@ -2341,7 +2213,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, SetBackgroundColor tag) {
+      DefaultMutableTreeNode node, SetBackgroundColor tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("SetBackgroundColor"));
     addLeaf(tagNode, "color: " + tag.getColor());
@@ -2359,12 +2231,12 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, SoundStreamBlock tag) {
+      DefaultMutableTreeNode node, SoundStreamBlock tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("SoundStreamBlock"));
     addLeaf(
-      tagNode, "streamSoundData: byte[" + tag.getStreamSoundData().length +
-      "]");
+        tagNode, "streamSoundData: byte[" + tag.getStreamSoundData().length +
+    "]");
   }
 
   private static void addNode(DefaultMutableTreeNode node, Scale9Grid tag) {
@@ -2394,7 +2266,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, SoundStreamHead2 tag) {
+      DefaultMutableTreeNode node, SoundStreamHead2 tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("SoundStreamHead2"));
     byte rate                      = tag.getPlaybackRate();
@@ -2425,7 +2297,7 @@ final class SWFTreeBuilder {
   }
 
   private static void addNode(
-    DefaultMutableTreeNode node, String var, SoundInfo info) {
+      DefaultMutableTreeNode node, String var, SoundInfo info) {
     DefaultMutableTreeNode siNode = addParentNode(node, var + "SoundInfo");
     addLeaf(siNode, "syncStop: " + info.isSyncStop());
     addLeaf(siNode, "syncNoMultiple: " + info.isSyncNoMultiple());
@@ -2452,7 +2324,7 @@ final class SWFTreeBuilder {
       }
     }
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, SymbolClass tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("SymbolClass"));
@@ -2460,15 +2332,15 @@ final class SWFTreeBuilder {
     for (Iterator<SymbolReference> it = references.iterator(); it.hasNext(); ) {
       SymbolReference symbolReference = it.next();
       addLeaf(
-        tagNode,
-        "characterId: " + symbolReference.getCharacterId() + ", symbol name: " +
-        symbolReference.getName());
+          tagNode,
+          "characterId: " + symbolReference.getCharacterId() + ", symbol name: " +
+          symbolReference.getName());
     }
   }
 
   private static void addNode(DefaultMutableTreeNode node, UnknownTag tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
-        node, formatControlTag("Unknown tag (" + tag.getCode() + ")"));
+        node, formatControlTag("Unknown tag (" + tag.tagCode() + ")"));
     byte[] data                    = tag.getData();
     addLeaf(tagNode, "size: " + data.length);
     addLeaf(tagNode, "data: " + HexUtils.toHex(data));
@@ -2484,13 +2356,13 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "build number: " + tag.getBuildNumber());
     addLeaf(tagNode, "build date: " + tag.getBuildDate());
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, DebugId tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("DebugId"));
     addLeaf(tagNode, "id: " + tag.getId());
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, DefineBinaryData tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("DefineBinaryData"));
@@ -2498,7 +2370,7 @@ final class SWFTreeBuilder {
     addLeaf(tagNode, "characterId: " + tag.getCharacterId());
     addLeaf(tagNode, "data: " + HexUtils.toHex(data));
   }
-  
+
   private static void addNode(DefaultMutableTreeNode node, VideoFrame tag) {
     DefaultMutableTreeNode tagNode = addParentNode(
         node, formatControlTag("VideoFrame"));
@@ -2508,7 +2380,7 @@ final class SWFTreeBuilder {
   }
 
   private static DefaultMutableTreeNode addParentNode(
-    DefaultMutableTreeNode node, String string) {
+      DefaultMutableTreeNode node, String string) {
     DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(string);
     node.insert(newNode, node.getChildCount());
     nodes++;

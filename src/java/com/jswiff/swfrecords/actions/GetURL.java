@@ -23,7 +23,7 @@ package com.jswiff.swfrecords.actions;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -79,6 +79,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 3
  */
 public final class GetURL extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private String url;
   private String target;
 
@@ -90,7 +93,7 @@ public final class GetURL extends Action {
    * @param target the target used to display the URL
    */
   public GetURL(String url, String target) {
-    code          = ActionConstants.GET_URL;
+    super(ActionType.GET_URL);
     this.url      = url;
     this.target   = target;
   }
@@ -99,7 +102,7 @@ public final class GetURL extends Action {
    * Creates a new GetURL action from a bit stream
    */
   GetURL(InputBitStream stream) throws IOException {
-    code     = ActionConstants.GET_URL;
+    super(ActionType.GET_URL);
     url      = stream.readString();
     target   = stream.readString();
   }
@@ -146,7 +149,7 @@ public final class GetURL extends Action {
    *         <code>target</code>
    */
   public String toString() {
-    return "GetURL url: '" + url + "' target: '" + target + "'";
+    return super.toString() + " url: '" + url + "' target: '" + target + "'";
   }
 
   protected void writeData(

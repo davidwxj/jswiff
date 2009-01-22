@@ -20,7 +20,7 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.OutputBitStream;
 
 
@@ -43,11 +43,14 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class Call extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new Call action.
    */
   public Call() {
-    code = ActionConstants.CALL;
+    super(ActionType.CALL);
   }
 
   /**
@@ -61,15 +64,6 @@ public final class Call extends Action {
    */
   public int getSize() {
     return 3; // 1 (code) + 2 (size - always 0 ...)
-  }
-
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Call"</code>
-   */
-  public String toString() {
-    return "Call";
   }
 
   protected void writeData(

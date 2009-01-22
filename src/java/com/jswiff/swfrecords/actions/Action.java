@@ -27,6 +27,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.OutputBitStream;
 
 
@@ -34,17 +35,23 @@ import com.jswiff.io.OutputBitStream;
  * This is the base class for action records.
  */
 public abstract class Action implements Serializable {
-  protected short code;
+
+  private static final long serialVersionUID = 1L;
+  
+  private final ActionType actionType;
   private int offset; // offset in stream, relative to beginning of action record array
   private String label;
   
-  /**
-   * Returns the code of the action record.
-   *
-   * @return the code
-   */
-  public short getCode() {
-    return code;
+  public Action(final ActionType actionType) {
+    this.actionType = actionType;
+  }
+  
+  public ActionType actionType() {
+    return this.actionType;
+  }
+  
+  public short actionCode() {
+    return this.actionType().getCode();
   }
   
   /**
@@ -137,8 +144,8 @@ public abstract class Action implements Serializable {
   }
 
   void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(code);
-    if (code >= 0x80) {
+    stream.writeUI8(this.actionCode());
+    if (this.actionCode() >= 0x80) {
       OutputBitStream dataStream = new OutputBitStream();
       dataStream.setANSI(stream.isANSI());
       dataStream.setShiftJIS(stream.isShiftJIS());
@@ -155,4 +162,10 @@ public abstract class Action implements Serializable {
       stream.writeBytes(mainStream.getData());
     }
   }
+  
+  @Override
+  public String toString() {
+    return actionType().getNiceName();
+  }
+  
 }

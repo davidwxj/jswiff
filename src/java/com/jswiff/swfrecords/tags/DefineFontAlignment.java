@@ -22,49 +22,54 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.AlignmentZone;
-
 
 /**
  * @since SWF 8
  */
 public class DefineFontAlignment extends Tag {
+
+  private static final long serialVersionUID = 1L;
+  
   /** TODO: Comments */
-  public static final byte THIN          = 0;
+  public static final byte THIN = 0;
   /** TODO: Comments */
-  public static final byte MEDIUM        = 1;
+  public static final byte MEDIUM = 1;
   /** TODO: Comments */
-  public static final byte THICK         = 2;
+  public static final byte THICK = 2;
   private int fontId;
   private byte thickness;
   private AlignmentZone[] alignmentZones;
 
   /**
    * Creates a new DefineFontAlignment instance.
-   *
-   * @param fontId TODO: Comments
-   * @param thickness TODO: Comments
-   * @param alignmentZones TODO: Comments
+   * 
+   * @param fontId
+   *          TODO: Comments
+   * @param thickness
+   *          TODO: Comments
+   * @param alignmentZones
+   *          TODO: Comments
    */
-  public DefineFontAlignment(
-    int fontId, byte thickness, AlignmentZone[] alignmentZones) {
-    this.fontId           = fontId;
-    this.thickness        = thickness;
-    this.alignmentZones   = alignmentZones;
-    code                  = TagConstants.DEFINE_FONT_ALIGNMENT;
+  public DefineFontAlignment(int fontId, byte thickness, AlignmentZone[] alignmentZones) {
+    super(TagType.DEFINE_FONT_ALIGNMENT);
+    this.fontId = fontId;
+    this.thickness = thickness;
+    this.alignmentZones = alignmentZones;
   }
-
+  
   DefineFontAlignment() {
-    super();
+    super(TagType.DEFINE_FONT_ALIGNMENT);
   }
 
   /**
    * TODO: Comments
-   *
-   * @param alignmentZones TODO: Comments
+   * 
+   * @param alignmentZones
+   *          TODO: Comments
    */
   public void setAlignmentZones(AlignmentZone[] alignmentZones) {
     this.alignmentZones = alignmentZones;
@@ -72,7 +77,7 @@ public class DefineFontAlignment extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public AlignmentZone[] getAlignmentZones() {
@@ -81,8 +86,9 @@ public class DefineFontAlignment extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param fontId TODO: Comments
+   * 
+   * @param fontId
+   *          TODO: Comments
    */
   public void setFontId(int fontId) {
     this.fontId = fontId;
@@ -90,7 +96,7 @@ public class DefineFontAlignment extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public int getFontId() {
@@ -99,8 +105,9 @@ public class DefineFontAlignment extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param thickness THIN, MEDIUM or THICK
+   * 
+   * @param thickness
+   *          THIN, MEDIUM or THICK
    */
   public void setThickness(byte thickness) {
     this.thickness = thickness;
@@ -108,7 +115,7 @@ public class DefineFontAlignment extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return THIN, MEDIUM or THICK
    */
   public byte getThickness() {
@@ -120,7 +127,7 @@ public class DefineFontAlignment extends Tag {
     outStream.writeUnsignedBits(thickness, 2);
     outStream.writeUnsignedBits(0, 6);
     if (alignmentZones != null) {
-      for (int i=0; i<alignmentZones.length; i++) {
+      for (int i = 0; i < alignmentZones.length; i++) {
         alignmentZones[i].write(outStream);
       }
     }
@@ -128,8 +135,8 @@ public class DefineFontAlignment extends Tag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
-    fontId      = inStream.readUI16();
-    thickness   = (byte) inStream.readUnsignedBits(2);
+    fontId = inStream.readUI16();
+    thickness = (byte) inStream.readUnsignedBits(2);
     inStream.readUnsignedBits(6);
     int glyphCount = inStream.available() / 10;
     alignmentZones = new AlignmentZone[glyphCount];

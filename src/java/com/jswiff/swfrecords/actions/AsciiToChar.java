@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class AsciiToChar extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new AsciiToChar action.
    */
   public AsciiToChar() {
-    code = ActionConstants.ASCII_TO_CHAR;
+    super(ActionType.ASCII_TO_CHAR);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"AsciiToChar"</code>
-   */
-  public String toString() {
-    return "AsciiToChar";
-  }
 }

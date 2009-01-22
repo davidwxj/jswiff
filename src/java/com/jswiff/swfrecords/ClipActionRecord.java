@@ -23,6 +23,7 @@ package com.jswiff.swfrecords;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.actions.ActionBlock;
@@ -35,6 +36,9 @@ import com.jswiff.swfrecords.actions.ActionBlock;
  * @see ClipActions
  */
 public final class ClipActionRecord implements Serializable {
+  
+  private static final long serialVersionUID = 1L;
+  
   private ClipEventFlags eventFlags;
   private short keyCode;
   private ActionBlock actions;
@@ -57,9 +61,11 @@ public final class ClipActionRecord implements Serializable {
    * @param swfVersion SWF version
    *
    * @throws IOException if an I/O error has occured
+   * @throws InvalidCodeException if the tag header contains an invalid code.
+   * This normally means invalid or corrupted data.
    */
   public ClipActionRecord(InputBitStream stream, short swfVersion)
-    throws IOException {
+    throws IOException, InvalidCodeException {
     eventFlags = new ClipEventFlags(stream, swfVersion);
     int actionRecordSize = (int) stream.readUI32();
     if ((swfVersion >= 6) && eventFlags.isKeyPress()) {

@@ -23,7 +23,7 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.util.Vector;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.GlyphEntry;
@@ -31,151 +31,148 @@ import com.jswiff.swfrecords.Matrix;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.TextRecord;
 
-
 /**
  * This tag defines a block of static text, just like <code>DefineText</code>.
  * Unlike the older text definition tag, <code>DefineText2</code> supports
- * transparency, i.e. colors in text records within <code>DefineText2</code>
- * are <code>RGBA</code> instances.
- *
+ * transparency, i.e. colors in text records within <code>DefineText2</code> are
+ * <code>RGBA</code> instances.
+ * 
  * @see DefineText
  * @see TextRecord
  * @since SWF 3
  */
 public final class DefineText2 extends DefinitionTag {
-  
-	private Rect textBounds;
-	private Matrix textMatrix;
-	private TextRecord[] textRecords;
 
-	/**
-	 * Creates a new DefineText2 tag. Supply text character ID, bounding box
-	 * and transform matrix. Specify text characters, their style and position
-	 * in an <code>TextRecord</code> array.
-	 *
-	 * @param characterId text character ID
-	 * @param textBounds bounding box of text
-	 * @param textMatrix transform matrix for text
-	 * @param textRecords <code>TextRecord</code> array containing text
-	 * 		  characters
-	 */
-	public DefineText2(
-		int characterId, Rect textBounds, Matrix textMatrix,
-		TextRecord[] textRecords) {
-		code				 = TagConstants.DEFINE_TEXT_2;
-		this.characterId     = characterId;
-		this.textBounds		 = textBounds;
-		this.textMatrix		 = textMatrix;
-		this.textRecords     = textRecords;
-	}
+  private static final long serialVersionUID = 1L;
 
-	DefineText2() {
-		// empty
-	}
+  private Rect textBounds;
+  private Matrix textMatrix;
+  private TextRecord[] textRecords;
 
-	/**
-	 * Sets the bounding box of the text, i.e. the smallest rectangle enclosing
-	 * the text.
-	 *
-	 * @param textBounds text bounds
-	 */
-	public void setTextBounds(Rect textBounds) {
-		this.textBounds = textBounds;
-	}
+  /**
+   * Creates a new DefineText2 tag. Supply text character ID, bounding box and
+   * transform matrix. Specify text characters, their style and position in an
+   * <code>TextRecord</code> array.
+   * 
+   * @param characterId
+   *          text character ID
+   * @param textBounds
+   *          bounding box of text
+   * @param textMatrix
+   *          transform matrix for text
+   * @param textRecords
+   *          <code>TextRecord</code> array containing text characters
+   */
+  public DefineText2(int characterId, Rect textBounds, Matrix textMatrix, TextRecord[] textRecords) {
+    super(TagType.DEFINE_TEXT_2);
+    this.characterId = characterId;
+    this.textBounds = textBounds;
+    this.textMatrix = textMatrix;
+    this.textRecords = textRecords;
+  }
 
-	/**
-	 * Returns the bounding box of the text, i.e. the smallest rectangle
-	 * enclosing the text.
-	 *
-	 * @return text bounds
-	 */
-	public Rect getTextBounds() {
-		return textBounds;
-	}
+  DefineText2() {
+    super(TagType.DEFINE_TEXT_2);
+  }
 
-	/**
-	 * Sets the transform matrix of the text.
-	 *
-	 * @param textMatrix text transform matrix
-	 */
-	public void setTextMatrix(Matrix textMatrix) {
-		this.textMatrix = textMatrix;
-	}
+  /**
+   * Sets the bounding box of the text, i.e. the smallest rectangle enclosing
+   * the text.
+   * 
+   * @param textBounds
+   *          text bounds
+   */
+  public void setTextBounds(Rect textBounds) {
+    this.textBounds = textBounds;
+  }
 
-	/**
-	 * Returns the transform matrix of the text.
-	 *
-	 * @return text transform matrix
-	 */
-	public Matrix getTextMatrix() {
-		return textMatrix;
-	}
+  /**
+   * Returns the bounding box of the text, i.e. the smallest rectangle enclosing
+   * the text.
+   * 
+   * @return text bounds
+   */
+  public Rect getTextBounds() {
+    return textBounds;
+  }
 
-	/**
-	 * Sets the array of <code>TextRecords</code> containing the text
-	 * characters and their style and position.
-	 *
-	 * @param textRecords text record array
-	 */
-	public void setTextRecords(TextRecord[] textRecords) {
-		this.textRecords = textRecords;
-	}
+  /**
+   * Sets the transform matrix of the text.
+   * 
+   * @param textMatrix
+   *          text transform matrix
+   */
+  public void setTextMatrix(Matrix textMatrix) {
+    this.textMatrix = textMatrix;
+  }
 
-	/**
-	 * Returns the array of <code>TextRecords</code> containing the text
-	 * characters and their style and position.
-	 *
-	 * @return text record array
-	 */
-	public TextRecord[] getTextRecords() {
-		return textRecords;
-	}
+  /**
+   * Returns the transform matrix of the text.
+   * 
+   * @return text transform matrix
+   */
+  public Matrix getTextMatrix() {
+    return textMatrix;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(characterId);
-		textBounds.write(outStream);
-		textMatrix.write(outStream);
-		// compute glyphBits and advanceBits
-		int glyphBits   = 0;
-		int advanceBits = 0;
-		for (int i = 0; i < textRecords.length; i++) {
-			GlyphEntry[] glyphs = textRecords[i].getGlyphEntries();
-			for (int j = 0; j < glyphs.length; j++) {
-				glyphBits	    = Math.max(
-						glyphBits,
-						OutputBitStream.getUnsignedBitsLength(
-							glyphs[j].getGlyphIndex()));
-				advanceBits     = Math.max(
-						advanceBits,
-						OutputBitStream.getSignedBitsLength(
-							glyphs[j].getGlyphAdvance()));
-			}
-		}
-		outStream.writeUI8((short) glyphBits);
-		outStream.writeUI8((short) advanceBits);
-		for (int i = 0; i < textRecords.length; i++) {
-			textRecords[i].write(
-				outStream, (short) glyphBits, (short) advanceBits);
-		}
-		outStream.writeUI8((short) 0);
-	}
+  /**
+   * Sets the array of <code>TextRecords</code> containing the text characters
+   * and their style and position.
+   * 
+   * @param textRecords
+   *          text record array
+   */
+  public void setTextRecords(TextRecord[] textRecords) {
+    this.textRecords = textRecords;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		characterId     = inStream.readUI16();
-		textBounds	    = new Rect(inStream);
-		textMatrix	    = new Matrix(inStream);
-		short glyphBits = inStream.readUI8();
-		short advanceBits = inStream.readUI8();
-		Vector<TextRecord> records = new Vector<TextRecord>();
-		do {
-			if (data[(int) inStream.getOffset()] == 0) {
-				break;
-			}
-			records.add(new TextRecord(inStream, glyphBits, advanceBits, true));
-		} while (true);
-		textRecords = new TextRecord[records.size()];
-		records.copyInto(textRecords);
-	}
+  /**
+   * Returns the array of <code>TextRecords</code> containing the text
+   * characters and their style and position.
+   * 
+   * @return text record array
+   */
+  public TextRecord[] getTextRecords() {
+    return textRecords;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(characterId);
+    textBounds.write(outStream);
+    textMatrix.write(outStream);
+    // compute glyphBits and advanceBits
+    int glyphBits = 0;
+    int advanceBits = 0;
+    for (int i = 0; i < textRecords.length; i++) {
+      GlyphEntry[] glyphs = textRecords[i].getGlyphEntries();
+      for (int j = 0; j < glyphs.length; j++) {
+        glyphBits = Math.max(glyphBits, OutputBitStream.getUnsignedBitsLength(glyphs[j].getGlyphIndex()));
+        advanceBits = Math.max(advanceBits, OutputBitStream.getSignedBitsLength(glyphs[j].getGlyphAdvance()));
+      }
+    }
+    outStream.writeUI8((short) glyphBits);
+    outStream.writeUI8((short) advanceBits);
+    for (int i = 0; i < textRecords.length; i++) {
+      textRecords[i].write(outStream, (short) glyphBits, (short) advanceBits);
+    }
+    outStream.writeUI8((short) 0);
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    characterId = inStream.readUI16();
+    textBounds = new Rect(inStream);
+    textMatrix = new Matrix(inStream);
+    short glyphBits = inStream.readUI8();
+    short advanceBits = inStream.readUI8();
+    Vector<TextRecord> records = new Vector<TextRecord>();
+    do {
+      if (data[(int) inStream.getOffset()] == 0) {
+        break;
+      }
+      records.add(new TextRecord(inStream, glyphBits, advanceBits, true));
+    } while (true);
+    textRecords = new TextRecord[records.size()];
+    records.copyInto(textRecords);
+  }
 }

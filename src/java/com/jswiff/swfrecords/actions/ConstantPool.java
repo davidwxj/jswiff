@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -49,13 +49,16 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 5
  */
 public final class ConstantPool extends Action {
+
+  private static final long serialVersionUID = 1L;
+  
   private List<String> constants = new ArrayList<String>();
 
   /**
    * Creates a new ConstantPool action.
    */
   public ConstantPool() {
-    code = ActionConstants.CONSTANT_POOL;
+    super(ActionType.CONSTANT_POOL);
   }
 
   /*
@@ -66,7 +69,7 @@ public final class ConstantPool extends Action {
    * @throws IOException if an I/O error has occured
    */
   ConstantPool(InputBitStream stream) throws IOException {
-    code = ActionConstants.CONSTANT_POOL;
+    super(ActionType.CONSTANT_POOL);
     int count = stream.readUI16();
     if (count > 0) {
       for (int i = 0; i < count; i++) {
@@ -109,7 +112,7 @@ public final class ConstantPool extends Action {
    * @return <code>"ConstantPool"</code> and number of constants in pool
    */
   public String toString() {
-    return "ConstantPool (" + constants.size() + " constants)";
+    return super.toString() + " (" + constants.size() + " constants)";
   }
 
   protected void writeData(

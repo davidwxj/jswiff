@@ -26,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -48,20 +48,23 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class Push extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private List<StackValue> values = new ArrayList<StackValue>();
 
   /**
    * Creates a new Push action.
    */
   public Push() {
-    code = ActionConstants.PUSH;
+    super(ActionType.PUSH);
   }
 
   /*
    * Reads a Push action from a bit stream.
    */
   Push(InputBitStream stream) throws IOException {
-    code = ActionConstants.PUSH;
+    super(ActionType.PUSH);
     while (stream.available() > 0) {
       StackValue value = new StackValue(stream);
       values.add(value);
@@ -100,15 +103,6 @@ public final class Push extends Action {
    */
   public void addValue(StackValue value) {
     values.add(value);
-  }
-
-  /**
-   * Returns a short description of the action.
-   *
-   * @return <code>"Push"</code>
-   */
-  public String toString() {
-    return "Push";
   }
 
   protected void writeData(

@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -42,19 +43,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class GetProperty extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new GetProperty action.
    */
   public GetProperty() {
-    code = ActionConstants.GET_PROPERTY;
+    super(ActionType.GET_PROPERTY);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"GetProperty"</code>
-   */
-  public String toString() {
-    return "GetProperty";
-  }
 }

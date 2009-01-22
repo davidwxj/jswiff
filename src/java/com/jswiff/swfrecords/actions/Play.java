@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -39,19 +40,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 3
  */
 public final class Play extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Play action.
    */
   public Play() {
-    code = ActionConstants.PLAY;
+    super(ActionType.PLAY);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Play"</code>
-   */
-  public String toString() {
-    return "Play";
-  }
 }

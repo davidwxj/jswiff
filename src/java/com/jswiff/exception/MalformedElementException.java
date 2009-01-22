@@ -24,6 +24,9 @@ package com.jswiff.exception;
  * Indicates that an element is malformed.
  */
 public class MalformedElementException extends RuntimeException {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new MalformedElementException instance
    *

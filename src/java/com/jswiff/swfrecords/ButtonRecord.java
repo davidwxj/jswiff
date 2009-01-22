@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import com.jswiff.constants.TagConstants.BlendMode;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -69,7 +71,7 @@ public final class ButtonRecord implements Serializable {
   private boolean hasBlendMode;
   private boolean hasFilters;
   private List<Filter> filters;
-  private short blendMode;
+  private BlendMode blendMode;
 
   /**
    * Creates a new ButtonRecord instance.
@@ -107,9 +109,11 @@ public final class ButtonRecord implements Serializable {
    * @param hasColorTransform indicates whether a color transform is present
    *
    * @throws IOException if an I/O error has occured
+   * @throws InvalidCodeException if the tag header contains an invalid code.
+   * This normally means invalid or corrupted data.
    */
   public ButtonRecord(InputBitStream stream, boolean hasColorTransform)
-    throws IOException {
+    throws IOException, InvalidCodeException {
     stream.readUnsignedBits(2);
     hasBlendMode   = stream.readBooleanBit();
     hasFilters     = stream.readBooleanBit();
@@ -127,10 +131,8 @@ public final class ButtonRecord implements Serializable {
       filters = Filter.readFilters(stream);
     }
     if (hasBlendMode) {
-      blendMode = stream.readUI8();
-      if (blendMode == 0) {
-        blendMode = BlendMode.NORMAL;
-      }
+      short code = stream.readUI8();
+      blendMode = code == 0 ? BlendMode.NORMAL : BlendMode.lookup(code);
     }
   }
 
@@ -139,7 +141,7 @@ public final class ButtonRecord implements Serializable {
    *
    * @param blendMode TODO: Comments
    */
-  public void setBlendMode(short blendMode) {
+  public void setBlendMode(BlendMode blendMode) {
     this.blendMode   = blendMode;
     hasBlendMode     = true;
   }
@@ -149,7 +151,7 @@ public final class ButtonRecord implements Serializable {
    *
    * @return TODO: Comments
    */
-  public short getBlendMode() {
+  public BlendMode getBlendMode() {
     return blendMode;
   }
 
@@ -304,7 +306,7 @@ public final class ButtonRecord implements Serializable {
       Filter.writeFilters(filters, stream);
     }
     if (hasBlendMode) {
-      stream.writeUI8(blendMode);
+      stream.writeUI8(blendMode.getCode());
     }
   }
 }

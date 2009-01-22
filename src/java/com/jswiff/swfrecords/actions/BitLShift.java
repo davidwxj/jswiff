@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -45,19 +46,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class BitLShift extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new BitLShift action.
    */
   public BitLShift() {
-    code = ActionConstants.BIT_L_SHIFT;
+    super(ActionType.BIT_L_SHIFT);
   }
-
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"BitLShift"</code>
-   */
-  public String toString() {
-    return "BitLShift";
-  }
+  
 }

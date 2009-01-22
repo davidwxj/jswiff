@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -49,19 +50,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class CloneSprite extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new CloneSprite action.
    */
   public CloneSprite() {
-    code = ActionConstants.CLONE_SPRITE;
+    super(ActionType.CLONE_SPRITE);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"CloneSprite"</code>
-   */
-  public String toString() {
-    return "CloneSprite";
-  }
 }

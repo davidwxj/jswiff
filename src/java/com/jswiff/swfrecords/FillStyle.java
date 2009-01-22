@@ -23,6 +23,9 @@ package com.jswiff.swfrecords;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.FillType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -44,23 +47,10 @@ import com.jswiff.io.OutputBitStream;
  * </ul>
  */
 public final class FillStyle implements Serializable {
-  /** Solid fill type */
-  public static final short TYPE_SOLID                      = 0x00;
-  /** Linear gradient fill type */
-  public static final short TYPE_LINEAR_GRADIENT            = 0x10;
-  /** Radial gradient fill type */
-  public static final short TYPE_RADIAL_GRADIENT            = 0x12;
-  /** Focal radial gradient fill type */
-  public static final short TYPE_FOCAL_RADIAL_GRADIENT      = 0x13;
-  /** Tiled bitmap fill type */
-  public static final short TYPE_TILED_BITMAP               = 0x40;
-  /** Clipped bitmap fill type */
-  public static final short TYPE_CLIPPED_BITMAP             = 0x41;
-  /** Nonsmoothed tiled bitmap fill type */
-  public static final short TYPE_NONSMOOTHED_TILED_BITMAP   = 0x42;
-  /** Nonsmoothed clipped bitmap fill type */
-  public static final short TYPE_NONSMOOTHED_CLIPPED_BITMAP = 0x43;
-  private short type;
+
+  private static final long serialVersionUID = 1L;
+  
+  private TagConstants.FillType type;
   private Color color;
   private Matrix gradientMatrix;
   private Gradient gradient;
@@ -86,8 +76,8 @@ public final class FillStyle implements Serializable {
    * 
    * <p>
    * Linear and circular gradients are supported. Use either
-   * <code>TYPE_LINEAR_GRADIENT</code> or <code>TYPE_CIRCULAR_GRADIENT</code>
-   * as gradient type.
+   * <code>LINEAR_GRADIENT</code>, <code>RADIAL_GRADIENT</code>, or 
+   * FOCAL_RADIAL_GRADIENT as gradient type.
    * </p>
    *
    * @param gradient a gradient
@@ -97,10 +87,8 @@ public final class FillStyle implements Serializable {
    * @throws IllegalArgumentException if specified gradient type is not
    *         supported
    */
-  public FillStyle(Gradient gradient, Matrix gradientMatrix, short type) {
-    if (
-      (type != TYPE_LINEAR_GRADIENT) && (type != TYPE_RADIAL_GRADIENT) &&
-          (type != TYPE_FOCAL_RADIAL_GRADIENT)) {
+  public FillStyle(Gradient gradient, Matrix gradientMatrix, TagConstants.FillType type) {
+    if (!TagConstants.FillTypeGroup.GRADIENT.equals(type.getGroup())) {
       throw new IllegalArgumentException("Illegal gradient type!");
     }
     this.type             = type;
@@ -120,16 +108,16 @@ public final class FillStyle implements Serializable {
    */
   public FillStyle(Color color) {
     this.color   = color;
-    type         = TYPE_SOLID;
+    type         = TagConstants.FillType.SOLID;
   }
 
   /**
    * Creates a new bitmap fill style. You have to specify the character ID of a
    * previously defined bitmap, a transform matrix used for mapping the bitmap
    * to the filled shape, and the bitmap type (one of the constants
-   * <code>TYPE_TILED_BITMAP</code>, <code>TYPE_CLIPPED_BITMAP</code>,
-   * <code>TYPE_NONSMOOTHED_TILED_BITMAP</code> or
-   * <code>TYPE_NONSMOOTHED_CLIPPED_BITMAP</code>).
+   * <code>TILED_BITMAP</code>, <code>CLIPPED_BITMAP</code>,
+   * <code>NONSMOOTHED_TILED_BITMAP</code> or
+   * <code>NONSMOOTHED_CLIPPED_BITMAP</code>).
    *
    * @param bitmapId character ID of the bitmap
    * @param bitmapMatrix transform matrix
@@ -138,11 +126,8 @@ public final class FillStyle implements Serializable {
    * @throws IllegalArgumentException if an illegal bitmap type has been
    *         specified
    */
-  public FillStyle(int bitmapId, Matrix bitmapMatrix, short type) {
-    if (
-      (type != TYPE_TILED_BITMAP) && (type != TYPE_CLIPPED_BITMAP) &&
-          (type != TYPE_NONSMOOTHED_TILED_BITMAP) &&
-          (type != TYPE_NONSMOOTHED_CLIPPED_BITMAP)) {
+  public FillStyle(int bitmapId, Matrix bitmapMatrix, TagConstants.FillType type) {
+    if (!TagConstants.FillTypeGroup.BITMAP.equals(type.getGroup())) {
       throw new IllegalArgumentException("Illegal bitmap type");
     }
     this.bitmapId       = bitmapId;
@@ -150,34 +135,24 @@ public final class FillStyle implements Serializable {
     this.type           = type;
   }
 
-  FillStyle(InputBitStream stream, boolean hasAlpha) throws IOException {
-    type = stream.readUI8();
-    switch (type) {
-      case TYPE_SOLID:
-        if (hasAlpha) {
-          color = new RGBA(stream);
-        } else {
-          color = new RGB(stream);
-        }
+  FillStyle(InputBitStream stream, boolean hasAlpha) throws InvalidCodeException, IOException {
+    short code = stream.readUI8();
+    type = FillType.lookup(code);
+    switch (type.getGroup()) {
+      case SOLID:
+        color = hasAlpha ? new RGBA(stream) : new RGB(stream);
         break;
-      case TYPE_LINEAR_GRADIENT:
-      case TYPE_RADIAL_GRADIENT:
+      case GRADIENT:
         gradientMatrix = new Matrix(stream);
-        gradient = new Gradient(stream, hasAlpha);
-        break;
-      case TYPE_FOCAL_RADIAL_GRADIENT:
-        gradientMatrix = new Matrix(stream);
-        gradient = new FocalGradient(stream);
-        break;
-      case TYPE_TILED_BITMAP:
-      case TYPE_CLIPPED_BITMAP:
-      case TYPE_NONSMOOTHED_TILED_BITMAP:
-      case TYPE_NONSMOOTHED_CLIPPED_BITMAP:
+        gradient = type.equals(FillType.FOCAL_RADIAL_GRADIENT) ? 
+            new FocalGradient(stream) : new Gradient(stream, hasAlpha);
+      break;
+      case BITMAP:
         bitmapId = stream.readUI16();
         bitmapMatrix = new Matrix(stream);
         break;
       default:
-        throw new IOException("Illegal fill type: " + type);
+        throw new AssertionError("Unhandled fill type : " + type);
     }
   }
 
@@ -235,26 +210,21 @@ public final class FillStyle implements Serializable {
    *
    * @return fill type
    */
-  public short getType() {
+  public TagConstants.FillType getType() {
     return type;
   }
 
   void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(type);
-    switch (type) {
-      case TYPE_SOLID:
+    stream.writeUI8(type.getCode());
+    switch (type.getGroup()) {
+      case SOLID:
         color.write(stream);
         break;
-      case TYPE_LINEAR_GRADIENT:
-      case TYPE_RADIAL_GRADIENT:
-      case TYPE_FOCAL_RADIAL_GRADIENT:
+      case GRADIENT:
         gradientMatrix.write(stream);
         gradient.write(stream);
         break;
-      case TYPE_TILED_BITMAP:
-      case TYPE_CLIPPED_BITMAP:
-      case TYPE_NONSMOOTHED_TILED_BITMAP:
-      case TYPE_NONSMOOTHED_CLIPPED_BITMAP:
+      case BITMAP:
         stream.writeUI16(bitmapId);
         bitmapMatrix.write(stream);
     }

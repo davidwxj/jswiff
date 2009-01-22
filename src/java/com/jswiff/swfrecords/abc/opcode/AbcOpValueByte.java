@@ -42,11 +42,11 @@ public class AbcOpValueByte extends AbcOp {
   }
   
   public String toString() {
-    return getOpcode().toString() + ": value = " + value;
+    return super.toString() + ": value = " + value;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeSI8(value);
   }
   

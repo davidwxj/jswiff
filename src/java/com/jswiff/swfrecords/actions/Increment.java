@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -38,19 +39,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class Increment extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Increment action.
    */
   public Increment() {
-    code = ActionConstants.INCREMENT;
+    super(ActionType.INCREMENT);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Increment"</code>
-   */
-  public String toString() {
-    return "Increment";
-  }
 }

@@ -22,11 +22,11 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.Shape;
-
 
 /**
  * <p>
@@ -37,73 +37,77 @@ import com.jswiff.swfrecords.Shape;
  * <p>
  * Warning: for dynamic text, you have to use the <code>DefineFont2</code> tag.
  * </p>
- *
+ * 
  * @see Shape
  * @since SWF 1
  */
 public final class DefineFont extends DefinitionTag {
-	private Shape[] glyphShapeTable;
 
-	/**
-	 * Creates a new DefineFont tag.
-	 *
-	 * @param characterId the character ID of the font
-	 * @param glyphShapeTable array of <code>Shape</code> instances
-	 */
-	public DefineFont(int characterId, Shape[] glyphShapeTable) {
-		code					 = TagConstants.DEFINE_FONT;
-		this.characterId		 = characterId;
-		this.glyphShapeTable     = glyphShapeTable;
-	}
+  private static final long serialVersionUID = 1L;
 
-	DefineFont() {
-		// empty
-	}
+  private Shape[] glyphShapeTable;
 
-	/**
-	 * Sets an array of <code>Shape</code> instances used to define character
-	 * glyphs.
-	 *
-	 * @param glyphShapeTable array of <code>Shape</code> instances
-	 */
-	public void setGlyphShapeTable(Shape[] glyphShapeTable) {
-		this.glyphShapeTable = glyphShapeTable;
-	}
+  /**
+   * Creates a new DefineFont tag.
+   * 
+   * @param characterId
+   *          the character ID of the font
+   * @param glyphShapeTable
+   *          array of <code>Shape</code> instances
+   */
+  public DefineFont(int characterId, Shape[] glyphShapeTable) {
+    super(TagType.DEFINE_FONT);
+    this.characterId = characterId;
+    this.glyphShapeTable = glyphShapeTable;
+  }
+  
+  DefineFont() {
+    super(TagType.DEFINE_FONT);
+  }
 
-	/**
-	 * Returns an array of <code>Shape</code> instances used to define
-	 * character glyphs.
-	 *
-	 * @return array of <code>Shape</code> instances
-	 */
-	public Shape[] getGlyphShapeTable() {
-		return glyphShapeTable;
-	}
+  /**
+   * Sets an array of <code>Shape</code> instances used to define character
+   * glyphs.
+   * 
+   * @param glyphShapeTable
+   *          array of <code>Shape</code> instances
+   */
+  public void setGlyphShapeTable(Shape[] glyphShapeTable) {
+    this.glyphShapeTable = glyphShapeTable;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(characterId);
-		int shapeTableOffset = glyphShapeTable.length * 2; // 2 bytes * table length
-		outStream.writeUI16(shapeTableOffset); // first entry of offsetTable
-		OutputBitStream glyphShapeTableStream = new OutputBitStream();
-		glyphShapeTable[0].write(glyphShapeTableStream); // write first shape
-		for (int i = 1; i < glyphShapeTable.length; i++) {
-			outStream.writeUI16(
-				(int) (shapeTableOffset + glyphShapeTableStream.getOffset()));
-			glyphShapeTable[i].write(glyphShapeTableStream);
-		}
-		outStream.writeBytes(glyphShapeTableStream.getData());
-	}
+  /**
+   * Returns an array of <code>Shape</code> instances used to define character
+   * glyphs.
+   * 
+   * @return array of <code>Shape</code> instances
+   */
+  public Shape[] getGlyphShapeTable() {
+    return glyphShapeTable;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		characterId = inStream.readUI16();
-		int shapeTableOffset = inStream.readUI16();
-		int tableSize		 = shapeTableOffset / 2;
-		inStream.readBytes(shapeTableOffset - 2); // ignore rest of the offsetTable
-		glyphShapeTable = new Shape[tableSize];
-		for (int i = 0; i < tableSize; i++) {
-			glyphShapeTable[i] = new Shape(inStream);
-		}
-	}
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(characterId);
+    int shapeTableOffset = glyphShapeTable.length * 2; // 2 bytes * table length
+    outStream.writeUI16(shapeTableOffset); // first entry of offsetTable
+    OutputBitStream glyphShapeTableStream = new OutputBitStream();
+    glyphShapeTable[0].write(glyphShapeTableStream); // write first shape
+    for (int i = 1; i < glyphShapeTable.length; i++) {
+      outStream.writeUI16((int) (shapeTableOffset + glyphShapeTableStream.getOffset()));
+      glyphShapeTable[i].write(glyphShapeTableStream);
+    }
+    outStream.writeBytes(glyphShapeTableStream.getData());
+  }
+
+  void setData(byte[] data) throws IOException, InvalidCodeException {
+    InputBitStream inStream = new InputBitStream(data);
+    characterId = inStream.readUI16();
+    int shapeTableOffset = inStream.readUI16();
+    int tableSize = shapeTableOffset / 2;
+    inStream.readBytes(shapeTableOffset - 2); // ignore rest of the offsetTable
+    glyphShapeTable = new Shape[tableSize];
+    for (int i = 0; i < tableSize; i++) {
+      glyphShapeTable[i] = new Shape(inStream);
+    }
+  }
 }

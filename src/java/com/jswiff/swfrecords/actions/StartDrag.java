@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -56,19 +57,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class StartDrag extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new StartDrag action.
    */
   public StartDrag() {
-    code = ActionConstants.START_DRAG;
+    super(ActionType.START_DRAG);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"StartDrag"</code>
-   */
-  public String toString() {
-    return "StartDrag";
-  }
 }

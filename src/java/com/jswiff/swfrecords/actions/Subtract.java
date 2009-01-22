@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -38,19 +39,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class Subtract extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Subtract action.
    */
   public Subtract() {
-    code = ActionConstants.SUBTRACT;
+    super(ActionType.SUBTRACT);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Subtract"</code>
-   */
-  public String toString() {
-    return "Subtract";
-  }
 }

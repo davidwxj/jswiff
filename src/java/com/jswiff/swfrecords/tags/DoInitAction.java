@@ -22,94 +22,98 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
 
-
 /**
  * <p>
- * This tag contains a series of initialization actions for a particular
- * sprite. These actions are executed only once, before the first instatiation
- * of the sprite. Typically used for class definitions.
+ * This tag contains a series of initialization actions for a particular sprite.
+ * These actions are executed only once, before the first instatiation of the
+ * sprite. Typically used for class definitions.
  * </p>
  * 
  * <p>
  * This tag is used to implement the <code>#initclip</code> ActionScript
  * compiler directive.
  * </p>
- *
+ * 
  * @since SWF 6
  */
 public final class DoInitAction extends Tag {
-	private int spriteId;
-	private ActionBlock initActions;
 
-	/**
-	 * Creates a new DoInitAction tag. Supply the character ID of the sprite
-	 * the initialization actions apply to. After creation, use
-	 * <code>addAction()</code> to add actions to the contained action block.
-	 *
-	 * @param spriteId character ID of sprite to be initialized
-	 */
-	public DoInitAction(int spriteId) {
-		code			  = TagConstants.DO_INIT_ACTION;
-		this.spriteId     = spriteId;
-		initActions		  = new ActionBlock();
-	}
+  private static final long serialVersionUID = 1L;
 
-	DoInitAction() {
-		// empty
-	}
+  private int spriteId;
+  private ActionBlock initActions;
 
-	/**
-	 * Returns the action block containing the initialization action records.
-	 * Use <code>addAction()</code> to add an action record to this block.
-	 *
-	 * @return initialization action block
-	 */
-	public ActionBlock getInitActions() {
-		return initActions;
-	}
+  /**
+   * Creates a new DoInitAction tag. Supply the character ID of the sprite the
+   * initialization actions apply to. After creation, use
+   * <code>addAction()</code> to add actions to the contained action block.
+   * 
+   * @param spriteId
+   *          character ID of sprite to be initialized
+   */
+  public DoInitAction(int spriteId) {
+    super(TagType.DO_INIT_ACTION);
+    this.spriteId = spriteId;
+    initActions = new ActionBlock();
+  }
 
-	/**
-	 * Sets the character ID of the sprite the initialization actions apply to.
-	 *
-	 * @param spriteId sprite's character ID
-	 */
-	public void setSpriteId(int spriteId) {
-		this.spriteId = spriteId;
-	}
+  DoInitAction() {
+    super(TagType.DO_INIT_ACTION);
+  }
 
-	/**
-	 * Returns the character ID of the sprite the initialization actions apply
-	 * to.
-	 *
-	 * @return sprite's character ID
-	 */
-	public int getSpriteId() {
-		return spriteId;
-	}
+  /**
+   * Returns the action block containing the initialization action records. Use
+   * <code>addAction()</code> to add an action record to this block.
+   * 
+   * @return initialization action block
+   */
+  public ActionBlock getInitActions() {
+    return initActions;
+  }
 
-	/**
-	 * Adds an initialization action record.
-	 *
-	 * @param action init action record
-	 */
-	public void addAction(Action action) {
-		initActions.addAction(action);
-	}
+  /**
+   * Sets the character ID of the sprite the initialization actions apply to.
+   * 
+   * @param spriteId
+   *          sprite's character ID
+   */
+  public void setSpriteId(int spriteId) {
+    this.spriteId = spriteId;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(spriteId);
-		initActions.write(outStream, true);
-	}
+  /**
+   * Returns the character ID of the sprite the initialization actions apply to.
+   * 
+   * @return sprite's character ID
+   */
+  public int getSpriteId() {
+    return spriteId;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
+  /**
+   * Adds an initialization action record.
+   * 
+   * @param action
+   *          init action record
+   */
+  public void addAction(Action action) {
+    initActions.addAction(action);
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(spriteId);
+    initActions.write(outStream, true);
+  }
+
+  void setData(byte[] data) throws IOException, InvalidCodeException {
+    InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {
         inStream.setShiftJIS(true);
@@ -117,7 +121,7 @@ public final class DoInitAction extends Tag {
         inStream.setANSI(true);
       }
     }
-		spriteId	    = inStream.readUI16();
-		initActions     = new ActionBlock(inStream);
-	}
+    spriteId = inStream.readUI16();
+    initActions = new ActionBlock(inStream);
+  }
 }

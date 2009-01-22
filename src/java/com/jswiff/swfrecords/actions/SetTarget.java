@@ -23,7 +23,7 @@ package com.jswiff.swfrecords.actions;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -50,6 +50,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 3
  */
 public final class SetTarget extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private String name;
 
   /**
@@ -59,7 +62,7 @@ public final class SetTarget extends Action {
    * @param name target object name
    */
   public SetTarget(String name) {
-    code        = ActionConstants.SET_TARGET;
+    super(ActionType.SET_TARGET);
     this.name   = name;
   }
 
@@ -67,7 +70,7 @@ public final class SetTarget extends Action {
    * Reads a SetTarget action from a bit stream.
    */
   SetTarget(InputBitStream stream) throws IOException {
-    code   = ActionConstants.SET_TARGET;
+    super(ActionType.SET_TARGET);
     name   = stream.readString();
   }
 
@@ -103,7 +106,7 @@ public final class SetTarget extends Action {
    * @return <code>"SetTarget"</code>
    */
   public String toString() {
-    return "SetTarget " + name;
+    return super.toString() + " " + name;
   }
 
   protected void writeData(

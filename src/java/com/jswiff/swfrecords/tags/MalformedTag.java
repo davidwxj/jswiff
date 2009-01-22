@@ -20,9 +20,8 @@
 
 package com.jswiff.swfrecords.tags;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * This tag is used as container for malformed tag data which could not be
@@ -30,6 +29,9 @@ import com.jswiff.io.OutputBitStream;
  * contained herein and can be used for error tracing.
  */
 public final class MalformedTag extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private byte[] data;
   private TagHeader tagHeader;
   private Exception exception;
@@ -37,21 +39,24 @@ public final class MalformedTag extends Tag {
   /**
    * Creates a new MalformedTag instance. It makes no sense to add MalformedTag
    * instances to a SWF document, as SWF writers don't write their contents.
-   *
-   * @param tagHeader tag header
-   * @param data raw tag data
-   * @param exception exception thrown while parsing the tag
+   * 
+   * @param tagHeader
+   *          tag header
+   * @param data
+   *          raw tag data
+   * @param exception
+   *          exception thrown while parsing the tag
    */
   public MalformedTag(TagHeader tagHeader, byte[] data, Exception exception) {
-    code             = TagConstants.MALFORMED;
-    this.tagHeader   = tagHeader;
-    this.data        = data;
-    this.exception   = exception;
+    super(TagType.MALFORMED);
+    this.tagHeader = tagHeader;
+    this.data = data;
+    this.exception = exception;
   }
 
   /**
    * Returns the raw data of the tag.
-   *
+   * 
    * @return tag data
    */
   public byte[] getData() {
@@ -60,7 +65,7 @@ public final class MalformedTag extends Tag {
 
   /**
    * Returns the exception which occured at parsing time.
-   *
+   * 
    * @return exception thrown while parsing tag
    */
   public Exception getException() {
@@ -69,7 +74,7 @@ public final class MalformedTag extends Tag {
 
   /**
    * Returns the header of the tag.
-   *
+   * 
    * @return tag header
    */
   public TagHeader getTagHeader() {

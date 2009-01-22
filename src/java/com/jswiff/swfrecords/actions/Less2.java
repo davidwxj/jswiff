@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -43,19 +44,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class Less2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Less2 action.
    */
   public Less2() {
-    code = ActionConstants.LESS_2;
+    super(ActionType.LESS_2);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Less2"</code>
-   */
-  public String toString() {
-    return "Less2";
-  }
 }

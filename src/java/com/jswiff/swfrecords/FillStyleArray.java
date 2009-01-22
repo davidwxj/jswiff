@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -39,6 +40,9 @@ import com.jswiff.io.OutputBitStream;
  * </p>
  */
 public final class FillStyleArray implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private List<FillStyle> styles = new ArrayList<FillStyle>();
 
   /**
@@ -48,8 +52,7 @@ public final class FillStyleArray implements Serializable {
     // empty
   }
 
-  FillStyleArray(InputBitStream stream, boolean hasAlpha)
-    throws IOException {
+  FillStyleArray(InputBitStream stream, boolean hasAlpha) throws IOException, InvalidCodeException {
     int styleCount = stream.readUI8();
     if (styleCount == 0xff) {
       styleCount = stream.readUI16();

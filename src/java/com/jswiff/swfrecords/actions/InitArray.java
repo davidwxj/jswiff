@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -44,19 +45,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class InitArray extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new InitArray action.
    */
   public InitArray() {
-    code = ActionConstants.INIT_ARRAY;
+    super(ActionType.INIT_ARRAY);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"InitArray"</code>
-   */
-  public String toString() {
-    return "InitArray";
-  }
 }

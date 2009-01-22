@@ -153,6 +153,8 @@ public class ImageUtilities {
     Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpg");
     if (iter.hasNext()) {
       writer = iter.next();
+    } else {
+      throw new AssertionError("No image writer provided for format 'jpg'");
     }
     ImageOutputStream ios = ImageIO.createImageOutputStream(stream);
     writer.setOutput(ios);

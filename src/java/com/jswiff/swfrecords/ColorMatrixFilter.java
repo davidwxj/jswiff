@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -40,6 +41,7 @@ public final class ColorMatrixFilter extends Filter {
    * @throws IllegalArgumentException if matrix array length != 20
    */
   public ColorMatrixFilter(float[] matrix) {
+    super(FilterType.COLOR_MATRIX);
     if (matrix.length != 20) {
       throw new IllegalArgumentException("matrix array length must be 20!");
     }
@@ -54,6 +56,7 @@ public final class ColorMatrixFilter extends Filter {
    * @throws IOException TODO: Comments
    */
   public ColorMatrixFilter(InputBitStream stream) throws IOException {
+    super(FilterType.COLOR_MATRIX);
     matrix = new float[20];
     for (int i = 0; i < 20; i++) {
       matrix[i] = stream.readFloat();

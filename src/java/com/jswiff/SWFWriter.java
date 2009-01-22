@@ -23,7 +23,7 @@ package com.jswiff;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.tags.FileAttributes;
 import com.jswiff.swfrecords.tags.Metadata;
@@ -132,7 +132,7 @@ public class SWFWriter {
   private int getFrameCount() {
     int count = 0;
     for (Tag t : document.getTags()) {
-      if (t.getCode() == TagConstants.SHOW_FRAME) {
+      if (TagType.SHOW_FRAME.equals(t.tagType())) {
         count++;
       }
     }

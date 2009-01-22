@@ -37,7 +37,7 @@ public class AbcOpLookupSwitch extends AbcOp {
   private List<Integer> caseOffsets = new ArrayList<Integer>();
 
   public AbcOpLookupSwitch(int defaultOffset) {
-    super(OpCode.LOOKUPSWITCH, OpCodeType.LOOKUP_SWITCH);
+    super(OpCode.LOOK_UP_SWITCH, OpCodeType.LOOKUP_SWITCH);
     this.defaultOffset = defaultOffset;
   }
 
@@ -54,7 +54,7 @@ public class AbcOpLookupSwitch extends AbcOp {
   }
 
   public String toString() {
-    String result = getOpcode().toString() + ": defaultOffset = " + defaultOffset + ", caseOffsets = [ ";
+    String result = super.toString() + ": defaultOffset = " + defaultOffset + ", caseOffsets = [ ";
     for (int offset : caseOffsets) {
       result = result.concat( offset + " " );
     }
@@ -63,7 +63,7 @@ public class AbcOpLookupSwitch extends AbcOp {
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeSI24(defaultOffset);
     stream.writeAbcInt(caseOffsets.size() - 1);
     for (Iterator<Integer> it = caseOffsets.iterator(); it.hasNext(); ) {

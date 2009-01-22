@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -46,9 +47,9 @@ import com.jswiff.io.OutputBitStream;
  */
 public final class LineStyleArray implements Serializable {
   
-  //FIXME: Give LineStyle and LineStyle2 a common lineage
-  //and tighten generic type for styles array, etc.
-  private List<Object> styles = new ArrayList<Object>();
+  private static final long serialVersionUID = 1L;
+  
+  private List<LineStyleTag> styles = new ArrayList<LineStyleTag>();
 
   /**
    * Creates a new LineStyleArray instance.
@@ -68,7 +69,7 @@ public final class LineStyleArray implements Serializable {
     }
   }
 
-  LineStyleArray(InputBitStream stream) throws IOException {
+  LineStyleArray(InputBitStream stream) throws IOException, InvalidCodeException {
     int styleCount = stream.readUI8();
     if (styleCount == 0xFF) {
       styleCount = stream.readUI16();
@@ -104,7 +105,7 @@ public final class LineStyleArray implements Serializable {
    * @see com.jswiff.swfrecords.LineStyle
    * @see com.jswiff.swfrecords.LineStyle2
    */
-  public Object getStyle(int index) {
+  public LineStyleTag getStyle(int index) {
     return styles.get(index - 1);
   }
 
@@ -113,7 +114,7 @@ public final class LineStyleArray implements Serializable {
    *
    * @return all line styles
    */
-  public List<Object> getStyles() {
+  public List<LineStyleTag> getStyles() {
     return styles;
   }
 
@@ -126,13 +127,7 @@ public final class LineStyleArray implements Serializable {
    * @see com.jswiff.swfrecords.LineStyle
    * @see com.jswiff.swfrecords.LineStyle2
    */
-  public void addStyle(Object lineStyle) {
-    if ( !(lineStyle instanceof LineStyle) 
-      && !(lineStyle instanceof LineStyle2) ) {
-      throw new IllegalArgumentException(
-          "Parameter has type '" + lineStyle.getClass().getName()
-          + "', must be of type LineStyle or LineStyle2");
-    }
+  public void addStyle(LineStyleTag lineStyle) {
     styles.add(lineStyle);
   }
 
@@ -144,13 +139,9 @@ public final class LineStyleArray implements Serializable {
     } else {
       stream.writeUI8((short) styleCount);
     }
-    for (int i = 0; i < styles.size(); i++) {
-      Object lineStyle = styles.get(i);
-      if (lineStyle instanceof LineStyle) {
-        ((LineStyle) lineStyle).write(stream);
-      } else {
-        ((LineStyle2) lineStyle).write(stream);
-      }
+    for (LineStyleTag ls : this.styles) {
+      ls.write(stream);
     }
   }
+  
 }

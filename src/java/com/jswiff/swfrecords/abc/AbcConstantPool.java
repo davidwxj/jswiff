@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jswiff.constants.AbcConstants;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -51,7 +52,7 @@ public class AbcConstantPool implements Serializable {
     multinames.add(null);
   }
   
-  public static AbcConstantPool read(InputBitStream stream) throws IOException {
+  public static AbcConstantPool read(InputBitStream stream) throws IOException, InvalidCodeException {
     AbcConstantPool pool = new AbcConstantPool();
     // read ints
     int count = stream.readAbcInt();

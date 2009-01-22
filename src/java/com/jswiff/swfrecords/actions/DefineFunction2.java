@@ -23,7 +23,8 @@ package com.jswiff.swfrecords.actions;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.RegisterParam;
@@ -90,6 +91,9 @@ import com.jswiff.swfrecords.RegisterParam;
  * @since SWF 7
  */
 public final class DefineFunction2 extends Action {
+
+  private static final long serialVersionUID = 1L;
+  
   private String name;
   private short registerCount;
   private boolean preloadParent;
@@ -114,7 +118,7 @@ public final class DefineFunction2 extends Action {
    */
   public DefineFunction2(
     String name, short registerCount, RegisterParam[] parameters) {
-    code                 = ActionConstants.DEFINE_FUNCTION_2;
+    super(ActionType.DEFINE_FUNCTION_2);
     this.name            = name;
     this.registerCount   = registerCount;
     this.parameters      = parameters;
@@ -129,8 +133,8 @@ public final class DefineFunction2 extends Action {
    * @throws IOException if an I/O error has occured
    */
   DefineFunction2(InputBitStream stream, InputBitStream mainStream)
-    throws IOException {
-    code                = ActionConstants.DEFINE_FUNCTION_2;
+    throws IOException, InvalidCodeException {
+    super(ActionType.DEFINE_FUNCTION_2);
     name                = stream.readString();
     int numParams       = stream.readUI16();
     registerCount       = stream.readUI8();
@@ -443,7 +447,7 @@ public final class DefineFunction2 extends Action {
    * @return <code>"DefineFunction2"</code>, function name
    */
   public String toString() {
-    return "DefineFunction2 " + name;
+    return super.toString() + " " + name;
   }
 
   protected void writeData(

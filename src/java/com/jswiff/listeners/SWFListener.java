@@ -85,13 +85,15 @@ public interface SWFListener {
 
   /**
    * <p>
-   * Triggered if an error occurs while reading a tag. The return value 
-   * indicates whether the reader (<code>SWFReader</code>) should stop reading
-   * the rest of the file.
-   * However, the reader invokes this method on all registered listeners
-   * before stopping. In case the reader isn't supposed to stop, it creates a
-   * <code>MalformedTag</code> instance from the tag header and data and
-   * invokes <code>processTag()</code> before parsing the next tag.
+   * Triggered if an error occurs while reading a tag.<br />
+   * Returning true will cause the reader (<code>SWFReader</code>) to
+   * stop reading the rest of the file and raise an exception.<br />
+   * Returning false will cause the reader to continue and insert a
+   * <code>MalformedTag</code> instance from the tag header and data.
+   * This can be useful if you wish to continue regardless of tag read errors,
+   * and deal with them later.<br />
+   * Note that this is triggered for all listeners, and if at least one returns
+   * true then the overall result is considered as true.
    * </p>
    *
    * @param tagHeader header of the malformed tag

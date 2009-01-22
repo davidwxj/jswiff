@@ -20,12 +20,12 @@
 
 package com.jswiff.test.simple;
 
-import com.jswiff.xml.Transformer;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.jswiff.xml.Transformer;
 
 
 /**

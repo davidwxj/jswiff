@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.dom4j.Element;
 
-import com.jswiff.constants.ActionConstants;
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
@@ -55,309 +54,63 @@ import com.jswiff.util.StringUtilities;
  * Writes SWF actions to XML.
  */
 class ActionXMLWriter {
+  
   static void writeAction(Element parentElement, Action action) {
-    int actionCode  = action.getCode();
-    Element element;
-    switch (actionCode) {
-      case ActionConstants.ADD:
-        element = parentElement.addElement("add");
+    Element element = parentElement.addElement(action.actionType().toString());
+    switch (action.actionType()) {      
+      case CONSTANT_POOL:
+        element = writeConstantPool(element, (ConstantPool) action);
         break;
-      case ActionConstants.ADD_2:
-        element = parentElement.addElement("add2");
+      case DEFINE_FUNCTION:
+        element = writeDefineFunction(element, (DefineFunction) action);
         break;
-      case ActionConstants.AND:
-        element = parentElement.addElement("and");
+      case DEFINE_FUNCTION_2:
+        element = writeDefineFunction2(element, (DefineFunction2) action);
         break;
-      case ActionConstants.ASCII_TO_CHAR:
-        element = parentElement.addElement("asciitochar");
+      case GET_URL:
+        element = writeGetURL(element, (GetURL) action);
         break;
-      case ActionConstants.BIT_AND:
-        element = parentElement.addElement("bitand");
+      case GET_URL_2:
+        element = writeGetURL2(element, (GetURL2) action);
         break;
-      case ActionConstants.BIT_L_SHIFT:
-        element = parentElement.addElement("bitlshift");
+      case GO_TO_FRAME:
+        element = writeGoToFrame(element, (GoToFrame) action);
         break;
-      case ActionConstants.BIT_OR:
-        element = parentElement.addElement("bitor");
+      case GO_TO_FRAME_2:
+        element = writeGoToFrame2(element, (GoToFrame2) action);
         break;
-      case ActionConstants.BIT_R_SHIFT:
-        element = parentElement.addElement("bitrshift");
+      case GO_TO_LABEL:
+        element = writeGoToLabel(element, (GoToLabel) action);
         break;
-      case ActionConstants.BIT_U_R_SHIFT:
-        element = parentElement.addElement("biturshift");
+      case IF:
+        element = writeIf(element, (If) action);
         break;
-      case ActionConstants.BIT_XOR:
-        element = parentElement.addElement("bitxor");
+      case JUMP:
+        element = writeJump(element, (Jump) action);
         break;
-      case ActionConstants.CALL:
-        element = parentElement.addElement("call");
+      case PUSH:
+        element = writePush(element, (Push) action);
         break;
-      case ActionConstants.CALL_FUNCTION:
-        element = parentElement.addElement("callfunction");
+      case SET_TARGET:
+        element = writeSetTarget(element, (SetTarget) action);
         break;
-      case ActionConstants.CALL_METHOD:
-        element = parentElement.addElement("callmethod");
+      case STORE_REGISTER:
+        element = writeStoreRegister(element, (StoreRegister) action);
         break;
-      case ActionConstants.CAST_OP:
-        element = parentElement.addElement("castop");
+      case TRY:
+        element = writeTry(element, (Try) action);
         break;
-      case ActionConstants.CHAR_TO_ASCII:
-        element = parentElement.addElement("chartoascii");
+      case WAIT_FOR_FRAME:
+        element = writeWaitForFrame(element, (WaitForFrame) action);
         break;
-      case ActionConstants.CLONE_SPRITE:
-        element = parentElement.addElement("clonesprite");
+      case WAIT_FOR_FRAME_2:
+        element = writeWaitForFrame2(element, (WaitForFrame2) action);
         break;
-      case ActionConstants.CONSTANT_POOL:
-        element = writeConstantPool(parentElement, (ConstantPool) action);
+      case WITH:
+        element = writeWith(element, (With) action);
         break;
-      case ActionConstants.DECREMENT:
-        element = parentElement.addElement("decrement");
-        break;
-      case ActionConstants.DEFINE_FUNCTION:
-        element = writeDefineFunction(parentElement, (DefineFunction) action);
-        break;
-      case ActionConstants.DEFINE_FUNCTION_2:
-        element = writeDefineFunction2(parentElement, (DefineFunction2) action);
-        break;
-      case ActionConstants.DEFINE_LOCAL:
-        element = parentElement.addElement("definelocal");
-        break;
-      case ActionConstants.DEFINE_LOCAL_2:
-        element = parentElement.addElement("definelocal2");
-        break;
-      case ActionConstants.DELETE:
-        element = parentElement.addElement("delete");
-        break;
-      case ActionConstants.DELETE_2:
-        element = parentElement.addElement("delete2");
-        break;
-      case ActionConstants.DIVIDE:
-        element = parentElement.addElement("divide");
-        break;
-      case ActionConstants.END_DRAG:
-        element = parentElement.addElement("enddrag");
-        break;
-      case ActionConstants.ENUMERATE:
-        element = parentElement.addElement("enumerate");
-        break;
-      case ActionConstants.ENUMERATE_2:
-        element = parentElement.addElement("enumerate2");
-        break;
-      case ActionConstants.EQUALS:
-        element = parentElement.addElement("equals");
-        break;
-      case ActionConstants.EQUALS_2:
-        element = parentElement.addElement("equals2");
-        break;
-      case ActionConstants.EXTENDS:
-        element = parentElement.addElement("extends");
-        break;
-      case ActionConstants.GET_MEMBER:
-        element = parentElement.addElement("getmember");
-        break;
-      case ActionConstants.GET_PROPERTY:
-        element = parentElement.addElement("getproperty");
-        break;
-      case ActionConstants.GET_TIME:
-        element = parentElement.addElement("gettime");
-        break;
-      case ActionConstants.GET_URL:
-        element = writeGetURL(parentElement, (GetURL) action);
-        break;
-      case ActionConstants.GET_URL_2:
-        element = writeGetURL2(parentElement, (GetURL2) action);
-        break;
-      case ActionConstants.GET_VARIABLE:
-        element = parentElement.addElement("getvariable");
-        break;
-      case ActionConstants.GO_TO_FRAME:
-        element = writeGoToFrame(parentElement, (GoToFrame) action);
-        break;
-      case ActionConstants.GO_TO_FRAME_2:
-        element = writeGoToFrame2(parentElement, (GoToFrame2) action);
-        break;
-      case ActionConstants.GO_TO_LABEL:
-        element = writeGoToLabel(parentElement, (GoToLabel) action);
-        break;
-      case ActionConstants.GREATER:
-        element = parentElement.addElement("greater");
-        break;
-      case ActionConstants.IF:
-        element = writeIf(parentElement, (If) action);
-        break;
-      case ActionConstants.IMPLEMENTS_OP:
-        element = parentElement.addElement("implementsop");
-        break;
-      case ActionConstants.INCREMENT:
-        element = parentElement.addElement("increment");
-        break;
-      case ActionConstants.INIT_ARRAY:
-        element = parentElement.addElement("initarray");
-        break;
-      case ActionConstants.INIT_OBJECT:
-        element = parentElement.addElement("initobject");
-        break;
-      case ActionConstants.INSTANCE_OF:
-        element = parentElement.addElement("instanceof");
-        break;
-      case ActionConstants.JUMP:
-        element = writeJump(parentElement, (Jump) action);
-        break;
-      case ActionConstants.LESS:
-        element = parentElement.addElement("less");
-        break;
-      case ActionConstants.LESS_2:
-        element = parentElement.addElement("less2");
-        break;
-      case ActionConstants.M_B_ASCII_TO_CHAR:
-        element = parentElement.addElement("mbasciitochar");
-        break;
-      case ActionConstants.M_B_CHAR_TO_ASCII:
-        element = parentElement.addElement("mbchartoascii");
-        break;
-      case ActionConstants.M_B_STRING_EXTRACT:
-        element = parentElement.addElement("mbstringextract");
-        break;
-      case ActionConstants.M_B_STRING_LENGTH:
-        element = parentElement.addElement("mbstringlength");
-        break;
-      case ActionConstants.MODULO:
-        element = parentElement.addElement("modulo");
-        break;
-      case ActionConstants.MULTIPLY:
-        element = parentElement.addElement("multiply");
-        break;
-      case ActionConstants.NEW_METHOD:
-        element = parentElement.addElement("newmethod");
-        break;
-      case ActionConstants.NEW_OBJECT:
-        element = parentElement.addElement("newobject");
-        break;
-      case ActionConstants.NEXT_FRAME:
-        element = parentElement.addElement("nextframe");
-        break;
-      case ActionConstants.NOT:
-        element = parentElement.addElement("not");
-        break;
-      case ActionConstants.OR:
-        element = parentElement.addElement("or");
-        break;
-      case ActionConstants.PLAY:
-        element = parentElement.addElement("play");
-        break;
-      case ActionConstants.POP:
-        element = parentElement.addElement("pop");
-        break;
-      case ActionConstants.PREVIOUS_FRAME:
-        element = parentElement.addElement("previousframe");
-        break;
-      case ActionConstants.PUSH:
-        element = writePush(parentElement, (Push) action);
-        break;
-      case ActionConstants.PUSH_DUPLICATE:
-        element = parentElement.addElement("pushduplicate");
-        break;
-      case ActionConstants.RANDOM_NUMBER:
-        element = parentElement.addElement("randomnumber");
-        break;
-      case ActionConstants.REMOVE_SPRITE:
-        element = parentElement.addElement("removesprite");
-        break;
-      case ActionConstants.RETURN:
-        element = parentElement.addElement("return");
-        break;
-      case ActionConstants.SET_MEMBER:
-        element = parentElement.addElement("setmember");
-        break;
-      case ActionConstants.SET_PROPERTY:
-        element = parentElement.addElement("setproperty");
-        break;
-      case ActionConstants.SET_TARGET:
-        element = writeSetTarget(parentElement, (SetTarget) action);
-        break;
-      case ActionConstants.SET_TARGET_2:
-        element = parentElement.addElement("settarget2");
-        break;
-      case ActionConstants.SET_VARIABLE:
-        element = parentElement.addElement("setvariable");
-        break;
-      case ActionConstants.STACK_SWAP:
-        element = parentElement.addElement("stackswap");
-        break;
-      case ActionConstants.START_DRAG:
-        element = parentElement.addElement("startdrag");
-        break;
-      case ActionConstants.STOP:
-        element = parentElement.addElement("stop");
-        break;
-      case ActionConstants.STOP_SOUNDS:
-        element = parentElement.addElement("stopsounds");
-        break;
-      case ActionConstants.STORE_REGISTER:
-        element = writeStoreRegister(parentElement, (StoreRegister) action);
-        break;
-      case ActionConstants.STRICT_EQUALS:
-        element = parentElement.addElement("strictequals");
-        break;
-      case ActionConstants.STRING_ADD:
-        element = parentElement.addElement("stringadd");
-        break;
-      case ActionConstants.STRING_EQUALS:
-        element = parentElement.addElement("stringequals");
-        break;
-      case ActionConstants.STRING_EXTRACT:
-        element = parentElement.addElement("stringextract");
-        break;
-      case ActionConstants.STRING_GREATER:
-        element = parentElement.addElement("stringgreater");
-        break;
-      case ActionConstants.STRING_LENGTH:
-        element = parentElement.addElement("stringlength");
-        break;
-      case ActionConstants.STRING_LESS:
-        element = parentElement.addElement("stringless");
-        break;
-      case ActionConstants.SUBTRACT:
-        element = parentElement.addElement("subtract");
-        break;
-      case ActionConstants.TARGET_PATH:
-        element = parentElement.addElement("targetpath");
-        break;
-      case ActionConstants.THROW:
-        element = parentElement.addElement("throw");
-        break;
-      case ActionConstants.TO_INTEGER:
-        element = parentElement.addElement("tointeger");
-        break;
-      case ActionConstants.TO_NUMBER:
-        element = parentElement.addElement("tonumber");
-        break;
-      case ActionConstants.TO_STRING:
-        element = parentElement.addElement("tostring");
-        break;
-      case ActionConstants.TOGGLE_QUALITY:
-        element = parentElement.addElement("togglequality");
-        break;
-      case ActionConstants.TRACE:
-        element = parentElement.addElement("trace");
-        break;
-      case ActionConstants.TRY:
-        element = writeTry(parentElement, (Try) action);
-        break;
-      case ActionConstants.TYPE_OF:
-        element = parentElement.addElement("typeof");
-        break;
-      case ActionConstants.WAIT_FOR_FRAME:
-        element = writeWaitForFrame(parentElement, (WaitForFrame) action);
-        break;
-      case ActionConstants.WAIT_FOR_FRAME_2:
-        element = writeWaitForFrame2(parentElement, (WaitForFrame2) action);
-        break;
-      case ActionConstants.WITH:
-        element = writeWith(parentElement, (With) action);
-        break;
-      default:
-        element = writeUnknown(parentElement, (UnknownAction) action);
+      case UNKNOWN_ACTION:
+        element = writeUnknown(element, (UnknownAction) action);
     }
     String label = action.getLabel();
     if (label != null) {
@@ -365,9 +118,7 @@ class ActionXMLWriter {
     }
   }
 
-  private static Element writeConstantPool(
-    Element parentElement, ConstantPool constantPool) {
-    Element element = parentElement.addElement("constantpool");
+  private static Element writeConstantPool(Element element, ConstantPool constantPool) {
     List<String> constants = constantPool.getConstants();
     int id = 0;
     for (String constant : constants) {
@@ -383,9 +134,7 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeDefineFunction(
-    Element parentElement, DefineFunction defineFunction) {
-    Element element = parentElement.addElement("definefunction");
+  private static Element writeDefineFunction(Element element, DefineFunction defineFunction) {
     RecordXMLWriter.addAttributeWithCharCheck(element, "name", defineFunction.getName());
     String[] parameters       = defineFunction.getParameters();
     Element parametersElement = element.addElement("parameters");
@@ -397,9 +146,7 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeDefineFunction2(
-    Element parentElement, DefineFunction2 defineFunction2) {
-    Element element = parentElement.addElement("definefunction2");
+  private static Element writeDefineFunction2(Element element, DefineFunction2 defineFunction2) {
     RecordXMLWriter.addAttributeWithCharCheck(element, "name", defineFunction2.getName());
     element.addAttribute(
       "registercount", Short.toString(defineFunction2.getRegisterCount()));
@@ -445,15 +192,13 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeGetURL(Element parentElement, GetURL getURL) {
-    Element element = parentElement.addElement("geturl");
+  private static Element writeGetURL(Element element, GetURL getURL) {
     RecordXMLWriter.addAttributeWithCharCheck(element, "url", getURL.getURL());
     RecordXMLWriter.addAttributeWithCharCheck(element, "target", getURL.getTarget());
     return element;
   }
 
-  private static Element writeGetURL2(Element parentElement, GetURL2 getURL2) {
-    Element element = parentElement.addElement("geturl2");
+  private static Element writeGetURL2(Element element, GetURL2 getURL2) {
     switch (getURL2.getSendVarsMethod()) {
       case GetURL2.METHOD_GET:
         element.addAttribute("sendvarsmethod", "get");
@@ -473,16 +218,12 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeGoToFrame(
-    Element parentElement, GoToFrame goToFrame) {
-    Element element = parentElement.addElement("gotoframe");
+  private static Element writeGoToFrame(Element element, GoToFrame goToFrame) {
     element.addAttribute("frame", Integer.toString(goToFrame.getFrame()));
     return element;
   }
 
-  private static Element writeGoToFrame2(
-    Element parentElement, GoToFrame2 goToFrame2) {
-    Element element = parentElement.addElement("gotoframe2");
+  private static Element writeGoToFrame2(Element element, GoToFrame2 goToFrame2) {
     element.addAttribute(
       "scenebias", Integer.toString(goToFrame2.getSceneBias()));
     if (goToFrame2.play()) {
@@ -491,15 +232,12 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeGoToLabel(
-    Element parentElement, GoToLabel goToLabel) {
-    Element element = parentElement.addElement("gotolabel");
+  private static Element writeGoToLabel(Element element, GoToLabel goToLabel) {
     RecordXMLWriter.addAttributeWithCharCheck(element, "framelabel", goToLabel.getFrameLabel());
     return element;
   }
 
-  private static Element writeIf(Element parentElement, If ifAction) {
-    Element element = parentElement.addElement("if");
+  private static Element writeIf(Element element, If ifAction) {
     String branchLabel = ifAction.getBranchLabel();
     RecordXMLWriter.addAttributeWithCharCheck(element, "branchlabel", branchLabel);
     if (ActionBlock.LABEL_OUT.equals(branchLabel)) {
@@ -508,8 +246,7 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeJump(Element parentElement, Jump jump) {
-    Element element = parentElement.addElement("jump");
+  private static Element writeJump(Element element, Jump jump) {
     String branchLabel = jump.getBranchLabel();
     RecordXMLWriter.addAttributeWithCharCheck(element, "branchlabel", branchLabel);
     if (ActionBlock.LABEL_OUT.equals(branchLabel)) {
@@ -518,8 +255,7 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writePush(Element parentElement, Push push) {
-    Element element = parentElement.addElement("push");
+  private static Element writePush(Element element, Push push) {
     List<StackValue> values     = push.getValues();
     for (StackValue value : values) {
       switch (value.getType()) {
@@ -567,22 +303,17 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeSetTarget(
-    Element parentElement, SetTarget setTarget) {
-    Element element = parentElement.addElement("settarget");
+  private static Element writeSetTarget(Element element, SetTarget setTarget) {
     RecordXMLWriter.addAttributeWithCharCheck(element, "name", setTarget.getName());
     return element;
   }
 
-  private static Element writeStoreRegister(
-    Element parentElement, StoreRegister storeRegister) {
-    Element element = parentElement.addElement("storeregister");
+  private static Element writeStoreRegister(Element element, StoreRegister storeRegister) {
     element.addAttribute("number", Short.toString(storeRegister.getNumber()));
     return element;
   }
 
-  private static Element writeTry(Element parentElement, Try tryAction) {
-    Element element = parentElement.addElement("try");
+  private static Element writeTry(Element element, Try tryAction) {
     if (tryAction.catchInRegister()) {
       element.addAttribute(
         "catchregister", Short.toString(tryAction.getCatchRegister()));
@@ -602,33 +333,26 @@ class ActionXMLWriter {
     return element;
   }
 
-  private static Element writeUnknown(
-    Element parentElement, UnknownAction action) {
-    Element element = parentElement.addElement("unknownaction");
-    element.addAttribute("code", Integer.toString(action.getCode()));
+  private static Element writeUnknown(Element element, UnknownAction action) {
+    element.addAttribute("code", Integer.toString(action.actionCode()));
     element.addText(Base64.encode(action.getData()));
     return element;
   }
 
-  private static Element writeWaitForFrame(
-    Element parentElement, WaitForFrame waitForFrame) {
-    Element element = parentElement.addElement("waitforframe");
+  private static Element writeWaitForFrame(Element element, WaitForFrame waitForFrame) {
     element.addAttribute("frame", Integer.toString(waitForFrame.getFrame()));
     element.addAttribute(
       "skipcount", Short.toString(waitForFrame.getSkipCount()));
     return element;
   }
 
-  private static Element writeWaitForFrame2(
-    Element parentElement, WaitForFrame2 waitForFrame2) {
-    Element element = parentElement.addElement("waitforframe2");
+  private static Element writeWaitForFrame2(Element element, WaitForFrame2 waitForFrame2) {
     element.addAttribute(
       "skipcount", Short.toString(waitForFrame2.getSkipCount()));
     return element;
   }
 
-  private static Element writeWith(Element parentElement, With with) {
-    Element element = parentElement.addElement("with");
+  private static Element writeWith(Element element, With with) {
     RecordXMLWriter.writeActionBlock(element, with.getWithBlock());
     return element;
   }

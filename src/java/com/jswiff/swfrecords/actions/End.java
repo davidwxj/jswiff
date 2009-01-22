@@ -20,16 +20,20 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /*
  * End action (used only internally).
  */
 final class End extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /*
    * Creates a new End action.
    */
   End() {
-    code = ActionConstants.END;
+    super(ActionType.END);
   }
 }

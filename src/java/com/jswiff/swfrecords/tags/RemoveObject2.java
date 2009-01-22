@@ -22,60 +22,63 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * The RemoveObject2 tag removes the character instance at the specified depth
  * from the display list.
- *
+ * 
  * @since SWF 3
  */
 public final class RemoveObject2 extends Tag {
-	private int depth;
 
-	/**
-	 * Creates a new RemoveObject2 tag. Supply the depth of the character
-	 * instance to be removed.
-	 *
-	 * @param depth depth of instance to be removed
-	 */
-	public RemoveObject2(int depth) {
-		code		   = TagConstants.REMOVE_OBJECT_2;
-		this.depth     = depth;
-	}
+  private static final long serialVersionUID = 1L;
 
-	RemoveObject2() {
-		// empty
-	}
+  private int depth;
 
-	/**
-	 * Sets the depth of the character instance to be removed.
-	 *
-	 * @param depth depth of instance to be removed
-	 */
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
+  /**
+   * Creates a new RemoveObject2 tag. Supply the depth of the character instance
+   * to be removed.
+   * 
+   * @param depth
+   *          depth of instance to be removed
+   */
+  public RemoveObject2(int depth) {
+    super(TagType.REMOVE_OBJECT_2);
+    this.depth = depth;
+  }
 
-	/**
-	 * Returns the depth of the character instance to be removed.
-	 *
-	 * @return depth of instance to be removed
-	 */
-	public int getDepth() {
-		return depth;
-	}
+  RemoveObject2() {
+    super(TagType.REMOVE_OBJECT_2);
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(depth);
-	}
+  /**
+   * Sets the depth of the character instance to be removed.
+   * 
+   * @param depth
+   *          depth of instance to be removed
+   */
+  public void setDepth(int depth) {
+    this.depth = depth;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		depth = inStream.readUI16();
-	}
+  /**
+   * Returns the depth of the character instance to be removed.
+   * 
+   * @return depth of instance to be removed
+   */
+  public int getDepth() {
+    return depth;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(depth);
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    depth = inStream.readUI16();
+  }
 }

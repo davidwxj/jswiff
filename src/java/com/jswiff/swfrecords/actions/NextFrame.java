@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * Instructs Flash Player to advance to the next frame in the current movie.
@@ -36,19 +37,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 3
  */
 public final class NextFrame extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new NextFrame action.
    */
   public NextFrame() {
-    code = ActionConstants.NEXT_FRAME;
+    super(ActionType.NEXT_FRAME);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"NextFrame"</code>
-   */
-  public String toString() {
-    return "NextFrame";
-  }
 }

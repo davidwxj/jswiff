@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -66,19 +67,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class TypeOf extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new TypeOf action.
    */
   public TypeOf() {
-    code = ActionConstants.TYPE_OF;
+    super(ActionType.TYPE_OF);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"TypeOf"</code>
-   */
-  public String toString() {
-    return "TypeOf";
-  }
 }

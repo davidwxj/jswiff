@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -48,19 +49,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 6
  */
 public final class CastOp extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new CastOp action.
    */
   public CastOp() {
-    code = ActionConstants.CAST_OP;
+    super(ActionType.CAST_OP);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"CastOp"</code>
-   */
-  public String toString() {
-    return "CastOp";
-  }
 }

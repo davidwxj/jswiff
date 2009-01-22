@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -54,8 +55,10 @@ public final class MorphFillStyles implements Serializable {
    * @param stream source bit stream
    *
    * @throws IOException if an I/O error occured
+   * @throws InvalidCodeException if the tag header contains an invalid code.
+   * This normally means invalid or corrupted data.
    */
-  public MorphFillStyles(InputBitStream stream) throws IOException {
+  public MorphFillStyles(InputBitStream stream) throws IOException, InvalidCodeException {
     int styleCount = stream.readUI8();
     if (styleCount == 0xFF) {
       styleCount = stream.readUI16();

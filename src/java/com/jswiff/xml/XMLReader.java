@@ -23,6 +23,7 @@ package com.jswiff.xml;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -31,7 +32,8 @@ import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 
 import com.jswiff.SWFDocument;
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidNameException;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.util.Base64;
 
@@ -82,164 +84,24 @@ public class XMLReader {
   private void addHandlers() {
     HeaderHandler headerHandler = new HeaderHandler();
     saxReader.addHandler("/swfdocument/header", headerHandler);
-    saxReader.addHandler(
-      "/swfdocument/debugid", new TagHandler(TagConstants.DEBUG_ID));
-    saxReader.addHandler(
-      "/swfdocument/definebinarydata", new TagHandler(TagConstants.DEFINE_BINARY_DATA));
-    saxReader.addHandler(
-      "/swfdocument/definebits", new TagHandler(TagConstants.DEFINE_BITS));
-    saxReader.addHandler(
-      "/swfdocument/definebitsjpeg2",
-      new TagHandler(TagConstants.DEFINE_BITS_JPEG_2));
-    saxReader.addHandler(
-      "/swfdocument/definebitsjpeg3",
-      new TagHandler(TagConstants.DEFINE_BITS_JPEG_3));
-    saxReader.addHandler(
-      "/swfdocument/definebitslossless",
-      new TagHandler(TagConstants.DEFINE_BITS_LOSSLESS));
-    saxReader.addHandler(
-      "/swfdocument/definebitslossless2",
-      new TagHandler(TagConstants.DEFINE_BITS_LOSSLESS_2));
-    saxReader.addHandler(
-      "/swfdocument/definebutton", new TagHandler(TagConstants.DEFINE_BUTTON));
-    saxReader.addHandler(
-      "/swfdocument/definebutton2", new TagHandler(
-        TagConstants.DEFINE_BUTTON_2));
-    saxReader.addHandler(
-      "/swfdocument/definebuttoncxform",
-      new TagHandler(TagConstants.DEFINE_BUTTON_C_XFORM));
-    saxReader.addHandler(
-      "/swfdocument/definebuttonsound",
-      new TagHandler(TagConstants.DEFINE_BUTTON_SOUND));
-    saxReader.addHandler(
-      "/swfdocument/defineedittext",
-      new TagHandler(TagConstants.DEFINE_EDIT_TEXT));
-    saxReader.addHandler(
-      "/swfdocument/definefont", new TagHandler(TagConstants.DEFINE_FONT));
-    saxReader.addHandler(
-      "/swfdocument/definefont2", new TagHandler(TagConstants.DEFINE_FONT_2));
-    saxReader.addHandler(
-      "/swfdocument/definefont3", new TagHandler(TagConstants.DEFINE_FONT_3));
-    saxReader.addHandler(
-      "/swfdocument/definefontinfo",
-      new TagHandler(TagConstants.DEFINE_FONT_INFO));
-    saxReader.addHandler(
-      "/swfdocument/definefontinfo2",
-      new TagHandler(TagConstants.DEFINE_FONT_INFO_2));
-    saxReader.addHandler(
-      "/swfdocument/definefontalignment",
-      new TagHandler(TagConstants.DEFINE_FONT_ALIGNMENT));
-    saxReader.addHandler(
-      "/swfdocument/definefontname",
-      new TagHandler(TagConstants.DEFINE_FONT_NAME));
-    saxReader.addHandler(
-      "/swfdocument/flashtypesettings",
-      new TagHandler(TagConstants.FLASHTYPE_SETTINGS));
-    saxReader.addHandler(
-      "/swfdocument/definemorphshape",
-      new TagHandler(TagConstants.DEFINE_MORPH_SHAPE));
-    saxReader.addHandler(
-      "/swfdocument/definemorphshape2",
-      new TagHandler(TagConstants.DEFINE_MORPH_SHAPE_2));
-    saxReader.addHandler(
-        "/swfdocument/definesceneframedata", new TagHandler(TagConstants.DEFINE_SCENE_FRAME_DATA));
-    saxReader.addHandler(
-      "/swfdocument/defineshape", new TagHandler(TagConstants.DEFINE_SHAPE));
-    saxReader.addHandler(
-      "/swfdocument/defineshape2", new TagHandler(TagConstants.DEFINE_SHAPE_2));
-    saxReader.addHandler(
-      "/swfdocument/defineshape3", new TagHandler(TagConstants.DEFINE_SHAPE_3));
-    saxReader.addHandler(
-      "/swfdocument/defineshape4", new TagHandler(TagConstants.DEFINE_SHAPE_4));
-    saxReader.addHandler(
-      "/swfdocument/definesound", new TagHandler(TagConstants.DEFINE_SOUND));
-    saxReader.addHandler(
-      "/swfdocument/definesprite", new TagHandler(TagConstants.DEFINE_SPRITE));
-    saxReader.addHandler(
-      "/swfdocument/definetext", new TagHandler(TagConstants.DEFINE_TEXT));
-    saxReader.addHandler(
-      "/swfdocument/definetext2", new TagHandler(TagConstants.DEFINE_TEXT_2));
-    saxReader.addHandler(
-      "/swfdocument/definevideostream",
-      new TagHandler(TagConstants.DEFINE_VIDEO_STREAM));
-    saxReader.addHandler(
-      "/swfdocument/doabc", new TagHandler(TagConstants.DO_ABC));
-    saxReader.addHandler(
-      "/swfdocument/doabcdefine", new TagHandler(TagConstants.DO_ABC_DEFINE));
-    saxReader.addHandler(
-      "/swfdocument/doaction", new TagHandler(TagConstants.DO_ACTION));
-    saxReader.addHandler(
-      "/swfdocument/doinitaction", new TagHandler(TagConstants.DO_INIT_ACTION));
-    saxReader.addHandler(
-      "/swfdocument/enabledebugger",
-      new TagHandler(TagConstants.ENABLE_DEBUGGER));
-    saxReader.addHandler(
-      "/swfdocument/enabledebugger",
-      new TagHandler(TagConstants.ENABLE_DEBUGGER_2));
-    saxReader.addHandler(
-      "/swfdocument/exportassets", new TagHandler(TagConstants.EXPORT_ASSETS));
-    saxReader.addHandler(
-      "/swfdocument/framelabel", new TagHandler(TagConstants.FRAME_LABEL));
-    saxReader.addHandler(
-      "/swfdocument/freecharacter", new TagHandler(TagConstants.FREE_CHARACTER));
-    saxReader.addHandler(
-      "/swfdocument/importassets", new TagHandler(TagConstants.IMPORT_ASSETS));
-    saxReader.addHandler(
-      "/swfdocument/importassets2", new TagHandler(
-        TagConstants.IMPORT_ASSETS_2));
-    saxReader.addHandler(
-      "/swfdocument/jpegtables", new TagHandler(TagConstants.JPEG_TABLES));
-    saxReader.addHandler(
-      "/swfdocument/malformedtag", new TagHandler(TagConstants.MALFORMED));
-    saxReader.addHandler(
-      "/swfdocument/metadata", new TagHandler(TagConstants.METADATA));
-    saxReader.addHandler(
-      "/swfdocument/placeobject", new TagHandler(TagConstants.PLACE_OBJECT));
-    saxReader.addHandler(
-      "/swfdocument/placeobject2", new TagHandler(TagConstants.PLACE_OBJECT_2));
-    saxReader.addHandler(
-      "/swfdocument/placeobject3", new TagHandler(TagConstants.PLACE_OBJECT_3));
-    saxReader.addHandler(
-      "/swfdocument/productinfo", new TagHandler(TagConstants.PRODUCT_INFO));
-    saxReader.addHandler(
-      "/swfdocument/protect", new TagHandler(TagConstants.PROTECT));
-    saxReader.addHandler(
-      "/swfdocument/removeobject", new TagHandler(TagConstants.REMOVE_OBJECT));
-    saxReader.addHandler(
-      "/swfdocument/removeobject2", new TagHandler(
-        TagConstants.REMOVE_OBJECT_2));
-    saxReader.addHandler(
-      "/swfdocument/scale9grid", new TagHandler(TagConstants.SCALE_9_GRID));
-    saxReader.addHandler(
-      "/swfdocument/scriptlimits", new TagHandler(TagConstants.SCRIPT_LIMITS));
-    saxReader.addHandler(
-      "/swfdocument/settabindex", new TagHandler(TagConstants.SET_TAB_INDEX));
-    saxReader.addHandler(
-      "/swfdocument/showframe", new TagHandler(TagConstants.SHOW_FRAME));
-    saxReader.addHandler(
-      "/swfdocument/soundstreamblock",
-      new TagHandler(TagConstants.SOUND_STREAM_BLOCK));
-    saxReader.addHandler(
-      "/swfdocument/soundstreamhead",
-      new TagHandler(TagConstants.SOUND_STREAM_HEAD));
-    saxReader.addHandler(
-      "/swfdocument/soundstreamhead2",
-      new TagHandler(TagConstants.SOUND_STREAM_HEAD_2));
-    saxReader.addHandler(
-      "/swfdocument/startsound", new TagHandler(TagConstants.START_SOUND));
-    saxReader.addHandler(
-      "/swfdocument/symbolclass", new TagHandler(TagConstants.SYMBOL_CLASS));
-    saxReader.addHandler(
-      "/swfdocument/videoframe", new TagHandler(TagConstants.VIDEO_FRAME));
     saxReader.addHandler("/swfdocument/unknowntag", new UnknownTagHandler());
+    
+    EnumSet<TagType> tagTypes = EnumSet.allOf(TagType.class);
+    tagTypes.remove(TagType.UNKNOWN_TAG);
+    tagTypes.remove(TagType.END);
+    tagTypes.remove(TagType.FILE_ATTRIBUTES);
+    tagTypes.remove(TagType.SET_BACKGROUND_COLOR);
+    for (TagType t : tagTypes) {
+      saxReader.addHandler(
+          "/swfdocument/".concat(t.toString()), new TagHandler(t));
+    }
   }
 
   private void parseHeader(Element headerElement) {
     if (RecordXMLReader.getBooleanAttribute("omitbinarydata", headerElement)) {
       throw new IllegalArgumentException("XML files with omitbinarydata flag set cannot be transformed back to SWF!");
     }
-    short swfVersion = RecordXMLReader.getShortAttribute(
-        "swfversion", headerElement);
+    short swfVersion = RecordXMLReader.getShortAttribute("swfversion", headerElement);
     swfDocument.setVersion(swfVersion);
     swfDocument.setCompressed(
       RecordXMLReader.getBooleanAttribute("compressed", headerElement));
@@ -270,17 +132,22 @@ public class XMLReader {
   }
 
   private class TagHandler implements ElementHandler {
-    private int tagCode;
+    private final TagType tagType;
 
-    public TagHandler(int tagCode) {
-      this.tagCode = tagCode;
+    public TagHandler(TagType tagType) {
+      this.tagType = tagType;
     }
 
     public void onEnd(ElementPath path) {
       Element tagElement = path.getCurrent();
       Tag tag;
-      tag = TagXMLReader.readTag(tagElement, tagCode);
-      tags.add(tag);
+      try {
+        tag = TagXMLReader.readTag(tagElement, tagType);
+        tags.add(tag);
+      } catch (InvalidNameException e) {
+        //FIXME: Handle exception properly
+        e.printStackTrace();
+      }
       tagElement.detach(); // prune element from tree
       tagElement = null;
     }

@@ -23,7 +23,7 @@ package com.jswiff.swfrecords.actions;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -46,6 +46,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 3
  */
 public final class GoToLabel extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private String frameLabel;
 
   /**
@@ -54,7 +57,7 @@ public final class GoToLabel extends Action {
    * @param frameLabel the label of the target frame
    */
   public GoToLabel(String frameLabel) {
-    code         = ActionConstants.GO_TO_LABEL;
+    super(ActionType.GO_TO_LABEL);
     this.frameLabel   = frameLabel;
   }
 
@@ -62,7 +65,7 @@ public final class GoToLabel extends Action {
    * Reads a GoToLabel action from a bit stream.
    */
   GoToLabel(InputBitStream stream) throws IOException {
-    code    = ActionConstants.GO_TO_LABEL;
+    super(ActionType.GO_TO_LABEL);
     frameLabel   = stream.readString();
   }
 
@@ -99,7 +102,7 @@ public final class GoToLabel extends Action {
    * @return <code>"GoToLabel", label</code>
    */
   public String toString() {
-    return "GoToLabel " + frameLabel;
+    return super.toString() + " " + frameLabel;
   }
 
   protected void writeData(

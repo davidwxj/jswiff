@@ -20,10 +20,19 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.TagConstants.ActionType;
+
 /**
  * Base class for branch actions (<code>Jump</code>, <code>If</code>).
  */
 public abstract class Branch extends Action {
+
+  private static final long serialVersionUID = 1L;
+
+  public Branch(ActionType actionType) {
+    super(actionType);
+  }
+
   /**
    * Returns the label of the action the execution is supposed to continue at,
    * if the condition is fulfilled.

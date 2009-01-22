@@ -24,6 +24,9 @@ package com.jswiff.exception;
  * Indicates that a mandatory node is missing.
  */
 public class MissingNodeException extends RuntimeException {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new MissingNodeException instance.
    *

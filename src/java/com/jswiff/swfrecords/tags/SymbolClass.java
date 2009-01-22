@@ -25,93 +25,99 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
-
 /**
  * <p>
- * This tag contains a list of symbol references, which is used to instantiate objects
- * (symbols) defined with <code>DoABCDefine</code>.
+ * This tag contains a list of symbol references, which is used to instantiate
+ * objects (symbols) defined with <code>DoABCDefine</code>.
  * </p>
  * 
  * @see DoAbcDefine
  * @since SWF 9
  */
 public final class SymbolClass extends Tag {
-    private List<SymbolReference> references = new ArrayList<SymbolReference>();
+
+  private static final long serialVersionUID = 1L;
+
+  private List<SymbolReference> references = new ArrayList<SymbolReference>();
+
+  /**
+   * Creates a new SymbolClass instance. Supply an array of export mappings (for
+   * each exported character one).
+   */
+  public SymbolClass() {
+    super(TagType.SYMBOL_CLASS);
+  }
+
+  /**
+   * Returns the symbol references defined in this tag.
+   * 
+   * @return character symbol references
+   */
+  public List<SymbolReference> getReferences() {
+    return references;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    int count = references.size();
+    outStream.writeUI16(count);
+    for (int i = 0; i < count; i++) {
+      SymbolReference symbolReference = references.get(i);
+      outStream.writeUI16(symbolReference.getCharacterId());
+      outStream.writeString(symbolReference.getName());
+    }
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    int count = inStream.readUI16();
+    for (int i = 0; i < count; i++) {
+      references.add(new SymbolReference(inStream.readUI16(), inStream.readString()));
+    }
+  }
+
+  /**
+   * Defines an (immutable) symbol reference.
+   */
+  public static class SymbolReference implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    
+    private int characterId;
+    private String name;
 
     /**
-     * Creates a new SymbolClass instance. Supply an array of export mappings
-     * (for each  exported character one).
+     * Creates a new symbol reference. Supply character ID and symbol name
+     * 
+     * @param characterId
+     *          character ID
+     * @param name
+     *          symbol name
      */
-    public SymbolClass() {
-        code = TagConstants.SYMBOL_CLASS;
+    public SymbolReference(int characterId, String name) {
+      this.characterId = characterId;
+      this.name = name;
     }
 
     /**
-     * Returns the symbol references defined in this tag.
-     *
-     * @return character symbol references
+     * Returns the character ID of the symbol reference
+     * 
+     * @return character ID
      */
-    public List<SymbolReference> getReferences() {
-        return references;
-    }
-
-    protected void writeData(OutputBitStream outStream)
-        throws IOException {
-        int count = references.size();
-        outStream.writeUI16(count);
-        for (int i = 0; i < count; i++) {
-            SymbolReference symbolReference = references.get(i);
-            outStream.writeUI16(symbolReference.getCharacterId());
-            outStream.writeString(symbolReference.getName());
-        }
-    }
-
-    void setData(byte[] data) throws IOException {
-        InputBitStream inStream = new InputBitStream(data);
-        int count               = inStream.readUI16();
-        for (int i = 0; i < count; i++) {
-            references.add(new SymbolReference(inStream.readUI16(), inStream.readString()));
-        }
+    public int getCharacterId() {
+      return characterId;
     }
 
     /**
-     * Defines an (immutable) symbol reference.
+     * Returns the name of the symbol to be referenced
+     * 
+     * @return export name
      */
-    public static class SymbolReference implements Serializable {
-        private int characterId;
-        private String name;
-
-        /**
-         * Creates a new symbol reference. Supply character ID and symbol name
-         *
-         * @param characterId character ID
-         * @param name symbol name
-         */
-        public SymbolReference(int characterId, String name) {
-            this.characterId     = characterId;
-            this.name            = name;
-        }
-
-        /**
-         * Returns the character ID of the symbol reference
-         *
-         * @return character ID
-         */
-        public int getCharacterId() {
-            return characterId;
-        }
-
-        /**
-         * Returns the name of the symbol to be referenced
-         *
-         * @return export name
-         */
-        public String getName() {
-            return name;
-        }
+    public String getName() {
+      return name;
     }
+  }
 }

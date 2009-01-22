@@ -60,11 +60,12 @@ public class AbcOpDebug extends AbcOp {
   }
   
   public String toString() {
-    return getOpcode().toString() + ": registerNameIndex = " + registerNameIndex + ", register = " + register + ", extra = " + extra;
+    return super.toString() + ": registerNameIndex = " + registerNameIndex
+    + ", register = " + register + ", extra = " + extra;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeUI8(type);
     stream.writeAbcInt(registerNameIndex);
     stream.writeUI8(register);

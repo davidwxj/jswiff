@@ -20,29 +20,30 @@
 
 package com.jswiff.swfrecords.tags;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.swfrecords.Shape;
 
-
 /**
- * This tag's structure is identical to <code>DefineFont2</code>. The
- * difference is in the precision of the glyph definition within
- * glyphShapeTable: all EM square coordinates are multiplied by 20 before
- * being added to the tag, thus enabling substantial resolution increase.
- *
+ * This tag's structure is identical to <code>DefineFont2</code>. The difference
+ * is in the precision of the glyph definition within glyphShapeTable: all EM
+ * square coordinates are multiplied by 20 before being added to the tag, thus
+ * enabling substantial resolution increase.
+ * 
  * @since SWF 8.
  */
 public final class DefineFont3 extends DefineFont2 {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * @see DefineFont2#DefineFont2(int, String, Shape[], char[])
    */
-  public DefineFont3(
-    int characterId, String fontName, Shape[] glyphShapeTable, char[] codeTable) {
-    super(characterId, fontName, glyphShapeTable, codeTable);
-    code = TagConstants.DEFINE_FONT_3;
+  public DefineFont3(int characterId, String fontName, Shape[] glyphShapeTable, char[] codeTable) {
+    super(characterId, fontName, glyphShapeTable, codeTable, TagType.DEFINE_FONT_3);
+  }
+  
+  DefineFont3() {
+    super(TagType.DEFINE_FONT_3);
   }
 
-  DefineFont3() {
-    // empty
-  }
 }

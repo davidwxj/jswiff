@@ -22,57 +22,60 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * This tag contains the JPEG encoding table (the Tables/Misc segment) for all
  * JPEG images defined in the SWF file with the <code>DefineBits</code> tag.
- *
+ * 
  * @since SWF 1
  */
 public final class JPEGTables extends Tag {
-	private byte[] jpegData;
 
-	/**
-	 * Creates a new JPEGTables instance.
-	 *
-	 * @param jpegData JPEG encoding data
-	 */
-	public JPEGTables(byte[] jpegData) {
-		code			  = TagConstants.JPEG_TABLES;
-		this.jpegData     = jpegData;
-	}
+  private static final long serialVersionUID = 1L;
 
-	JPEGTables() {
-		// nothing to do
-	}
+  private byte[] jpegData;
 
-	/**
-	 * Sets the contained JPEG encoding data.
-	 *
-	 * @param jpegData encoding data
-	 */
-	public void setJpegData(byte[] jpegData) {
-		this.jpegData = jpegData;
-	}
+  /**
+   * Creates a new JPEGTables instance.
+   * 
+   * @param jpegData
+   *          JPEG encoding data
+   */
+  public JPEGTables(byte[] jpegData) {
+    super(TagType.JPEG_TABLES);
+    this.jpegData = jpegData;
+  }
 
-	/**
-	 * Returns the contained JPEG encoding data.
-	 *
-	 * @return JPEG encoding data
-	 */
-	public byte[] getJpegData() {
-		return jpegData;
-	}
+  JPEGTables() {
+    super(TagType.JPEG_TABLES);
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeBytes(jpegData);
-	}
+  /**
+   * Sets the contained JPEG encoding data.
+   * 
+   * @param jpegData
+   *          encoding data
+   */
+  public void setJpegData(byte[] jpegData) {
+    this.jpegData = jpegData;
+  }
 
-	void setData(byte[] data) {
-		jpegData = data;
-	}
+  /**
+   * Returns the contained JPEG encoding data.
+   * 
+   * @return JPEG encoding data
+   */
+  public byte[] getJpegData() {
+    return jpegData;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeBytes(jpegData);
+  }
+
+  void setData(byte[] data) {
+    jpegData = data;
+  }
 }

@@ -25,11 +25,13 @@ import java.io.IOException;
 import com.jswiff.constants.TagConstants;
 import com.jswiff.io.InputBitStream;
 
-
 /**
  * This class represents a SWF tag header.
  */
 public final class TagHeader {
+
+  private static final long serialVersionUID = 1L;
+
   private short code;
   private int length;
 
@@ -46,9 +48,9 @@ public final class TagHeader {
 
   /**
    * Returns the code of the tag which designates its type.
-   *
+   * 
    * @return tag type code
-   *
+   * 
    * @see TagConstants
    */
   public short getCode() {
@@ -57,7 +59,7 @@ public final class TagHeader {
 
   /**
    * Returns the length of the tag.
-   *
+   * 
    * @return tag length
    */
   public int getLength() {
@@ -66,8 +68,8 @@ public final class TagHeader {
 
   private void read(InputBitStream stream) throws IOException {
     int codeAndLength = stream.readUI16();
-    code     = (short) (codeAndLength >> 6); // upper 10 bits
-    length   = codeAndLength & 0x3F; // 0x3F = 63 = 111111, lower 6 bits
+    code = (short) (codeAndLength >> 6); // upper 10 bits
+    length = codeAndLength & 0x3F; // 0x3F = 63 = 111111, lower 6 bits
     if (length == 0x3F) {
       length = (int) stream.readUI32();
     }

@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -44,19 +45,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 7
  */
 public final class ImplementsOp extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new ImplementsOp action.
    */
   public ImplementsOp() {
-    code = ActionConstants.IMPLEMENTS_OP;
+    super(ActionType.IMPLEMENTS_OP);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"ImplementsOp"</code>
-   */
-  public String toString() {
-    return "ImplementsOp";
-  }
 }

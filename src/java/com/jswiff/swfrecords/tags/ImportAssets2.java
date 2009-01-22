@@ -22,28 +22,31 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * TODO: Comments
  */
 public class ImportAssets2 extends ImportAssets {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new ImportAssets2 instance.
-   *
-   * @param url TODO: Comments
-   * @param importMappings TODO: Comments
+   * 
+   * @param url
+   *          TODO: Comments
+   * @param importMappings
+   *          TODO: Comments
    */
   public ImportAssets2(String url, ImportMapping[] importMappings) {
-    super(url, importMappings);
-    code = TagConstants.IMPORT_ASSETS_2;
+    super(url, importMappings, TagType.IMPORT_ASSETS_2);
   }
 
   ImportAssets2() {
-    // empty
+    super(TagType.IMPORT_ASSETS_2);
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
@@ -65,8 +68,8 @@ public class ImportAssets2 extends ImportAssets {
     int count = inStream.readUI16();
     importMappings = new ImportMapping[count];
     for (int i = 0; i < count; i++) {
-      int characterId   = inStream.readUI16();
-      String name       = inStream.readString();
+      int characterId = inStream.readUI16();
+      String name = inStream.readString();
       importMappings[i] = new ImportMapping(name, characterId);
     }
   }

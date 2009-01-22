@@ -30,7 +30,10 @@ import com.jswiff.io.OutputBitStream;
 /**
  * This class is used to define a line style. Contains line width and color.
  */
-public class LineStyle implements Serializable {
+public class LineStyle implements LineStyleTag, Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   private int width;
   private Color color;
 
@@ -78,7 +81,7 @@ public class LineStyle implements Serializable {
     return width;
   }
 
-  void write(OutputBitStream stream) throws IOException {
+  public void write(OutputBitStream stream) throws IOException {
     stream.writeUI16(width);
     color.write(stream);
   }

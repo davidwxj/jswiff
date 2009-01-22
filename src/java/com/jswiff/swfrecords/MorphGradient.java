@@ -23,6 +23,9 @@ package com.jswiff.swfrecords;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.jswiff.constants.TagConstants.InterpolationMethod;
+import com.jswiff.constants.TagConstants.SpreadMethod;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -43,19 +46,12 @@ import com.jswiff.io.OutputBitStream;
  * @see MorphFillStyle
  */
 public class MorphGradient implements Serializable {
-  /** TODO: Comments */
-  public static final byte SPREAD_PAD               = 0;
-  /** TODO: Comments */
-  public static final byte SPREAD_REFLECT           = 1;
-  /** TODO: Comments */
-  public static final byte SPREAD_REPEAT            = 2;
-  /** TODO: Comments */
-  public static final byte INTERPOLATION_RGB        = 0;
-  /** TODO: Comments */
-  public static final byte INTERPOLATION_LINEAR_RGB = 1;
+
+  private static final long serialVersionUID = 1L;
+  
   private MorphGradRecord[] gradientRecords;
-  private byte spreadMethod;
-  private byte interpolationMethod;
+  private SpreadMethod spreadMethod;
+  private InterpolationMethod interpolationMethod;
 
   /**
    * Creates a new MorphGradient instance. Specify an array of at least two
@@ -68,9 +64,9 @@ public class MorphGradient implements Serializable {
     this.gradientRecords = gradientRecords;
   }
 
-  MorphGradient(InputBitStream stream) throws IOException {
-    spreadMethod          = (byte) stream.readUnsignedBits(2);
-    interpolationMethod   = (byte) stream.readUnsignedBits(2);
+  MorphGradient(InputBitStream stream) throws IOException, InvalidCodeException {
+    spreadMethod          = SpreadMethod.lookup((short) stream.readUnsignedBits(2));
+    interpolationMethod   = InterpolationMethod.lookup((short) stream.readUnsignedBits(2));
     short count           = (short) stream.readUnsignedBits(4);
     gradientRecords = new MorphGradRecord[count];
     for (int i = 0; i < count; i++) {
@@ -90,8 +86,8 @@ public class MorphGradient implements Serializable {
   }
 
   void write(OutputBitStream stream) throws IOException {
-    stream.writeUnsignedBits(spreadMethod, 2);
-    stream.writeUnsignedBits(interpolationMethod, 2);
+    stream.writeUnsignedBits(spreadMethod.getCode(), 2);
+    stream.writeUnsignedBits(interpolationMethod.getCode(), 2);
     int count = gradientRecords.length;
     stream.writeUnsignedBits(count, 4);
     for (int i = 0; i < count; i++) {
@@ -99,19 +95,19 @@ public class MorphGradient implements Serializable {
     }
   }
 
-  public byte getInterpolationMethod() {
+  public InterpolationMethod getInterpolationMethod() {
     return interpolationMethod;
   }
 
-  public void setInterpolationMethod(byte interpolationMethod) {
+  public void setInterpolationMethod(InterpolationMethod interpolationMethod) {
     this.interpolationMethod = interpolationMethod;
   }
 
-  public byte getSpreadMethod() {
+  public SpreadMethod getSpreadMethod() {
     return spreadMethod;
   }
 
-  public void setSpreadMethod(byte spreadMethod) {
+  public void setSpreadMethod(SpreadMethod spreadMethod) {
     this.spreadMethod = spreadMethod;
   }
 

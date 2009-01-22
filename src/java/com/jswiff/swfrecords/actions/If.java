@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -48,6 +48,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class If extends Branch {
+
+  private static final long serialVersionUID = 1L;
+  
   private short branchOffset;
   private String branchLabel;
 
@@ -63,7 +66,7 @@ public final class If extends Branch {
    *        continue at
    */
   public If(String branchLabel) {
-    code               = ActionConstants.IF;
+    super(ActionType.IF);
     this.branchLabel   = branchLabel;
   }
 
@@ -71,7 +74,7 @@ public final class If extends Branch {
    * Reads an If action from a bit stream.
    */
   If(InputBitStream stream) throws IOException {
-    code           = ActionConstants.IF;
+    super(ActionType.IF);
     branchOffset   = stream.readSI16();
   }
 
@@ -111,7 +114,7 @@ public final class If extends Branch {
    * @return <code>"If", branchLabel</code>
    */
   public String toString() {
-    return "If branchLabel: " + branchLabel;
+    return super.toString() + " branchLabel: " + branchLabel;
   }
 
   protected void writeData(

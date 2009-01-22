@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -46,6 +46,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 5
  */
 public final class StoreRegister extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private short number;
 
   /**
@@ -55,12 +58,12 @@ public final class StoreRegister extends Action {
    * @param number a register number.
    */
   public StoreRegister(short number) {
-    code          = ActionConstants.STORE_REGISTER;
+    super(ActionType.STORE_REGISTER);
     this.number   = number;
   }
 
   StoreRegister(InputBitStream stream) throws IOException {
-    code     = ActionConstants.STORE_REGISTER;
+    super(ActionType.STORE_REGISTER);
     number   = stream.readUI8();
   }
 
@@ -90,7 +93,7 @@ public final class StoreRegister extends Action {
    * @return <code>"StoreRegister", number</code>
    */
   public String toString() {
-    return "StoreRegister " + number;
+    return super.toString() + " " + number;
   }
 
   protected void writeData(

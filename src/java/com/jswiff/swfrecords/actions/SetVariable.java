@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class SetVariable extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new SetVariable action.
    */
   public SetVariable() {
-    code = ActionConstants.SET_VARIABLE;
+    super(ActionType.SET_VARIABLE);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"SetVariable"</code>
-   */
-  public String toString() {
-    return "SetVariable";
-  }
 }

@@ -22,6 +22,7 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
 
 
@@ -30,8 +31,22 @@ import com.jswiff.io.OutputBitStream;
  * because the tag type is unknown (e.g. for new Flash versions).
  */
 public class UnknownTag extends Tag {
+
+  private static final long serialVersionUID = 1L;
+  
+  private final short unknownTagCode;
   private byte[] inData;
 
+  /**
+   * Creates a new UnknownTag instance.
+   *
+   * @param code tag code (indicating the tag type)
+   */
+  public UnknownTag(short code) {
+    super(TagType.UNKNOWN_TAG);
+    this.unknownTagCode = code;
+  }
+  
   /**
    * Creates a new UnknownTag instance.
    *
@@ -39,11 +54,8 @@ public class UnknownTag extends Tag {
    * @param data tag data
    */
   public UnknownTag(short code, byte[] data) {
-    this.code   = code;
-    inData      = data;
-  }
-
-  UnknownTag() {
+    this(code);
+    this.inData = data;
   }
 
   /**
@@ -62,7 +74,7 @@ public class UnknownTag extends Tag {
    * @return string representation
    */
   public String toString() {
-    return "Unknown tag (tag code: " + code + "; data size: " + getData().length +
+    return super.toString() + " (tag code: " + this.unknownTagCode + "; data size: " + getData().length +
     " bytes)";
   }
 
@@ -73,4 +85,10 @@ public class UnknownTag extends Tag {
   void setData(byte[] data) {
     inData = data;
   }
+  
+  @Override
+  public short tagCode() {
+    return this.unknownTagCode;
+  }
+  
 }

@@ -22,85 +22,90 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * This tag is used to set the tab order index of character instances. This
  * index determines the order in which character instances receive input focus
  * when repeatedly pressing the TAB key (aka 'tab order'). It also affects the
  * access order (aka 'reading order') when using screen readers.
- *
+ * 
  * @since SWF 7
  */
 public final class SetTabIndex extends Tag {
-	private int depth;
-	private int tabIndex;
 
-	/**
-	 * Creates a new SetTabIndex tag. Provide the depth of the character
-	 * instance and its tab order index.
-	 *
-	 * @param depth depth the character instance is placed at
-	 * @param tabIndex tab order index (up to 65535)
-	 */
-	public SetTabIndex(int depth, int tabIndex) {
-		code			  = TagConstants.SET_TAB_INDEX;
-		this.depth		  = depth;
-		this.tabIndex     = tabIndex;
-	}
+  private static final long serialVersionUID = 1L;
 
-	SetTabIndex() {
-		// empty
-	}
+  private int depth;
+  private int tabIndex;
 
-	/**
-	 * Sets the depth the character instance is placed at.
-	 *
-	 * @param depth placement depth
-	 */
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
+  /**
+   * Creates a new SetTabIndex tag. Provide the depth of the character instance
+   * and its tab order index.
+   * 
+   * @param depth
+   *          depth the character instance is placed at
+   * @param tabIndex
+   *          tab order index (up to 65535)
+   */
+  public SetTabIndex(int depth, int tabIndex) {
+    super(TagType.SET_TAB_INDEX);
+    this.depth = depth;
+    this.tabIndex = tabIndex;
+  }
 
-	/**
-	 * Returns the depth the character instance is placed at.
-	 *
-	 * @return placement depth
-	 */
-	public int getDepth() {
-		return depth;
-	}
+  SetTabIndex() {
+    super(TagType.SET_TAB_INDEX);
+  }
 
-	/**
-	 * Sets the tab order index of the character instance.
-	 *
-	 * @param tabIndex tab order index
-	 */
-	public void setTabIndex(int tabIndex) {
-		this.tabIndex = tabIndex;
-	}
+  /**
+   * Sets the depth the character instance is placed at.
+   * 
+   * @param depth
+   *          placement depth
+   */
+  public void setDepth(int depth) {
+    this.depth = depth;
+  }
 
-	/**
-	 * Returns the tab order index of the character instance.
-	 *
-	 * @return tab order index
-	 */
-	public int getTabIndex() {
-		return tabIndex;
-	}
+  /**
+   * Returns the depth the character instance is placed at.
+   * 
+   * @return placement depth
+   */
+  public int getDepth() {
+    return depth;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(depth);
-		outStream.writeUI16(tabIndex);
-	}
+  /**
+   * Sets the tab order index of the character instance.
+   * 
+   * @param tabIndex
+   *          tab order index
+   */
+  public void setTabIndex(int tabIndex) {
+    this.tabIndex = tabIndex;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		depth		 = inStream.readUI16();
-		tabIndex     = inStream.readUI16();
-	}
+  /**
+   * Returns the tab order index of the character instance.
+   * 
+   * @return tab order index
+   */
+  public int getTabIndex() {
+    return tabIndex;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(depth);
+    outStream.writeUI16(tabIndex);
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    depth = inStream.readUI16();
+    tabIndex = inStream.readUI16();
+  }
 }

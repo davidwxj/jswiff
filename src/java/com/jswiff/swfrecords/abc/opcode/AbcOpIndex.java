@@ -42,11 +42,11 @@ public class AbcOpIndex extends AbcOp {
   }
 
   public String toString() {
-    return getOpcode().toString() + ": index = " + index;
+    return super.toString() + ": index = " + index;
   }
 
   public void write(OutputBitStream stream) throws IOException {
-    stream.writeUI8(getOpcode().getCode());
+    stream.writeUI8(opCode.getCode());
     stream.writeAbcInt(index);
   }
   

@@ -22,10 +22,9 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * <p>
@@ -35,91 +34,97 @@ import com.jswiff.io.OutputBitStream;
  * 
  * <p>
  * As of SWF 6, labels can additionally be defined as named anchors for better
- * browser integration. Named anchors are similar to HTML anchors (i.e.
- * fragment identifiers, as specified in RFC 2396). If the named anchor is
- * supplied at the end of the SWF file's URL (like
- * <code>http://servername/filename.swf#named_anchor</code>) in the browser,
- * the Flash Player plugin starts playback at the frame labeled as
+ * browser integration. Named anchors are similar to HTML anchors (i.e. fragment
+ * identifiers, as specified in RFC 2396). If the named anchor is supplied at
+ * the end of the SWF file's URL (like
+ * <code>http://servername/filename.swf#named_anchor</code>) in the browser, the
+ * Flash Player plugin starts playback at the frame labeled as
  * <code>named_anchor</code>. Additionally, if the Flash Player plugin
  * encounters a frame containing a named anchor during playback of an SWF, it
- * adds the anchor to the URL of the HTML page embedding the SWF in the
- * address bar (or updates it if an anchor is already there), so the frame can
- * be bookmarked and the browser's "back" and "forward" buttons can be used
- * for navigation.
+ * adds the anchor to the URL of the HTML page embedding the SWF in the address
+ * bar (or updates it if an anchor is already there), so the frame can be
+ * bookmarked and the browser's "back" and "forward" buttons can be used for
+ * navigation.
  * </p>
- *
+ * 
  * @since SWF 3 (named anchors since SWF 6)
  */
 public final class FrameLabel extends Tag {
-	private String name;
-	private boolean isNamedAnchor;
 
-	/**
-	 * Creates a new FrameLabel tag.
-	 *
-	 * @param name label name
-	 * @param isNamedAnchor set to <code>true</code> if label is named anchor,
-	 * 		  otherwise <code>false</code>
-	 */
-	public FrameLabel(String name, boolean isNamedAnchor) {
-		code				   = TagConstants.FRAME_LABEL;
-		this.name			   = name;
-		this.isNamedAnchor     = isNamedAnchor;
-	}
+  private static final long serialVersionUID = 1L;
 
-	FrameLabel() {
-		// empty
-	}
+  private String name;
+  private boolean isNamedAnchor;
 
-	/**
-	 * Sets the name of the label assigned to the frame.
-	 *
-	 * @param name label name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+  /**
+   * Creates a new FrameLabel tag.
+   * 
+   * @param name
+   *          label name
+   * @param isNamedAnchor
+   *          set to <code>true</code> if label is named anchor, otherwise
+   *          <code>false</code>
+   */
+  public FrameLabel(String name, boolean isNamedAnchor) {
+    super(TagType.FRAME_LABEL);
+    this.name = name;
+    this.isNamedAnchor = isNamedAnchor;
+  }
 
-	/**
-	 * Returns the name of the label assigned to the frame.
-	 *
-	 * @return label name
-	 */
-	public String getName() {
-		return name;
-	}
+  FrameLabel() {
+    super(TagType.FRAME_LABEL);
+  }
 
-	/**
-	 * Specifies whether the label is defined as named anchor.
-	 *
-	 * @param isNamedAnchor <code>true</code> if label is named anchor,
-	 * 		  otherwise <code>false</code>
-	 */
-	public void setNamedAnchor(boolean isNamedAnchor) {
-		this.isNamedAnchor = isNamedAnchor;
-	}
+  /**
+   * Sets the name of the label assigned to the frame.
+   * 
+   * @param name
+   *          label name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	/**
-	 * Checks whether the label is defined as named anchor.
-	 *
-	 * @return <code>true</code> if label is named anchor, otherwise
-	 * 		   <code>false</code>
-	 */
-	public boolean isNamedAnchor() {
-		return isNamedAnchor;
-	}
+  /**
+   * Returns the name of the label assigned to the frame.
+   * 
+   * @return label name
+   */
+  public String getName() {
+    return name;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		forceLongHeader = true;
-		outStream.writeString(name);
-		if ((getSWFVersion() >= 6) && isNamedAnchor) {
-			outStream.writeUI8((short) 1);
-		}
-	}
+  /**
+   * Specifies whether the label is defined as named anchor.
+   * 
+   * @param isNamedAnchor
+   *          <code>true</code> if label is named anchor, otherwise
+   *          <code>false</code>
+   */
+  public void setNamedAnchor(boolean isNamedAnchor) {
+    this.isNamedAnchor = isNamedAnchor;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
+  /**
+   * Checks whether the label is defined as named anchor.
+   * 
+   * @return <code>true</code> if label is named anchor, otherwise
+   *         <code>false</code>
+   */
+  public boolean isNamedAnchor() {
+    return isNamedAnchor;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    this.setForceLongHeader(true);
+    outStream.writeString(name);
+    if ((getSWFVersion() >= 6) && isNamedAnchor) {
+      outStream.writeUI8((short) 1);
+    }
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {
         inStream.setShiftJIS(true);
@@ -127,9 +132,9 @@ public final class FrameLabel extends Tag {
         inStream.setANSI(true);
       }
     }
-		name = inStream.readString();
-		if ((getSWFVersion() >= 6) && (inStream.available() > 0)) {
-			isNamedAnchor = (inStream.readUI8() != 0);
-		}
-	}
+    name = inStream.readString();
+    if ((getSWFVersion() >= 6) && (inStream.available() > 0)) {
+      isNamedAnchor = (inStream.readUI8() != 0);
+    }
+  }
 }

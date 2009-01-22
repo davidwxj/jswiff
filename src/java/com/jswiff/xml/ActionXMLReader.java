@@ -26,6 +26,8 @@ import java.util.List;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidNameException;
 import com.jswiff.exception.MissingNodeException;
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.*;
@@ -33,212 +35,314 @@ import com.jswiff.util.Base64;
 
 
 class ActionXMLReader {
-  static Action readAction(Element element) {
-    String name   = element.getName();
+  
+  static Action readAction(Element element) throws InvalidNameException {
+    ActionType actionType = ActionType.lookup(element.getName());
     Action action;
-    if (name.equals("add")) {
+    switch (actionType) {
+    case ADD:
       action = new Add();
-    } else if (name.equals("add2")) {
+      break;
+    case ADD_2:
       action = new Add2();
-    } else if (name.equals("and")) {
+      break;
+    case AND:
       action = new And();
-    } else if (name.equals("asciitochar")) {
+      break;
+    case ASCII_TO_CHAR:
       action = new AsciiToChar();
-    } else if (name.equals("bitand")) {
+      break;
+    case BIT_AND:
       action = new BitAnd();
-    } else if (name.equals("bitlshift")) {
+      break;
+    case BIT_L_SHIFT:
       action = new BitLShift();
-    } else if (name.equals("bitor")) {
+      break;
+    case BIT_OR:
       action = new BitOr();
-    } else if (name.equals("bitrshift")) {
+      break;
+    case BIT_R_SHIFT:
       action = new BitRShift();
-    } else if (name.equals("biturshift")) {
+      break;
+    case BIT_U_R_SHIFT:
       action = new BitURShift();
-    } else if (name.equals("bitxor")) {
+      break;
+    case BIT_XOR:
       action = new BitXor();
-    } else if (name.equals("call")) {
+      break;
+    case CALL:
       action = new Call();
-    } else if (name.equals("callfunction")) {
+      break;
+    case CALL_FUNCTION:
       action = new CallFunction();
-    } else if (name.equals("callmethod")) {
+      break;
+    case CALL_METHOD:
       action = new CallMethod();
-    } else if (name.equals("castop")) {
+      break;
+    case CAST_OP:
       action = new CastOp();
-    } else if (name.equals("chartoascii")) {
+      break;
+    case CHAR_TO_ASCII:
       action = new CharToAscii();
-    } else if (name.equals("clonesprite")) {
+      break;
+    case CLONE_SPRITE:
       action = new CloneSprite();
-    } else if (name.equals("constantpool")) {
+      break;
+    case CONSTANT_POOL:
       action = readConstantPool(element);
-    } else if (name.equals("decrement")) {
+      break;
+    case DECREMENT:
       action = new Decrement();
-    } else if (name.equals("definefunction")) {
+      break;
+    case DEFINE_FUNCTION:
       action = readDefineFunction(element);
-    } else if (name.equals("definefunction2")) {
+      break;
+    case DEFINE_FUNCTION_2:
       action = readDefineFunction2(element);
-    } else if (name.equals("definelocal")) {
+      break;
+    case DEFINE_LOCAL:
       action = new DefineLocal();
-    } else if (name.equals("definelocal2")) {
+      break;
+    case DEFINE_LOCAL_2:
       action = new DefineLocal2();
-    } else if (name.equals("delete")) {
+      break;
+    case DELETE:
       action = new Delete();
-    } else if (name.equals("delete2")) {
+      break;
+    case DELETE_2:
       action = new Delete2();
-    } else if (name.equals("divide")) {
+      break;
+    case DIVIDE:
       action = new Divide();
-    } else if (name.equals("enddrag")) {
+      break;
+    case END_DRAG:
       action = new EndDrag();
-    } else if (name.equals("enumerate")) {
+      break;
+    case ENUMERATE:
       action = new Enumerate();
-    } else if (name.equals("enumerate2")) {
+      break;
+    case ENUMERATE_2:
       action = new Enumerate2();
-    } else if (name.equals("equals")) {
+      break;
+    case EQUALS:
       action = new Equals();
-    } else if (name.equals("equals2")) {
+      break;
+    case EQUALS_2:
       action = new Equals2();
-    } else if (name.equals("extends")) {
+      break;
+    case EXTENDS:
       action = new Extends();
-    } else if (name.equals("getmember")) {
+      break;
+    case GET_MEMBER:
       action = new GetMember();
-    } else if (name.equals("getproperty")) {
+      break;
+    case GET_PROPERTY:
       action = new GetProperty();
-    } else if (name.equals("gettime")) {
+      break;
+    case GET_TIME:
       action = new GetTime();
-    } else if (name.equals("geturl")) {
+      break;
+    case GET_URL:
       action = readGetURL(element);
-    } else if (name.equals("geturl2")) {
+      break;
+    case GET_URL_2:
       action = readGetURL2(element);
-    } else if (name.equals("getvariable")) {
+      break;
+    case GET_VARIABLE:
       action = new GetVariable();
-    } else if (name.equals("gotoframe")) {
+      break;
+    case GO_TO_FRAME:
       action = readGoToFrame(element);
-    } else if (name.equals("gotoframe2")) {
+      break;
+    case GO_TO_FRAME_2:
       action = readGoToFrame2(element);
-    } else if (name.equals("gotolabel")) {
+      break;
+    case GO_TO_LABEL:
       action = readGoToLabel(element);
-    } else if (name.equals("greater")) {
+      break;
+    case GREATER:
       action = new Greater();
-    } else if (name.equals("if")) {
+      break;
+    case IF:
       action = readIf(element);
-    } else if (name.equals("implementsop")) {
+      break;
+    case IMPLEMENTS_OP:
       action = new ImplementsOp();
-    } else if (name.equals("increment")) {
+      break;
+    case INCREMENT:
       action = new Increment();
-    } else if (name.equals("initarray")) {
+      break;
+    case INIT_ARRAY:
       action = new InitArray();
-    } else if (name.equals("initobject")) {
+      break;
+    case INIT_OBJECT:
       action = new InitObject();
-    } else if (name.equals("instanceof")) {
+      break;
+    case INSTANCE_OF:
       action = new InstanceOf();
-    } else if (name.equals("jump")) {
+      break;
+    case JUMP:
       action = readJump(element);
-    } else if (name.equals("less")) {
+      break;
+    case LESS:
       action = new Less();
-    } else if (name.equals("less2")) {
+      break;
+    case LESS_2:
       action = new Less2();
-    } else if (name.equals("mbasciitochar")) {
+      break;
+    case M_B_ASCII_TO_CHAR:
       action = new MBAsciiToChar();
-    } else if (name.equals("mbchartoascii")) {
+      break;
+    case M_B_CHAR_TO_ASCII:
       action = new MBCharToAscii();
-    } else if (name.equals("mbstringextract")) {
+      break;
+    case M_B_STRING_EXTRACT:
       action = new MBStringExtract();
-    } else if (name.equals("mbstringlength")) {
+      break;
+    case M_B_STRING_LENGTH:
       action = new MBStringLength();
-    } else if (name.equals("modulo")) {
+      break;
+    case MODULO:
       action = new Modulo();
-    } else if (name.equals("multiply")) {
+      break;
+    case MULTIPLY:
       action = new Multiply();
-    } else if (name.equals("newmethod")) {
+      break;
+    case NEW_METHOD:
       action = new NewMethod();
-    } else if (name.equals("newobject")) {
+      break;
+    case NEW_OBJECT:
       action = new NewObject();
-    } else if (name.equals("nextframe")) {
+      break;
+    case NEXT_FRAME:
       action = new NextFrame();
-    } else if (name.equals("not")) {
+      break;
+    case NOT:
       action = new Not();
-    } else if (name.equals("or")) {
+      break;
+    case OR:
       action = new Or();
-    } else if (name.equals("play")) {
+      break;
+    case PLAY:
       action = new Play();
-    } else if (name.equals("pop")) {
+      break;
+    case POP:
       action = new Pop();
-    } else if (name.equals("previousframe")) {
+      break;
+    case PREVIOUS_FRAME:
       action = new PreviousFrame();
-    } else if (name.equals("push")) {
+      break;
+    case PUSH:
       action = readPush(element);
-    } else if (name.equals("pushduplicate")) {
+      break;
+    case PUSH_DUPLICATE:
       action = new PushDuplicate();
-    } else if (name.equals("randomnumber")) {
+      break;
+    case RANDOM_NUMBER:
       action = new RandomNumber();
-    } else if (name.equals("removesprite")) {
+      break;
+    case REMOVE_SPRITE:
       action = new RemoveSprite();
-    } else if (name.equals("return")) {
+      break;
+    case RETURN:
       action = new Return();
-    } else if (name.equals("setmember")) {
+      break;
+    case SET_MEMBER:
       action = new SetMember();
-    } else if (name.equals("setproperty")) {
+      break;
+    case SET_PROPERTY:
       action = new SetProperty();
-    } else if (name.equals("settarget")) {
+      break;
+    case SET_TARGET:
       action = readSetTarget(element);
-    } else if (name.equals("settarget2")) {
+      break;
+    case SET_TARGET_2:
       action = new SetTarget2();
-    } else if (name.equals("setvariable")) {
+      break;
+    case SET_VARIABLE:
       action = new SetVariable();
-    } else if (name.equals("stackswap")) {
+      break;
+    case STACK_SWAP:
       action = new StackSwap();
-    } else if (name.equals("startdrag")) {
+      break;
+    case START_DRAG:
       action = new StartDrag();
-    } else if (name.equals("stop")) {
+      break;
+    case STOP:
       action = new Stop();
-    } else if (name.equals("stopsounds")) {
+      break;
+    case STOP_SOUNDS:
       action = new StopSounds();
-    } else if (name.equals("storeregister")) {
+      break;
+    case STORE_REGISTER:
       action = readStoreRegister(element);
-    } else if (name.equals("strictequals")) {
+      break;
+    case STRICT_EQUALS:
       action = new StrictEquals();
-    } else if (name.equals("stringadd")) {
+      break;
+    case STRING_ADD:
       action = new StringAdd();
-    } else if (name.equals("stringequals")) {
+      break;
+    case STRING_EQUALS:
       action = new StringEquals();
-    } else if (name.equals("stringextract")) {
+      break;
+    case STRING_EXTRACT:
       action = new StringExtract();
-    } else if (name.equals("stringgreater")) {
+      break;
+    case STRING_GREATER:
       action = new StringGreater();
-    } else if (name.equals("stringlength")) {
+      break;
+    case STRING_LENGTH:
       action = new StringLength();
-    } else if (name.equals("stringless")) {
+      break;
+    case STRING_LESS:
       action = new StringLess();
-    } else if (name.equals("subtract")) {
+      break;
+    case SUBTRACT:
       action = new Subtract();
-    } else if (name.equals("targetpath")) {
+      break;
+    case TARGET_PATH:
       action = new TargetPath();
-    } else if (name.equals("throw")) {
+      break;
+    case THROW:
       action = new Throw();
-    } else if (name.equals("tointeger")) {
+      break;
+    case TO_INTEGER:
       action = new ToInteger();
-    } else if (name.equals("tonumber")) {
+      break;
+    case TO_NUMBER:
       action = new ToNumber();
-    } else if (name.equals("tostring")) {
+      break;
+    case TO_STRING:
       action = new ToString();
-    } else if (name.equals("togglequality")) {
+      break;
+    case TOGGLE_QUALITY:
       action = new ToggleQuality();
-    } else if (name.equals("trace")) {
+      break;
+    case TRACE:
       action = new Trace();
-    } else if (name.equals("try")) {
+      break;
+    case TRY:
       action = readTry(element);
-    } else if (name.equals("typeof")) {
+      break;
+    case TYPE_OF:
       action = new TypeOf();
-    } else if (name.equals("waitforframe")) {
+      break;
+    case WAIT_FOR_FRAME:
       action = readWaitForFrame(element);
-    } else if (name.equals("waitforframe2")) {
+      break;
+    case WAIT_FOR_FRAME_2:
       action = readWaitForFrame2(element);
-    } else if (name.equals("with")) {
+      break;
+    case WITH:
       action = readWith(element);
-    } else if (name.equals("unknownaction")) {
+      break;
+    case UNKNOWN_ACTION:
       action = readUnknownAction(element);
-    } else {
-      throw new IllegalArgumentException(
-        "Unexpected action record name: " + name);
+      break;
+    //case END:
+    default:
+      throw new AssertionError("Action type '" + actionType.name() + "' not handled!");
     }
     Attribute label = element.attribute("label");
     if (label != null) {
@@ -264,7 +368,7 @@ class ActionXMLReader {
   }
 
   @SuppressWarnings("unchecked")
-  private static DefineFunction readDefineFunction(Element element) {
+  private static DefineFunction readDefineFunction(Element element) throws InvalidNameException {
     String name            = RecordXMLReader.getStringAttributeWithBase64Check(
         "name", element);
     List parameterElements = RecordXMLReader.getElement("parameters", element)
@@ -282,7 +386,7 @@ class ActionXMLReader {
   }
 
   @SuppressWarnings("unchecked")
-  private static DefineFunction2 readDefineFunction2(Element element) {
+  private static DefineFunction2 readDefineFunction2(Element element) throws InvalidNameException {
     String name                = RecordXMLReader.getStringAttributeWithBase64Check(
         "name", element);
     short registerCount        = RecordXMLReader.getShortAttribute(
@@ -448,7 +552,7 @@ class ActionXMLReader {
       RecordXMLReader.getShortAttribute("number", element));
   }
 
-  private static Try readTry(Element element) {
+  private static Try readTry(Element element) throws InvalidNameException {
     Try tryAction;
     Attribute catchRegister = element.attribute("catchregister");
     if (catchRegister != null) {
@@ -493,7 +597,7 @@ class ActionXMLReader {
       RecordXMLReader.getShortAttribute("skipcount", element));
   }
 
-  private static With readWith(Element element) {
+  private static With readWith(Element element) throws InvalidNameException {
     With with = new With();
     RecordXMLReader.readActionBlock(with.getWithBlock(), element);
     return with;

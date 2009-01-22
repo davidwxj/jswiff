@@ -29,14 +29,15 @@ import java.util.UUID;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.BlendMode;
+import com.jswiff.constants.TagConstants.LangCode;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidNameException;
 import com.jswiff.swfrecords.AlignmentZone;
-import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.CXform;
 import com.jswiff.swfrecords.FrameData;
 import com.jswiff.swfrecords.KerningRecord;
-import com.jswiff.swfrecords.LangCode;
 import com.jswiff.swfrecords.Matrix;
 import com.jswiff.swfrecords.MorphFillStyles;
 import com.jswiff.swfrecords.MorphLineStyles;
@@ -114,202 +115,210 @@ import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
 
-
+@SuppressWarnings("unchecked")
 class TagXMLReader {
-  static Tag readTag(Element tagElement, int tagCode) {
+  
+  static Tag readTag(Element tagElement, TagType tagType) throws InvalidNameException {
     Tag tag;
-    switch (tagCode) {
-      case TagConstants.DEBUG_ID:
+    switch (tagType) {
+      case DEBUG_ID:
         tag = readDebugId(tagElement);
         break;
-      case TagConstants.DEFINE_BINARY_DATA:
+      case DEFINE_BINARY_DATA:
         tag = readDefineBinaryData(tagElement);
         break;
-      case TagConstants.DEFINE_BITS:
+      case DEFINE_BITS:
         tag = readDefineBits(tagElement);
         break;
-      case TagConstants.DEFINE_BITS_JPEG_2:
+      case DEFINE_BITS_JPEG_2:
         tag = readDefineBitsJPEG2(tagElement);
         break;
-      case TagConstants.DEFINE_BITS_JPEG_3:
+      case DEFINE_BITS_JPEG_3:
         tag = readDefineBitsJPEG3(tagElement);
         break;
-      case TagConstants.DEFINE_BITS_LOSSLESS:
+      case DEFINE_BITS_LOSSLESS:
         tag = readDefineBitsLossless(tagElement);
         break;
-      case TagConstants.DEFINE_BITS_LOSSLESS_2:
+      case DEFINE_BITS_LOSSLESS_2:
         tag = readDefineBitsLossless2(tagElement);
         break;
-      case TagConstants.DEFINE_BUTTON:
+      case DEFINE_BUTTON:
         tag = readDefineButton(tagElement);
         break;
-      case TagConstants.DEFINE_BUTTON_2:
+      case DEFINE_BUTTON_2:
         tag = readDefineButton2(tagElement);
         break;
-      case TagConstants.DEFINE_BUTTON_C_XFORM:
+      case DEFINE_BUTTON_C_XFORM:
         tag = readDefineButtonCXform(tagElement);
         break;
-      case TagConstants.DEFINE_BUTTON_SOUND:
+      case DEFINE_BUTTON_SOUND:
         tag = readDefineButtonSound(tagElement);
         break;
-      case TagConstants.DEFINE_EDIT_TEXT:
+      case DEFINE_EDIT_TEXT:
         tag = readDefineEditText(tagElement);
         break;
-      case TagConstants.DEFINE_FONT:
+      case DEFINE_FONT:
         tag = readDefineFont(tagElement);
         break;
-      case TagConstants.DEFINE_FONT_2:
+      case DEFINE_FONT_2:
         tag = readDefineFont2(tagElement);
         break;
-      case TagConstants.DEFINE_FONT_3:
+      case DEFINE_FONT_3:
         tag = readDefineFont3(tagElement);
         break;
-      case TagConstants.DEFINE_FONT_INFO:
+      case DEFINE_FONT_INFO:
         tag = readDefineFontInfo(tagElement);
         break;
-      case TagConstants.DEFINE_FONT_INFO_2:
+      case DEFINE_FONT_INFO_2:
         tag = readDefineFontInfo2(tagElement);
         break;
-      case TagConstants.DEFINE_FONT_ALIGNMENT:
+      case DEFINE_FONT_ALIGNMENT:
         tag = readDefineFontAlignment(tagElement);
         break;
-      case TagConstants.DEFINE_FONT_NAME:
+      case DEFINE_FONT_NAME:
         tag = readDefineFontName(tagElement);
         break;
-      case TagConstants.DEFINE_MORPH_SHAPE:
+      case DEFINE_MORPH_SHAPE:
         tag = readDefineMorphShape(tagElement);
         break;
-      case TagConstants.DEFINE_MORPH_SHAPE_2:
+      case DEFINE_MORPH_SHAPE_2:
         tag = readDefineMorphShape2(tagElement);
         break;
-      case TagConstants.DEFINE_SCENE_FRAME_DATA:
+      case DEFINE_SCENE_FRAME_DATA:
         tag = readDefineSceneFrameData(tagElement);
         break;
-      case TagConstants.DEFINE_SHAPE:
+      case DEFINE_SHAPE:
         tag = readDefineShape(tagElement);
         break;
-      case TagConstants.DEFINE_SHAPE_2:
+      case DEFINE_SHAPE_2:
         tag = readDefineShape2(tagElement);
         break;
-      case TagConstants.DEFINE_SHAPE_3:
+      case DEFINE_SHAPE_3:
         tag = readDefineShape3(tagElement);
         break;
-      case TagConstants.DEFINE_SHAPE_4:
+      case DEFINE_SHAPE_4:
         tag = readDefineShape4(tagElement);
         break;
-      case TagConstants.DEFINE_SOUND:
+      case DEFINE_SOUND:
         tag = readDefineSound(tagElement);
         break;
-      case TagConstants.DEFINE_SPRITE:
+      case DEFINE_SPRITE:
         tag = readDefineSprite(tagElement);
         break;
-      case TagConstants.DEFINE_TEXT:
+      case DEFINE_TEXT:
         tag = readDefineText(tagElement);
         break;
-      case TagConstants.DEFINE_TEXT_2:
+      case DEFINE_TEXT_2:
         tag = readDefineText2(tagElement);
         break;
-      case TagConstants.DEFINE_VIDEO_STREAM:
+      case DEFINE_VIDEO_STREAM:
         tag = readDefineVideoStream(tagElement);
         break;
-      case TagConstants.DO_ABC:
+      case DO_ABC:
         tag = readDoAbc(tagElement);
         break;
-      case TagConstants.DO_ABC_DEFINE:
+      case DO_ABC_DEFINE:
         tag = readDoAbcDefine(tagElement);
         break;
-      case TagConstants.DO_ACTION:
+      case DO_ACTION:
         tag = readDoAction(tagElement);
         break;
-      case TagConstants.DO_INIT_ACTION:
+      case DO_INIT_ACTION:
         tag = readDoInitAction(tagElement);
         break;
-      case TagConstants.ENABLE_DEBUGGER:
+      case ENABLE_DEBUGGER:
         tag = readEnableDebugger(tagElement);
         break;
-      case TagConstants.ENABLE_DEBUGGER_2:
+      case ENABLE_DEBUGGER_2:
         tag = readEnableDebugger2(tagElement);
         break;
-      case TagConstants.EXPORT_ASSETS:
+      case EXPORT_ASSETS:
         tag = readExportAssets(tagElement);
         break;
-      case TagConstants.FLASHTYPE_SETTINGS:
+      case FLASHTYPE_SETTINGS:
         tag = readFlashTypeSettings(tagElement);
         break;
-      case TagConstants.FRAME_LABEL:
+      case FRAME_LABEL:
         tag = readFrameLabel(tagElement);
         break;
-      case TagConstants.FREE_CHARACTER:
+      case FREE_CHARACTER:
         tag = readFreeCharacter(tagElement);
         break;
-      case TagConstants.IMPORT_ASSETS:
+      case IMPORT_ASSETS:
         tag = readImportAssets(tagElement);
         break;
-      case TagConstants.IMPORT_ASSETS_2:
+      case IMPORT_ASSETS_2:
         tag = readImportAssets2(tagElement);
         break;
-      case TagConstants.JPEG_TABLES:
+      case JPEG_TABLES:
         tag = readJPEGTables(tagElement);
         break;
-      case TagConstants.MALFORMED:
+      case MALFORMED:
         tag = readMalformedTag(tagElement);
         break;
-      case TagConstants.METADATA:
+      case METADATA:
         tag = readMetadata(tagElement);
         break;
-      case TagConstants.PLACE_OBJECT:
+      case PLACE_OBJECT:
         tag = readPlaceObject(tagElement);
         break;
-      case TagConstants.PLACE_OBJECT_2:
+      case PLACE_OBJECT_2:
         tag = readPlaceObject2(tagElement);
         break;
-      case TagConstants.PLACE_OBJECT_3:
+      case PLACE_OBJECT_3:
         tag = readPlaceObject3(tagElement);
         break;
-      case TagConstants.PRODUCT_INFO:
+      case PRODUCT_INFO:
         tag = readProductInfo(tagElement);
         break;
-      case TagConstants.PROTECT:
+      case PROTECT:
         tag = readProtect(tagElement);
         break;
-      case TagConstants.REMOVE_OBJECT:
+      case REMOVE_OBJECT:
         tag = readRemoveObject(tagElement);
         break;
-      case TagConstants.REMOVE_OBJECT_2:
+      case REMOVE_OBJECT_2:
         tag = readRemoveObject2(tagElement);
         break;
-      case TagConstants.SCRIPT_LIMITS:
+      case SCRIPT_LIMITS:
         tag = readScriptLimits(tagElement);
         break;
-      case TagConstants.SCALE_9_GRID:
+      case SCALE_9_GRID:
         tag = readScale9Grid(tagElement);
         break;
-      case TagConstants.SET_TAB_INDEX:
+      case SET_TAB_INDEX:
         tag = readSetTabIndex(tagElement);
         break;
-      case TagConstants.SHOW_FRAME:
+      case SHOW_FRAME:
         tag = readShowFrame(tagElement);
         break;
-      case TagConstants.SOUND_STREAM_BLOCK:
+      case SOUND_STREAM_BLOCK:
         tag = readSoundStreamBlock(tagElement);
         break;
-      case TagConstants.SOUND_STREAM_HEAD:
+      case SOUND_STREAM_HEAD:
         tag = readSoundStreamHead(tagElement);
         break;
-      case TagConstants.SOUND_STREAM_HEAD_2:
+      case SOUND_STREAM_HEAD_2:
         tag = readSoundStreamHead2(tagElement);
         break;
-      case TagConstants.START_SOUND:
+      case START_SOUND:
         tag = readStartSound(tagElement);
         break;
-      case TagConstants.SYMBOL_CLASS:
+      case SYMBOL_CLASS:
         tag = readSymbolClass(tagElement);
         break;
-      case TagConstants.VIDEO_FRAME:
+      case VIDEO_FRAME:
         tag = readVideoFrame(tagElement);
         break;
-      default:
+      case UNKNOWN_TAG:
         tag = readUnknownTag(tagElement);
+        break;
+      // Never passed:
+      //case END:
+      //case FILE_ATTRIBUTES:
+      //case SET_BACKGROUND_COLOR:
+      default:
+        throw new AssertionError("Unhandled tag type '" + tagType.name() + "'");
     }
     return tag;
   }
@@ -446,7 +455,7 @@ class TagXMLReader {
     return new DefineBitsLossless2(characterId, format, width, height, data);
   }
 
-  private static Tag readDefineButton(Element tagElement) {
+  private static Tag readDefineButton(Element tagElement) throws InvalidNameException {
     int characterId           = RecordXMLReader.getCharacterId(tagElement);
     ButtonRecord[] characters = RecordXMLReader.readButtonRecords(tagElement);
     DefineButton defineButton = new DefineButton(characterId, characters);
@@ -454,7 +463,7 @@ class TagXMLReader {
     return defineButton;
   }
 
-  private static Tag readDefineButton2(Element tagElement) {
+  private static Tag readDefineButton2(Element tagElement) throws InvalidNameException {
     int characterId             = RecordXMLReader.getCharacterId(tagElement);
     boolean trackAsMenu         = RecordXMLReader.getBooleanAttribute(
         "trackasmenu", tagElement);
@@ -586,7 +595,7 @@ class TagXMLReader {
     return defineEditText;
   }
 
-  private static Tag readDefineFont(Element tagElement) {
+  private static Tag readDefineFont(Element tagElement) throws InvalidNameException {
     int characterId         = RecordXMLReader.getCharacterId(tagElement);
     Element glyphShapeTable = RecordXMLReader.getElement(
         "glyphshapetable", tagElement);
@@ -601,7 +610,7 @@ class TagXMLReader {
     return defineFont;
   }
 
-  private static Tag readDefineFont2(Element tagElement) {
+  private static Tag readDefineFont2(Element tagElement) throws InvalidNameException {
     int characterId                = RecordXMLReader.getCharacterId(tagElement);
     String fontName                = RecordXMLReader.getStringAttributeWithBase64Check("fontname", tagElement);
     Shape[] glyphShapes            = null;
@@ -679,7 +688,7 @@ class TagXMLReader {
     return defineFont2;
   }
 
-  private static Tag readDefineFont3(Element tagElement) {
+  private static Tag readDefineFont3(Element tagElement) throws InvalidNameException {
     int characterId                = RecordXMLReader.getCharacterId(tagElement);
     String fontName                = RecordXMLReader.getStringAttribute("fontname", tagElement);
     Shape[] glyphShapes            = null;
@@ -781,7 +790,7 @@ class TagXMLReader {
     return defineFontInfo;
   }
 
-  private static Tag readDefineFontInfo2(Element tagElement) {
+  private static Tag readDefineFontInfo2(Element tagElement) throws InvalidNameException {
     int fontId        = RecordXMLReader.getIntAttribute("fontid", tagElement);
     String fontName   = RecordXMLReader.getStringAttributeWithBase64Check("fontname", tagElement);
     List charElements = tagElement.elements("char");
@@ -829,7 +838,7 @@ class TagXMLReader {
     return defineFontName;
   }
   
-  private static Tag readDefineMorphShape(Element tagElement) {
+  private static Tag readDefineMorphShape(Element tagElement) throws InvalidNameException {
     int characterId                 = RecordXMLReader.getCharacterId(
         tagElement);
     Element startElement            = RecordXMLReader.getElement(
@@ -858,7 +867,7 @@ class TagXMLReader {
       startShape, endShape);
   }
   
-  private static Tag readDefineMorphShape2(Element tagElement) {
+  private static Tag readDefineMorphShape2(Element tagElement) throws InvalidNameException {
     int characterId                 = RecordXMLReader.getCharacterId(
         tagElement);
     Element startElement            = RecordXMLReader.getElement(
@@ -914,7 +923,7 @@ class TagXMLReader {
     return tag;
   }
   
-  private static Tag readDefineShape(Element tagElement) {
+  private static Tag readDefineShape(Element tagElement) throws InvalidNameException {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("bounds", tagElement));
@@ -922,7 +931,7 @@ class TagXMLReader {
     return new DefineShape(characterId, shapeBounds, shapes);
   }
 
-  private static Tag readDefineShape2(Element tagElement) {
+  private static Tag readDefineShape2(Element tagElement) throws InvalidNameException {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("bounds", tagElement));
@@ -930,7 +939,7 @@ class TagXMLReader {
     return new DefineShape2(characterId, shapeBounds, shapes);
   }
 
-  private static Tag readDefineShape3(Element tagElement) {
+  private static Tag readDefineShape3(Element tagElement) throws InvalidNameException {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("bounds", tagElement));
@@ -938,7 +947,7 @@ class TagXMLReader {
     return new DefineShape3(characterId, shapeBounds, shapes);
   }
 
-  private static Tag readDefineShape4(Element tagElement) {
+  private static Tag readDefineShape4(Element tagElement) throws InvalidNameException {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("shapebounds", tagElement));
@@ -965,54 +974,72 @@ class TagXMLReader {
       characterId, format, rate, is16BitSample, isStereo, sampleCount, soundData);
   }
 
-  private static Tag readDefineSprite(Element tagElement) {
+  private static Tag readDefineSprite(Element tagElement) throws InvalidNameException {
     int characterId           = RecordXMLReader.getCharacterId(tagElement);
     List controlTagElements   = tagElement.elements();
     DefineSprite defineSprite = new DefineSprite(characterId);
     for (Iterator it = controlTagElements.iterator(); it.hasNext();) {
       Element controlTagElement = (Element) it.next();
       Tag tag;
-      String tagName            = controlTagElement.getName();
-      if (tagName.equals("showframe")) {
+      TagType tagType = TagType.lookup(controlTagElement.getName());
+      switch (tagType) {
+      case SHOW_FRAME:
         tag = readShowFrame(controlTagElement);
-      } else if (tagName.equals("placeobject")) {
+        break;
+      case PLACE_OBJECT:
         tag = readPlaceObject(controlTagElement);
-      } else if (tagName.equals("placeobject2")) {
+        break;
+      case PLACE_OBJECT_2:
         tag = readPlaceObject2(controlTagElement);
-      } else if (tagName.equals("placeobject3")) {
+        break;
+      case PLACE_OBJECT_3:
         tag = readPlaceObject3(controlTagElement);
-      } else if (tagName.equals("removeobject")) {
+        break;
+      case REMOVE_OBJECT:
         tag = readRemoveObject(controlTagElement);
-      } else if (tagName.equals("removeobject2")) {
+        break;
+      case REMOVE_OBJECT_2:
         tag = readRemoveObject2(controlTagElement);
-      } else if (tagName.equals("startsound")) {
+        break;
+      case START_SOUND:
         tag = readStartSound(controlTagElement);
-      } else if (tagName.equals("framelabel")) {
+        break;
+      case FRAME_LABEL:
         tag = readFrameLabel(controlTagElement);
-      } else if (tagName.equals("soundstreamhead")) {
+        break;
+      case SOUND_STREAM_HEAD:
         tag = readSoundStreamHead(controlTagElement);
-      } else if (tagName.equals("soundstreamhead2")) {
+        break;
+      case SOUND_STREAM_HEAD_2:
         tag = readSoundStreamHead2(controlTagElement);
-      } else if (tagName.equals("soundstreamblock")) {
+        break;
+      case SOUND_STREAM_BLOCK:
         tag = readSoundStreamBlock(controlTagElement);
-      } else if (tagName.equals("doaction")) {
+        break;
+      case DO_ACTION:
         tag = readDoAction(controlTagElement);
-      } else if (tagName.equals("doinitaction")) {
+        break;
+      case DO_INIT_ACTION:
         tag = readDoInitAction(controlTagElement);
-      } else if (tagName.equals("settabindex")) {
+        break;
+      case SET_TAB_INDEX:
         tag = readSetTabIndex(controlTagElement);
-      } else if (tagName.equals("videoframe")) {
+        break;
+      case VIDEO_FRAME:
         tag = readVideoFrame(controlTagElement);
-      } else if (tagName.equals("unknowntag")) {
-        tag = readUnknownTag(controlTagElement);
-      } else if (tagName.equals("definevideostream")) {
+        break;
+      case DEFINE_VIDEO_STREAM:
         // seems to be an exception to the rule "no define* tags"
-        tag = readDefineVideoStream(controlTagElement);  
-      } else if (tagName.equals("malformedtag")) {
+        tag = readDefineVideoStream(controlTagElement);
+        break;
+      case UNKNOWN_TAG:
+        tag = readUnknownTag(controlTagElement);
+        break;
+      case MALFORMED:
         tag = readMalformedTag(controlTagElement);
-      } else {
-        throw new IllegalArgumentException(
-          tagName + " tag not expected within definesprite!");
+        break;
+      default:
+        throw new IllegalArgumentException(tagType.name() + " tag not expected within definesprite!");
       }
       defineSprite.addControlTag(tag);
     }
@@ -1065,13 +1092,13 @@ class TagXMLReader {
     return doAbcDefine;
   }
   
-  private static Tag readDoAction(Element tagElement) {
+  private static Tag readDoAction(Element tagElement) throws InvalidNameException {
     DoAction doAction = new DoAction();
     RecordXMLReader.readActionBlock(doAction.getActions(), tagElement);
     return doAction;
   }
 
-  private static Tag readDoInitAction(Element tagElement) {
+  private static Tag readDoInitAction(Element tagElement) throws InvalidNameException {
     int spriteId              = RecordXMLReader.getIntAttribute(
         "spriteid", tagElement);
     DoInitAction doInitAction = new DoInitAction(spriteId);
@@ -1167,25 +1194,9 @@ class TagXMLReader {
     return new JPEGTables(jpegData);
   }
 
-  private static LangCode readLangCode(Element parentElement) {
-    String language   = RecordXMLReader.getStringAttribute("language", parentElement);
-    LangCode langCode;
-    if (language.equals("latin")) {
-      langCode = new LangCode(LangCode.LATIN);
-    } else if (language.equals("undefined")) {
-      langCode = new LangCode(LangCode.UNDEFINED);
-    } else if (language.equals("japanese")) {
-      langCode = new LangCode(LangCode.JAPANESE);
-    } else if (language.equals("korean")) {
-      langCode = new LangCode(LangCode.KOREAN);
-    } else if (language.equals("simpchinese")) {
-      langCode = new LangCode(LangCode.SIMPLIFIED_CHINESE);
-    } else if (language.equals("tradchinese")) {
-      langCode = new LangCode(LangCode.TRADITIONAL_CHINESE);
-    } else {
-      throw new IllegalArgumentException("Illegal language: " + language);
-    }
-    return langCode;
+  private static LangCode readLangCode(Element parentElement) throws InvalidNameException {
+    String language = RecordXMLReader.getStringAttribute("language", parentElement);
+    return LangCode.lookup(language);
   }
 
   private static Tag readMalformedTag(Element tagElement) {
@@ -1211,7 +1222,7 @@ class TagXMLReader {
     return new PlaceObject(characterId, depth, matrix, colorTransform);
   }
 
-  private static Tag readPlaceObject2(Element tagElement) {
+  private static Tag readPlaceObject2(Element tagElement) throws InvalidNameException {
     int depth                 = RecordXMLReader.getIntAttribute(
         "depth", tagElement);
     PlaceObject2 placeObject2 = new PlaceObject2(depth);
@@ -1247,7 +1258,7 @@ class TagXMLReader {
     return placeObject2;
   }
 
-  private static Tag readPlaceObject3(Element tagElement) {
+  private static Tag readPlaceObject3(Element tagElement) throws InvalidNameException {
     int depth                 = RecordXMLReader.getIntAttribute(
         "depth", tagElement);
     PlaceObject3 placeObject3 = new PlaceObject3(depth);
@@ -1285,8 +1296,7 @@ class TagXMLReader {
     }
     Attribute blendMode = tagElement.attribute("blendmode");
     if (blendMode != null) {
-      placeObject3.setBlendMode(
-        BlendMode.getFromDescription(blendMode.getValue()));
+      placeObject3.setBlendMode(BlendMode.lookup(blendMode.getValue()));
     }
     placeObject3.setCacheAsBitmap(
       RecordXMLReader.getBooleanAttribute("cacheasbitmap", tagElement));

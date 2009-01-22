@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -46,9 +47,9 @@ import com.jswiff.io.OutputBitStream;
  */
 public final class MorphLineStyles implements Serializable {
   
-  //FIXME: Give MorphLineStyle and MorphLineStyle2 a common lineage
-  //and tighten generic type for styles array, etc.
-  private List<Object> styles = new ArrayList<Object>();
+  private static final long serialVersionUID = 1L;
+  
+  private List<MorphLineStyleTag> styles = new ArrayList<MorphLineStyleTag>();
 
   /**
    * Creates a new MorphLineStyles instance.
@@ -64,9 +65,11 @@ public final class MorphLineStyles implements Serializable {
    * @param useNewMorphLineStyle TODO: Comments
    *
    * @throws IOException if an I/O error occured
+   * @throws InvalidCodeException if the tag header contains an invalid code.
+   * This normally means invalid or corrupted data.
    */
   public MorphLineStyles(InputBitStream stream, boolean useNewMorphLineStyle)
-    throws IOException {
+    throws IOException, InvalidCodeException {
     int styleCount = stream.readUI8();
     if (styleCount == 0xFF) {
       styleCount = stream.readUI16();
@@ -104,7 +107,7 @@ public final class MorphLineStyles implements Serializable {
    *
    * @return morph line style located at the specified position
    */
-  public Object getStyle(int index) {
+  public MorphLineStyleTag getStyle(int index) {
     return styles.get(index - 1);
   }
 
@@ -113,7 +116,7 @@ public final class MorphLineStyles implements Serializable {
    *
    * @return all morph line styles
    */
-  public List<Object> getStyles() {
+  public List<MorphLineStyleTag> getStyles() {
     return styles;
   }
 
@@ -123,13 +126,7 @@ public final class MorphLineStyles implements Serializable {
    *
    * @param lineStyle a morph line style
    */
-  public void addStyle(Object lineStyle) {
-    if ( !(lineStyle instanceof MorphLineStyle) 
-      && !(lineStyle instanceof MorphLineStyle2) ) {
-        throw new IllegalArgumentException(
-            "Parameter has type '" + lineStyle.getClass().getName()
-            + "', must be of type MorphLineStyle or MorphLineStyle2");
-      }
+  public void addStyle(MorphLineStyleTag lineStyle) {
     styles.add(lineStyle);
   }
 
@@ -148,13 +145,9 @@ public final class MorphLineStyles implements Serializable {
     } else {
       stream.writeUI8((short) styleCount);
     }
-    for (int i = 0; i < styles.size(); i++) {
-      Object lineStyle = styles.get(i);
-      if (lineStyle instanceof MorphLineStyle) {
-        ((MorphLineStyle) lineStyle).write(stream);
-      } else {
-        ((MorphLineStyle2) lineStyle).write(stream);
-      }
+    for (MorphLineStyleTag mls : this.styles) {
+      mls.write(stream);
     }
   }
+  
 }

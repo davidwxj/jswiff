@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class MBCharToAscii extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new MBCharToAscii action.
    */
   public MBCharToAscii() {
-    code = ActionConstants.M_B_CHAR_TO_ASCII;
+    super(ActionType.M_B_CHAR_TO_ASCII);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"MBCharToAscii"</code>
-   */
-  public String toString() {
-    return "MBCharToAscii";
-  }
 }

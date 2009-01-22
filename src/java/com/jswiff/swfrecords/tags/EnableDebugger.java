@@ -22,9 +22,8 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * <p>
@@ -34,59 +33,62 @@ import com.jswiff.io.OutputBitStream;
  * 
  * <p>
  * Note: Flash Player 6 or later will ignore this tag, since the format of the
- * debugging information required in the ActionScript debugger has changed
- * with version 6. In SWF 6 or later, <code>EnableDebugger2</code> is used
- * instead.
+ * debugging information required in the ActionScript debugger has changed with
+ * version 6. In SWF 6 or later, <code>EnableDebugger2</code> is used instead.
  * </p>
- *
+ * 
  * @since SWF 5 (used only in SWF 5)
  */
 public final class EnableDebugger extends Tag {
-	private String password;
 
-	/**
-	 * Creates a new EnableDebugger instance. Supply a password encrypted with
-	 * the MD5 algorithm.
-	 *
-	 * @param password MD5 encrypted password
-	 */
-	public EnableDebugger(String password) {
-		code			  = TagConstants.ENABLE_DEBUGGER;
-		this.password     = password;
-	}
+  private static final long serialVersionUID = 1L;
 
-	EnableDebugger() {
-		// empty
-	}
+  private String password;
 
-	/**
-	 * Sets the (MD5-encrypted) password.
-	 *
-	 * @param password encrypted password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  /**
+   * Creates a new EnableDebugger instance. Supply a password encrypted with the
+   * MD5 algorithm.
+   * 
+   * @param password
+   *          MD5 encrypted password
+   */
+  public EnableDebugger(String password) {
+    super(TagType.ENABLE_DEBUGGER);
+    this.password = password;
+  }
 
-	/**
-	 * Returns the MD5-encrypted password.
-	 *
-	 * @return encrypted password
-	 */
-	public String getPassword() {
-		return password;
-	}
+  EnableDebugger() {
+    super(TagType.ENABLE_DEBUGGER);
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		if (password != null) {
-			outStream.writeString(password);
-		}
-	}
+  /**
+   * Sets the (MD5-encrypted) password.
+   * 
+   * @param password
+   *          encrypted password
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-	void setData(byte[] data) throws IOException {
-		if ((data.length > 0)) {
-			password = new String(data, 0, data.length - 1, "UTF-8");
-		}
-	}
+  /**
+   * Returns the MD5-encrypted password.
+   * 
+   * @return encrypted password
+   */
+  public String getPassword() {
+    return password;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    if (password != null) {
+      outStream.writeString(password);
+    }
+  }
+
+  void setData(byte[] data) throws IOException {
+    if ((data.length > 0)) {
+      password = new String(data, 0, data.length - 1, "UTF-8");
+    }
+  }
 }

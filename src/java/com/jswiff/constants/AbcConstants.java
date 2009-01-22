@@ -20,12 +20,15 @@
 
 package com.jswiff.constants;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.jswiff.exception.InvalidCodeException;
+import com.jswiff.exception.InvalidNameException;
 
 public class AbcConstants {
   
-  public enum ValueTypeKind {
+  /**
+   * Represents AS3 value types.
+   */
+  public static enum ValueTypeKind implements ByteCodeConstant {
     
     UNDEFINED ((short)0x00, "undefined"),
     STRING    ((short)0x01, "string"),
@@ -36,11 +39,30 @@ public class AbcConstants {
     TRUE      ((short)0x0B, "true"),
     NULL      ((short)0x0C, "null");
     
-    public static ValueTypeKind getKind(short code) {
-      for (ValueTypeKind bk : ValueTypeKind.values()) {
-        if (bk.code == code) return bk;
-      }
-      return null;
+    private static ByteCodeConstantHelper<ValueTypeKind> helper;
+    
+    static {
+      helper = new ByteCodeConstantHelper<ValueTypeKind>(ValueTypeKind.values(), "Value Type Kind");
+    }
+    
+    /**
+     * Lookup a value corresponding to the given code
+     * @param code the bytecode id
+     * @return the enum mapped to the given code
+     * @throws InvalidCodeException if no value exists for the given code.
+     */
+    public static ValueTypeKind lookup(short code) throws InvalidCodeException {
+      return helper.codeLookup(code);
+    }
+    
+    /**
+     * Lookup a value based corresponding to the given string
+     * @param name the string id
+     * @return the enum mapped to the given name
+     * @throws InvalidNameException if no value exists for the given name
+     */
+    public static ValueTypeKind lookup(String name) throws InvalidNameException {
+      return helper.nameLookup(name);
     }
     
     private final short code;
@@ -61,7 +83,12 @@ public class AbcConstants {
     }
   }
   
-  public enum OpCodeType {
+  /**
+   * Represents possible categories of ABC OpCodes.
+   * @author bstock
+   *
+   */
+  public static enum OpCodeType {
     ARGS,
     BRANCH, 
     DEBUG, 
@@ -75,207 +102,218 @@ public class AbcConstants {
     PROFILING;
   }
 
-  public enum OpCode {
+  /**
+   * Represents ABC OpCodes.
+   */
+  public static enum OpCode implements ByteCodeConstant {
     
-    DEBUG              (OpCodeType.DEBUG, (short)0xEF, "debug"),
+    DEBUG                 (OpCodeType.DEBUG, (short)0xEF, "debug"),
     
-    HASNEXT2           (OpCodeType.HAS_NEXT2, (short)0x32, "hasnext2"),
-    
-    LOOKUPSWITCH       (OpCodeType.LOOKUP_SWITCH, (short)0x1B, "lookupswitch"),
-    
-    GETSCOPEOBJECT     (OpCodeType.VALUE_BYTE, (short)0x65, "getscopeobject"),
-    PUSHBYTE           (OpCodeType.VALUE_BYTE, (short)0x24, "pushbyte"),
-    
-    DEBUGLINE          (OpCodeType.VALUE_INT, (short)0xF0, "debugline"),
-    PUSHSHORT          (OpCodeType.VALUE_INT, (short)0x25, "pushshort"),
-    
-    CALLSTATIC         (OpCodeType.INDEX_ARGS, (short)0x44, "callstatic"),
-    CALLSUPER          (OpCodeType.INDEX_ARGS, (short)0x45, "callsuper"),
-    CALLPROPERTY       (OpCodeType.INDEX_ARGS, (short)0x46, "callproperty"),
-    CONSTRUCTPROP      (OpCodeType.INDEX_ARGS, (short)0x4A, "constructprop"),
-    CALLPROPLEX        (OpCodeType.INDEX_ARGS, (short)0x4C, "callproplex"),
-    CALLSUPERVOID      (OpCodeType.INDEX_ARGS, (short)0x4E, "callsupervoid"),
-    CALLPROPVOID       (OpCodeType.INDEX_ARGS, (short)0x4F, "callpropvoid"),
+    HAS_NEXT_2            (OpCodeType.HAS_NEXT2, (short)0x32, "hasnext2"),
 
-    CALL               (OpCodeType.ARGS, (short)0x41, "call"),
-    CONSTRUCT          (OpCodeType.ARGS, (short)0x42, "construct"),
-    CONSTRUCTSUPER     (OpCodeType.ARGS, (short)0x49, "constructsuper"),
-    NEWOBJECT          (OpCodeType.ARGS, (short)0x55, "newobject"),
-    NEWARRAY           (OpCodeType.ARGS, (short)0x56, "newarray"),
+    LOOK_UP_SWITCH        (OpCodeType.LOOKUP_SWITCH, (short)0x1B, "lookupswitch"),
 
-    ASTYPE             (OpCodeType.INDEX, (short)0x86, "astype"),
-    COERCE             (OpCodeType.INDEX, (short)0x80, "coerce"),
-    DEBUGFILE          (OpCodeType.INDEX, (short)0xF1, "debugfile"),
-    DECLOCAL           (OpCodeType.INDEX, (short)0x94, "declocal"),
-    DECLOCAL_I         (OpCodeType.INDEX, (short)0xC3, "declocal_i"),
-    DELETEPROPERTY     (OpCodeType.INDEX, (short)0x6A, "deleteproperty"),
-    FINDDEF            (OpCodeType.INDEX, (short)0x5F, "finddef"),
-    FINDPROPERTY       (OpCodeType.INDEX, (short)0x5E, "findproperty"),
-    FINDPROPSTRICT     (OpCodeType.INDEX, (short)0x5D, "findpropstrict"),
-    GETDESCENDANTS     (OpCodeType.INDEX, (short)0x59, "getdescendants"),
-    GETGLOBALSLOT      (OpCodeType.INDEX, (short)0x6E, "getglobalslot"),
-    GETLEX             (OpCodeType.INDEX, (short)0x60, "getlex"),
-    GETLOCAL           (OpCodeType.INDEX, (short)0x62, "getlocal"),
-    GETPROPERTY        (OpCodeType.INDEX, (short)0x66, "getproperty"),
-    GETSLOT            (OpCodeType.INDEX, (short)0x6C, "getslot"),
-    GETSUPER           (OpCodeType.INDEX, (short)0x04, "getsuper"),
-    INCLOCAL           (OpCodeType.INDEX, (short)0x92, "inclocal"),
-    INCLOCAL_I         (OpCodeType.INDEX, (short)0xC2, "inclocal_i"),
-    INITPROPERTY       (OpCodeType.INDEX, (short)0x68, "initproperty"),
-    ISTYPE             (OpCodeType.INDEX, (short)0xB2, "istype"),
-    KILL               (OpCodeType.INDEX, (short)0x08, "kill"),
-    NEWCATCH           (OpCodeType.INDEX, (short)0x5A, "newcatch"),
-    NEWCLASS           (OpCodeType.INDEX, (short)0x58, "newclass"),
-    NEWFUNCTION        (OpCodeType.INDEX, (short)0x40, "newfunction"),
-    PUSHDOUBLE         (OpCodeType.INDEX, (short)0x2F, "pushdouble"),
-    PUSHINT            (OpCodeType.INDEX, (short)0x2D, "pushint"),
-    PUSHNAMESPACE      (OpCodeType.INDEX, (short)0x31, "pushnamespace"),
-    PUSHSTRING         (OpCodeType.INDEX, (short)0x2C, "pushstring"),
-    PUSHUINT           (OpCodeType.INDEX, (short)0x2E, "pushuint"),
-    SETGLOBALSLOT      (OpCodeType.INDEX, (short)0x6F, "setglobalslot"),
-    SETLOCAL           (OpCodeType.INDEX, (short)0x63, "setlocal"),
-    SETPROPERTY        (OpCodeType.INDEX, (short)0x61, "setproperty"),
-    SETSLOT            (OpCodeType.INDEX, (short)0x6D, "setslot"),
-    SETSUPER           (OpCodeType.INDEX, (short)0x05, "setsuper"),
+    GET_SCOPE_OBJECT      (OpCodeType.VALUE_BYTE, (short)0x65, "getscopeobject"),
+    PUSH_BYTE             (OpCodeType.VALUE_BYTE, (short)0x24, "pushbyte"),
+
+    DEBUG_LINE            (OpCodeType.VALUE_INT, (short)0xF0, "debugline"),
+    PUSH_SHORT            (OpCodeType.VALUE_INT, (short)0x25, "pushshort"),
+
+    CALL_STATIC           (OpCodeType.INDEX_ARGS, (short)0x44, "callstatic"),
+    CALL_SUPER            (OpCodeType.INDEX_ARGS, (short)0x45, "callsuper"),
+    CALL_PROPERTY         (OpCodeType.INDEX_ARGS, (short)0x46, "callproperty"),
+    CONSTRUCT_PROP        (OpCodeType.INDEX_ARGS, (short)0x4A, "constructprop"),
+    CALL_PROP_LEX         (OpCodeType.INDEX_ARGS, (short)0x4C, "callproplex"),
+    CALL_SUPER_VOID       (OpCodeType.INDEX_ARGS, (short)0x4E, "callsupervoid"),
+    CALL_PROP_VOID        (OpCodeType.INDEX_ARGS, (short)0x4F, "callpropvoid"),
+
+    CALL                  (OpCodeType.ARGS, (short)0x41, "call"),
+    CONSTRUCT             (OpCodeType.ARGS, (short)0x42, "construct"),
+    CONSTRUCT_SUPER       (OpCodeType.ARGS, (short)0x49, "constructsuper"),
+    NEW_OBJECT            (OpCodeType.ARGS, (short)0x55, "newobject"),
+    NEW_ARRAY             (OpCodeType.ARGS, (short)0x56, "newarray"),
+
+    AS_TYPE               (OpCodeType.INDEX, (short)0x86, "astype"),
+    COERCE                (OpCodeType.INDEX, (short)0x80, "coerce"),
+    DEBUG_FILE            (OpCodeType.INDEX, (short)0xF1, "debugfile"),
+    DEC_LOCAL             (OpCodeType.INDEX, (short)0x94, "declocal"),
+    DEC_LOCAL_I           (OpCodeType.INDEX, (short)0xC3, "declocal_i"),
+    DELETE_PROPERTY       (OpCodeType.INDEX, (short)0x6A, "deleteproperty"),
+    FIND_DEF              (OpCodeType.INDEX, (short)0x5F, "finddef"),
+    FIND_PROPERTY         (OpCodeType.INDEX, (short)0x5E, "findproperty"),
+    FIND_PROP_STRICT      (OpCodeType.INDEX, (short)0x5D, "findpropstrict"),
+    GET_DESCENDANTS       (OpCodeType.INDEX, (short)0x59, "getdescendants"),
+    GET_GLOBAL_SLOT       (OpCodeType.INDEX, (short)0x6E, "getglobalslot"),
+    GET_LEX               (OpCodeType.INDEX, (short)0x60, "getlex"),
+    GET_LOCAL             (OpCodeType.INDEX, (short)0x62, "getlocal"),
+    GET_PROPERTY          (OpCodeType.INDEX, (short)0x66, "getproperty"),
+    GET_SLOT              (OpCodeType.INDEX, (short)0x6C, "getslot"),
+    GET_SUPER             (OpCodeType.INDEX, (short)0x04, "getsuper"),
+    INC_LOCAL             (OpCodeType.INDEX, (short)0x92, "inclocal"),
+    INC_LOCAL_I           (OpCodeType.INDEX, (short)0xC2, "inclocal_i"),
+    INIT_PROPERTY         (OpCodeType.INDEX, (short)0x68, "initproperty"),
+    IS_TYPE               (OpCodeType.INDEX, (short)0xB2, "istype"),
+    KILL                  (OpCodeType.INDEX, (short)0x08, "kill"),
+    NEW_CATCH             (OpCodeType.INDEX, (short)0x5A, "newcatch"),
+    NEW_CLASS             (OpCodeType.INDEX, (short)0x58, "newclass"),
+    NEW_FUNCTION          (OpCodeType.INDEX, (short)0x40, "newfunction"),
+    PUSH_DOUBLE           (OpCodeType.INDEX, (short)0x2F, "pushdouble"),
+    PUSH_INT              (OpCodeType.INDEX, (short)0x2D, "pushint"),
+    PUSH_NAMESPACE        (OpCodeType.INDEX, (short)0x31, "pushnamespace"),
+    PUSH_STRING           (OpCodeType.INDEX, (short)0x2C, "pushstring"),
+    PUSH_UINT             (OpCodeType.INDEX, (short)0x2E, "pushuint"),
+    SET_GLOBAL_SLOT       (OpCodeType.INDEX, (short)0x6F, "setglobalslot"),
+    SET_LOCAL             (OpCodeType.INDEX, (short)0x63, "setlocal"),
+    SET_PROPERTY          (OpCodeType.INDEX, (short)0x61, "setproperty"),
+    SET_SLOT              (OpCodeType.INDEX, (short)0x6D, "setslot"),
+    SET_SUPER             (OpCodeType.INDEX, (short)0x05, "setsuper"),
     
-    IFEQ               (OpCodeType.BRANCH, (short)0x13, "ifeq"),
-    IFFALSE            (OpCodeType.BRANCH, (short)0x12, "iffalse"),
-    IFGE               (OpCodeType.BRANCH, (short)0x18, "ifge"),
-    IFGT               (OpCodeType.BRANCH, (short)0x17, "ifgt"),
-    IFLE               (OpCodeType.BRANCH, (short)0x16, "ifle"),
-    IFLT               (OpCodeType.BRANCH, (short)0x15, "iflt"),
-    IFNE               (OpCodeType.BRANCH, (short)0x14, "ifne"),
-    IFNGE              (OpCodeType.BRANCH, (short)0x0F, "ifnge"),
-    IFNGT              (OpCodeType.BRANCH, (short)0x0E, "ifngt"),
-    IFNLE              (OpCodeType.BRANCH, (short)0x0D, "ifnle"),
-    IFNLT              (OpCodeType.BRANCH, (short)0x0C, "ifnlt"),
-    IFSTRICTEQ         (OpCodeType.BRANCH, (short)0x19, "ifstricteq"),
-    IFSTRICTNE         (OpCodeType.BRANCH, (short)0x1A, "ifstrictne"),
-    IFTRUE             (OpCodeType.BRANCH, (short)0x11, "iftrue"),
-    JUMP               (OpCodeType.BRANCH, (short)0x10, "jump"),
+    IF_EQ                 (OpCodeType.BRANCH, (short)0x13, "ifeq"),
+    IF_FALSE              (OpCodeType.BRANCH, (short)0x12, "iffalse"),
+    IF_GE                 (OpCodeType.BRANCH, (short)0x18, "ifge"),
+    IF_GT                 (OpCodeType.BRANCH, (short)0x17, "ifgt"),
+    IF_LE                 (OpCodeType.BRANCH, (short)0x16, "ifle"),
+    IF_LT                 (OpCodeType.BRANCH, (short)0x15, "iflt"),
+    IF_NE                 (OpCodeType.BRANCH, (short)0x14, "ifne"),
+    IF_NGE                (OpCodeType.BRANCH, (short)0x0F, "ifnge"),
+    IF_NGT                (OpCodeType.BRANCH, (short)0x0E, "ifngt"),
+    IF_NLE                (OpCodeType.BRANCH, (short)0x0D, "ifnle"),
+    IF_NLT                (OpCodeType.BRANCH, (short)0x0C, "ifnlt"),
+    IF_STRICT_EQ          (OpCodeType.BRANCH, (short)0x19, "ifstricteq"),
+    IF_STRICT_NE          (OpCodeType.BRANCH, (short)0x1A, "ifstrictne"),
+    IF_TRUE               (OpCodeType.BRANCH, (short)0x11, "iftrue"),
+    JUMP                  (OpCodeType.BRANCH, (short)0x10, "jump"),
     
-    ADD                (OpCodeType.SIMPLE, (short)0xA0, "add"),
-    ADD_D              (OpCodeType.SIMPLE, (short)0x9B, "add_d"),
-    ADD_I              (OpCodeType.SIMPLE, (short)0xC5, "add_i"),
-    ASTYPELATE         (OpCodeType.SIMPLE, (short)0x87, "astypelate"),
-    BITAND             (OpCodeType.SIMPLE, (short)0xA8, "bitand"),
-    BITNOT             (OpCodeType.SIMPLE, (short)0x97, "bitnot"),
-    BITOR              (OpCodeType.SIMPLE, (short)0xA9, "bitor"),
-    BITXOR             (OpCodeType.SIMPLE, (short)0xAA, "bitxor"),
-    BKPT               (OpCodeType.SIMPLE, (short)0x01, "bkpt"),
-    BKPTLINE           (OpCodeType.SIMPLE, (short)0xF2, "bkptline"),
-    CALLINTERFACE      (OpCodeType.SIMPLE, (short)0x4D, "callinterface"),
-    CALLMETHOD         (OpCodeType.SIMPLE, (short)0x43, "callmethod"),
-    CALLSUPERID        (OpCodeType.SIMPLE, (short)0x4B, "callsuperid"),
-    CHECKFILTER        (OpCodeType.SIMPLE, (short)0x78, "checkfilter"),
-    COERCE_A           (OpCodeType.SIMPLE, (short)0x82, "coerce_a"),
-    COERCE_B           (OpCodeType.SIMPLE, (short)0x81, "coerce_b"),
-    COERCE_D           (OpCodeType.SIMPLE, (short)0x84, "coerce_d"),
-    COERCE_I           (OpCodeType.SIMPLE, (short)0x83, "coerce_i"),
-    COERCE_O           (OpCodeType.SIMPLE, (short)0x89, "coerce_o"),
-    COERCE_S           (OpCodeType.SIMPLE, (short)0x85, "coerce_s"),
-    COERCE_U           (OpCodeType.SIMPLE, (short)0x88, "coerce_u"),
-    CONCAT             (OpCodeType.SIMPLE, (short)0x9A, "concat"),
-    CONVERT_B          (OpCodeType.SIMPLE, (short)0x76, "convert_b"),
-    CONVERT_D          (OpCodeType.SIMPLE, (short)0x75, "convert_d"),
-    CONVERT_I          (OpCodeType.SIMPLE, (short)0x73, "convert_i"),
-    CONVERT_O          (OpCodeType.SIMPLE, (short)0x77, "convert_o"),
-    CONVERT_S          (OpCodeType.SIMPLE, (short)0x70, "convert_s"),
-    CONVERT_U          (OpCodeType.SIMPLE, (short)0x74, "convert_u"),
-    DECREMENT          (OpCodeType.SIMPLE, (short)0x93, "decrement"),
-    DECREMENT_I        (OpCodeType.SIMPLE, (short)0xC1, "decrement_i"),
-    DELETEPROPERTYLATE (OpCodeType.SIMPLE, (short)0x6B, "deletepropertylate"),
-    DIVIDE             (OpCodeType.SIMPLE, (short)0xA3, "divide"),
-    DUP                (OpCodeType.SIMPLE, (short)0x2A, "dup"),
-    DXNS               (OpCodeType.SIMPLE, (short)0x06, "dxns"),
-    DXNSLATE           (OpCodeType.SIMPLE, (short)0x07, "dxnslate"),
-    EQUALS             (OpCodeType.SIMPLE, (short)0xAB, "equals"),
-    ESC_XATTR          (OpCodeType.SIMPLE, (short)0x72, "esc_xattr"),
-    ESC_XELEM          (OpCodeType.SIMPLE, (short)0x71, "esc_xelem"),
-    GETGLOBALSCOPE     (OpCodeType.SIMPLE, (short)0x64, "getglobalscope"),
-    GETLOCAL0          (OpCodeType.SIMPLE, (short)0xD0, "getlocal0"),
-    GETLOCAL1          (OpCodeType.SIMPLE, (short)0xD1, "getlocal1"),
-    GETLOCAL2          (OpCodeType.SIMPLE, (short)0xD2, "getlocal2"),
-    GETLOCAL3          (OpCodeType.SIMPLE, (short)0xD3, "getlocal3"),
-    GETPROPERTYLATE    (OpCodeType.SIMPLE, (short)0x67, "getpropertylate"),
-    GREATEREQUALS      (OpCodeType.SIMPLE, (short)0xB0, "greaterequals"),
-    GREATERTHAN        (OpCodeType.SIMPLE, (short)0xAF, "greaterthan"),
-    HASNEXT            (OpCodeType.SIMPLE, (short)0x1F, "hasnext"),
-    IN                 (OpCodeType.SIMPLE, (short)0xB4, "in"),
-    INCREMENT          (OpCodeType.SIMPLE, (short)0x91, "increment"),
-    INCREMENT_I        (OpCodeType.SIMPLE, (short)0xC0, "increment_i"),
-    INSTANCEOF         (OpCodeType.SIMPLE, (short)0xB1, "instanceof"),
-    ISTYPELATE         (OpCodeType.SIMPLE, (short)0xB3, "istypelate"),
-    LABEL              (OpCodeType.SIMPLE, (short)0x09, "label"), // ignored by avm
-    LESSEQUALS         (OpCodeType.SIMPLE, (short)0xAE, "lessequals"),
-    LESSTHAN           (OpCodeType.SIMPLE, (short)0xAD, "lessthan"),
-    LSHIFT             (OpCodeType.SIMPLE, (short)0xA5, "lshift"),
-    MODULO             (OpCodeType.SIMPLE, (short)0xA4, "modulo"),
-    MULTIPLY           (OpCodeType.SIMPLE, (short)0xA2, "multiply"),
-    MULTIPLY_I         (OpCodeType.SIMPLE, (short)0xC7, "multiply_i"),
-    NEGATE             (OpCodeType.SIMPLE, (short)0x90, "negate"),
-    NEGATE_I           (OpCodeType.SIMPLE, (short)0xC4, "negate_i"),
-    NEWACTIVATION      (OpCodeType.SIMPLE, (short)0x57, "newactivation"),
-    NEXTNAME           (OpCodeType.SIMPLE, (short)0x1E, "nextname"),
-    NEXTVALUE          (OpCodeType.SIMPLE, (short)0x23, "nextvalue"),
-    NOP                (OpCodeType.SIMPLE, (short)0x02, "nop"), // ignored by avm
-    NOT                (OpCodeType.SIMPLE, (short)0x96, "not"),
-    POP                (OpCodeType.SIMPLE, (short)0x29, "pop"),
-    POPSCOPE           (OpCodeType.SIMPLE, (short)0x1D, "popscope"),
-    PUSHCONSTANT       (OpCodeType.SIMPLE, (short)0x22, "pushconstant"),
-    PUSHFALSE          (OpCodeType.SIMPLE, (short)0x27, "pushfalse"),
-    PUSHNAN            (OpCodeType.SIMPLE, (short)0x28, "pushnan"),
-    PUSHNULL           (OpCodeType.SIMPLE, (short)0x20, "pushnull"),
-    PUSHSCOPE          (OpCodeType.SIMPLE, (short)0x30, "pushscope"),
-    PUSHTRUE           (OpCodeType.SIMPLE, (short)0x26, "pushtrue"),
-    PUSHUNDEFINED      (OpCodeType.SIMPLE, (short)0x21, "pushundefined"),
-    PUSHWITH           (OpCodeType.SIMPLE, (short)0x1C, "pushwith"),
-    RETURNVALUE        (OpCodeType.SIMPLE, (short)0x48, "returnvalue"),
-    RETURNVOID         (OpCodeType.SIMPLE, (short)0x47, "returnvoid"),
-    RSHIFT             (OpCodeType.SIMPLE, (short)0xA6, "rshift"),
-    SETLOCAL0          (OpCodeType.SIMPLE, (short)0xD4, "setlocal0"),
-    SETLOCAL1          (OpCodeType.SIMPLE, (short)0xD5, "setlocal1"),
-    SETLOCAL2          (OpCodeType.SIMPLE, (short)0xD6, "setlocal2"),
-    SETLOCAL3          (OpCodeType.SIMPLE, (short)0xD7, "setlocal3"),
-    SETPROPERTYLATE    (OpCodeType.SIMPLE, (short)0x69, "setpropertylate"),
-    STRICTEQUALS       (OpCodeType.SIMPLE, (short)0xAC, "strictequals"),
-    SUBTRACT           (OpCodeType.SIMPLE, (short)0xA1, "subtract"),
-    SUBTRACT_I         (OpCodeType.SIMPLE, (short)0xC6, "subtract_i"),
-    SWAP               (OpCodeType.SIMPLE, (short)0x2B, "swap"),
-    THROW              (OpCodeType.SIMPLE, (short)0x03, "throw"),
-    TIMESTAMP          (OpCodeType.SIMPLE, (short)0xF3, "timestamp"), // ignored by avm
-    TYPEOF             (OpCodeType.SIMPLE, (short)0x95, "typeof"),
-    URSHIFT            (OpCodeType.SIMPLE, (short)0xA7, "urshift"),
+    ADD                   (OpCodeType.SIMPLE, (short)0xA0, "add"),
+    ADD_D                 (OpCodeType.SIMPLE, (short)0x9B, "add_d"),
+    ADD_I                 (OpCodeType.SIMPLE, (short)0xC5, "add_i"),
+    AS_TYPE_LATE          (OpCodeType.SIMPLE, (short)0x87, "astypelate"),
+    BIT_AND               (OpCodeType.SIMPLE, (short)0xA8, "bitand"),
+    BIT_NOT               (OpCodeType.SIMPLE, (short)0x97, "bitnot"),
+    BIT_OR                (OpCodeType.SIMPLE, (short)0xA9, "bitor"),
+    BIT_XOR               (OpCodeType.SIMPLE, (short)0xAA, "bitxor"),
+    BKPT                  (OpCodeType.SIMPLE, (short)0x01, "bkpt"),
+    BKPT_LINE             (OpCodeType.SIMPLE, (short)0xF2, "bkptline"),
+    CALL_INTERFACE        (OpCodeType.SIMPLE, (short)0x4D, "callinterface"),
+    CALL_METHOD           (OpCodeType.SIMPLE, (short)0x43, "callmethod"),
+    CALL_SUPERID          (OpCodeType.SIMPLE, (short)0x4B, "callsuperid"),
+    CHECK_FILTER          (OpCodeType.SIMPLE, (short)0x78, "checkfilter"),
+    COERCE_A              (OpCodeType.SIMPLE, (short)0x82, "coerce_a"),
+    COERCE_B              (OpCodeType.SIMPLE, (short)0x81, "coerce_b"),
+    COERCE_D              (OpCodeType.SIMPLE, (short)0x84, "coerce_d"),
+    COERCE_I              (OpCodeType.SIMPLE, (short)0x83, "coerce_i"),
+    COERCE_O              (OpCodeType.SIMPLE, (short)0x89, "coerce_o"),
+    COERCE_S              (OpCodeType.SIMPLE, (short)0x85, "coerce_s"),
+    COERCE_U              (OpCodeType.SIMPLE, (short)0x88, "coerce_u"),
+    CONCAT                (OpCodeType.SIMPLE, (short)0x9A, "concat"),
+    CONVERT_B             (OpCodeType.SIMPLE, (short)0x76, "convert_b"),
+    CONVERT_D             (OpCodeType.SIMPLE, (short)0x75, "convert_d"),
+    CONVERT_I             (OpCodeType.SIMPLE, (short)0x73, "convert_i"),
+    CONVERT_O             (OpCodeType.SIMPLE, (short)0x77, "convert_o"),
+    CONVERT_S             (OpCodeType.SIMPLE, (short)0x70, "convert_s"),
+    CONVERT_U             (OpCodeType.SIMPLE, (short)0x74, "convert_u"),
+    DECREMENT             (OpCodeType.SIMPLE, (short)0x93, "decrement"),
+    DECREMENT_I           (OpCodeType.SIMPLE, (short)0xC1, "decrement_i"),
+    DELETE_PROPERTY_LATE  (OpCodeType.SIMPLE, (short)0x6B, "deletepropertylate"),
+    DIVIDE                (OpCodeType.SIMPLE, (short)0xA3, "divide"),
+    DUP                   (OpCodeType.SIMPLE, (short)0x2A, "dup"),
+    DXNS                  (OpCodeType.SIMPLE, (short)0x06, "dxns"),
+    DXNS_LATE             (OpCodeType.SIMPLE, (short)0x07, "dxnslate"),
+    EQUALS                (OpCodeType.SIMPLE, (short)0xAB, "equals"),
+    ESC_XATTR             (OpCodeType.SIMPLE, (short)0x72, "esc_xattr"),
+    ESC_XELEM             (OpCodeType.SIMPLE, (short)0x71, "esc_xelem"),
+    GET_GLOBAL_SCOPE      (OpCodeType.SIMPLE, (short)0x64, "getglobalscope"),
+    GET_LOCAL_0           (OpCodeType.SIMPLE, (short)0xD0, "getlocal0"),
+    GET_LOCAL_1           (OpCodeType.SIMPLE, (short)0xD1, "getlocal1"),
+    GET_LOCAL_2           (OpCodeType.SIMPLE, (short)0xD2, "getlocal2"),
+    GET_LOCAL_3           (OpCodeType.SIMPLE, (short)0xD3, "getlocal3"),
+    GET_PROPERTY_LATE     (OpCodeType.SIMPLE, (short)0x67, "getpropertylate"),
+    GREATER_EQUALS        (OpCodeType.SIMPLE, (short)0xB0, "greaterequals"),
+    GREATER_THAN          (OpCodeType.SIMPLE, (short)0xAF, "greaterthan"),
+    HAS_NEXT              (OpCodeType.SIMPLE, (short)0x1F, "hasnext"),
+    IN                    (OpCodeType.SIMPLE, (short)0xB4, "in"),
+    INCREMENT             (OpCodeType.SIMPLE, (short)0x91, "increment"),
+    INCREMENT_I           (OpCodeType.SIMPLE, (short)0xC0, "increment_i"),
+    INSTANCE_OF           (OpCodeType.SIMPLE, (short)0xB1, "instanceof"),
+    IS_TYPE_LATE          (OpCodeType.SIMPLE, (short)0xB3, "istypelate"),
+    LABEL                 (OpCodeType.SIMPLE, (short)0x09, "label"), // ignored by avm
+    LESS_EQUALS           (OpCodeType.SIMPLE, (short)0xAE, "lessequals"),
+    LESS_THAN             (OpCodeType.SIMPLE, (short)0xAD, "lessthan"),
+    L_SHIFT               (OpCodeType.SIMPLE, (short)0xA5, "lshift"),
+    MODULO                (OpCodeType.SIMPLE, (short)0xA4, "modulo"),
+    MULTIPLY              (OpCodeType.SIMPLE, (short)0xA2, "multiply"),
+    MULTIPLY_I            (OpCodeType.SIMPLE, (short)0xC7, "multiply_i"),
+    NEGATE                (OpCodeType.SIMPLE, (short)0x90, "negate"),
+    NEGATE_I              (OpCodeType.SIMPLE, (short)0xC4, "negate_i"),
+    NEW_ACTIVATION        (OpCodeType.SIMPLE, (short)0x57, "newactivation"),
+    NEXT_NAME             (OpCodeType.SIMPLE, (short)0x1E, "nextname"),
+    NEXT_VALUE            (OpCodeType.SIMPLE, (short)0x23, "nextvalue"),
+    NOP                   (OpCodeType.SIMPLE, (short)0x02, "nop"), // ignored by avm
+    NOT                   (OpCodeType.SIMPLE, (short)0x96, "not"),
+    POP                   (OpCodeType.SIMPLE, (short)0x29, "pop"),
+    POP_SCOPE             (OpCodeType.SIMPLE, (short)0x1D, "popscope"),
+    PUSH_CONSTANT         (OpCodeType.SIMPLE, (short)0x22, "pushconstant"),
+    PUSH_FALSE            (OpCodeType.SIMPLE, (short)0x27, "pushfalse"),
+    PUSH_NAN              (OpCodeType.SIMPLE, (short)0x28, "pushnan"),
+    PUSH_NULL             (OpCodeType.SIMPLE, (short)0x20, "pushnull"),
+    PUSH_SCOPE            (OpCodeType.SIMPLE, (short)0x30, "pushscope"),
+    PUSH_TRUE             (OpCodeType.SIMPLE, (short)0x26, "pushtrue"),
+    PUSH_UNDEFINED        (OpCodeType.SIMPLE, (short)0x21, "pushundefined"),
+    PUSH_WITH             (OpCodeType.SIMPLE, (short)0x1C, "pushwith"),
+    RETURN_VALUE          (OpCodeType.SIMPLE, (short)0x48, "returnvalue"),
+    RETURN_VOID           (OpCodeType.SIMPLE, (short)0x47, "returnvoid"),
+    R_SHIFT               (OpCodeType.SIMPLE, (short)0xA6, "rshift"),
+    SET_LOCAL_0           (OpCodeType.SIMPLE, (short)0xD4, "setlocal0"),
+    SET_LOCAL_1           (OpCodeType.SIMPLE, (short)0xD5, "setlocal1"),
+    SET_LOCAL_2           (OpCodeType.SIMPLE, (short)0xD6, "setlocal2"),
+    SET_LOCAL_3           (OpCodeType.SIMPLE, (short)0xD7, "setlocal3"),
+    SET_PROPERTY_LATE     (OpCodeType.SIMPLE, (short)0x69, "setpropertylate"),
+    STRICT_EQUALS         (OpCodeType.SIMPLE, (short)0xAC, "strictequals"),
+    SUBTRACT              (OpCodeType.SIMPLE, (short)0xA1, "subtract"),
+    SUBTRACT_I            (OpCodeType.SIMPLE, (short)0xC6, "subtract_i"),
+    SWAP                  (OpCodeType.SIMPLE, (short)0x2B, "swap"),
+    THROW                 (OpCodeType.SIMPLE, (short)0x03, "throw"),
+    TIMESTAMP             (OpCodeType.SIMPLE, (short)0xF3, "timestamp"), // ignored by avm
+    TYPE_OF               (OpCodeType.SIMPLE, (short)0x95, "typeof"),
+    URSHIFT               (OpCodeType.SIMPLE, (short)0xA7, "urshift"),
     
     // NO real opcodes, but values used for dynamic profiling
-    VERIFYPASS         (OpCodeType.PROFILING, (short)0xF5, "verifypass"), // for VM profiling (abc verify overhead)
-    ALLOC              (OpCodeType.PROFILING, (short)0xF6, "alloc"), // for GC profiling
-    MARK               (OpCodeType.PROFILING, (short)0xF7, "mark"), // for GC profiling
-    WB                 (OpCodeType.PROFILING, (short)0xF8, "wb"), // for GC profiling
-    PROLOGUE           (OpCodeType.PROFILING, (short)0xF9, "prologue"), // for codegen profiling
-    SENDENTER          (OpCodeType.PROFILING, (short)0xFA, "sendenter"), // ignored by AVM (profiling?)
-    DOUBLETOATOM       (OpCodeType.PROFILING, (short)0xFB, "doubletoatom"), // for VM profiling (doubleToAtom method in avmcore)
-    SWEEP              (OpCodeType.PROFILING, (short)0xFC, "sweep"), // for GC profiling
-    CODEGENOP          (OpCodeType.PROFILING, (short)0xFD, "codegenop"), // for codegen profiling
-    VERIFYOP           (OpCodeType.PROFILING, (short)0xFE, "verifyop"), // for VM profiling (abc verify overhead)
-    DECODE             (OpCodeType.PROFILING, (short)0xFF, "decode"); // for VM profiling (abc parsing overhead)
+    VERIFY_PASS           (OpCodeType.PROFILING, (short)0xF5, "verifypass"), // for VM profiling (abc verify overhead)
+    ALLOC                 (OpCodeType.PROFILING, (short)0xF6, "alloc"), // for GC profiling
+    MARK                  (OpCodeType.PROFILING, (short)0xF7, "mark"), // for GC profiling
+    WB                    (OpCodeType.PROFILING, (short)0xF8, "wb"), // for GC profiling
+    PROLOGUE              (OpCodeType.PROFILING, (short)0xF9, "prologue"), // for codegen profiling
+    SEND_ENTER            (OpCodeType.PROFILING, (short)0xFA, "sendenter"), // ignored by AVM (profiling?)
+    DOUBLE_TO_ATOM        (OpCodeType.PROFILING, (short)0xFB, "doubletoatom"), // for VM profiling (doubleToAtom method in avmcore)
+    SWEEP                 (OpCodeType.PROFILING, (short)0xFC, "sweep"), // for GC profiling
+    CODE_GEN_OP           (OpCodeType.PROFILING, (short)0xFD, "codegenop"), // for codegen profiling
+    VERIFY_OP             (OpCodeType.PROFILING, (short)0xFE, "verifyop"), // for VM profiling (abc verify overhead)
+    DECODE                (OpCodeType.PROFILING, (short)0xFF, "decode"); // for VM profiling (abc parsing overhead)
     
-    private static final Map<Short, OpCode>  codeLookupMap = new HashMap<Short, OpCode>();
-    private static final Map<String, OpCode>  nameLookupMap = new HashMap<String, OpCode>();
+    private static ByteCodeConstantHelper<OpCode> helper;
     
     static {
-      for (OpCode opCode : OpCode.values()) {
-        codeLookupMap.put(opCode.getCode(), opCode);
-        nameLookupMap.put(opCode.toString(), opCode);
-      }
+      helper = new ByteCodeConstantHelper<OpCode>(OpCode.values(), "ABC Op Code");
     }
     
-    public static OpCode lookupOpCode(short code) {
-      return codeLookupMap.get(code);
+    /**
+     * Lookup a value corresponding to the given code
+     * @param code the bytecode id
+     * @return the enum mapped to the given code
+     * @throws InvalidCodeException if no value exists for the given code.
+     */
+    public static OpCode lookup(short code) throws InvalidCodeException {
+      return helper.codeLookup(code);
     }
     
-    public static OpCode lookupOpCode(String name) {
-      return nameLookupMap.get(name);
+    /**
+     * Lookup a value based corresponding to the given string
+     * @param name the string id
+     * @return the enum mapped to the given name
+     * @throws InvalidNameException if no value exists for the given name
+     */
+    public static OpCode lookup(String name) throws InvalidNameException {
+      return helper.nameLookup(name);
     }
     
     private final OpCodeType type;
@@ -303,7 +341,10 @@ public class AbcConstants {
     
   }
   
-  public enum TraitKind {
+  /**
+   * Represents ABC trait types.
+   */
+  public static enum TraitKind implements ByteCodeConstant {
     
     SLOT     ((short)0x00, "slot"),
     METHOD   ((short)0x01, "method"),
@@ -313,11 +354,30 @@ public class AbcConstants {
     FUNCTION ((short)0x05, "function"),
     CONST    ((short)0x06, "const");
     
-    public static TraitKind getKind(short code) {
-      for (TraitKind type : TraitKind.values()) {
-        if (type.code == code) return type;
-      }
-      return null;
+    private static ByteCodeConstantHelper<TraitKind> helper;
+    
+    static {
+      helper = new ByteCodeConstantHelper<TraitKind>(TraitKind.values(), "ABC Trait Kind");
+    }
+    
+    /**
+     * Lookup a value corresponding to the given code
+     * @param code the bytecode id
+     * @return the enum mapped to the given code
+     * @throws InvalidCodeException if no value exists for the given code.
+     */
+    public static TraitKind lookup(short code) throws InvalidCodeException {
+      return helper.codeLookup(code);
+    }
+    
+    /**
+     * Lookup a value based corresponding to the given string
+     * @param name the string id
+     * @return the enum mapped to the given name
+     * @throws InvalidNameException if no value exists for the given name
+     */
+    public static TraitKind lookup(String name) throws InvalidNameException {
+      return helper.nameLookup(name);
     }
     
     private final short code;
@@ -338,7 +398,10 @@ public class AbcConstants {
     }
   }
   
-  public enum NamespaceKind {
+  /**
+   * Represents ABC namespace types.
+   */
+  public static enum NamespaceKind implements ByteCodeConstant {
     
     PRIVATE          ((short)0x05, "private"),
     NAMESPACE        ((short)0x08, "namespace"),
@@ -348,11 +411,30 @@ public class AbcConstants {
     EXPLICIT         ((short)0x19, "explicit"),
     STATIC_PROTECTED ((short)0x1A, "static_protected");
     
-    public static NamespaceKind getKind(short code) {
-      for (NamespaceKind nsKind : NamespaceKind.values()) {
-        if (nsKind.code == code) return nsKind;
-      }
-      return null;
+    private static ByteCodeConstantHelper<NamespaceKind> helper;
+    
+    static {
+      helper = new ByteCodeConstantHelper<NamespaceKind>(NamespaceKind.values(), "ABC Namespace Kind");
+    }
+    
+    /**
+     * Lookup a value corresponding to the given code
+     * @param code the bytecode id
+     * @return the enum mapped to the given code
+     * @throws InvalidCodeException if no value exists for the given code.
+     */
+    public static NamespaceKind lookup(short code) throws InvalidCodeException {
+      return helper.codeLookup(code);
+    }
+    
+    /**
+     * Lookup a value based corresponding to the given string
+     * @param name the string id
+     * @return the enum mapped to the given name
+     * @throws InvalidNameException if no value exists for the given name
+     */
+    public static NamespaceKind lookup(String name) throws InvalidNameException {
+      return helper.nameLookup(name);
     }
     
     private final short code;
@@ -373,7 +455,10 @@ public class AbcConstants {
     }
   }
   
-  public enum MultiNameKind {
+  /**
+   * Represents ABC multiname types.
+   */
+  public static enum MultiNameKind implements ByteCodeConstant {
     
     Q_NAME        ((short)0x07, "q_name"),
     Q_NAME_A      ((short)0x0D, "q_name_a"),
@@ -386,11 +471,30 @@ public class AbcConstants {
     MULTINAME_L   ((short)0x1B, "multiname_l"),
     MULTINAME_L_A ((short)0x1C, "multiname_l_a");
     
-    public static MultiNameKind getKind(short code) {
-      for (MultiNameKind mnKind : MultiNameKind.values()) {
-        if (mnKind.code == code) return mnKind;
-      }
-      return null;
+    private static ByteCodeConstantHelper<MultiNameKind> helper;
+    
+    static {
+      helper = new ByteCodeConstantHelper<MultiNameKind>(MultiNameKind.values(), "ABC Multiname Kind");
+    }
+    
+    /**
+     * Lookup a value corresponding to the given code
+     * @param code the bytecode id
+     * @return the enum mapped to the given code
+     * @throws InvalidCodeException if no value exists for the given code.
+     */
+    public static MultiNameKind lookup(short code) throws InvalidCodeException {
+      return helper.codeLookup(code);
+    }
+    
+    /**
+     * Lookup a value based corresponding to the given string
+     * @param name the string id
+     * @return the enum mapped to the given name
+     * @throws InvalidNameException if no value exists for the given name
+     */
+    public static MultiNameKind lookup(String name) throws InvalidNameException {
+      return helper.nameLookup(name);
     }
     
     private final short code;

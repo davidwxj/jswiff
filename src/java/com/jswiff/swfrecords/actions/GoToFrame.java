@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -43,6 +43,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 3
  */
 public final class GoToFrame extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private int frame;
 
   /**
@@ -52,7 +55,7 @@ public final class GoToFrame extends Action {
    * @param frame a frame number
    */
   public GoToFrame(int frame) {
-    code         = ActionConstants.GO_TO_FRAME;
+    super(ActionType.GO_TO_FRAME);
     this.frame   = frame;
   }
 
@@ -60,7 +63,7 @@ public final class GoToFrame extends Action {
    * Reads a GoToFrame action from a bit stream.
    */
   GoToFrame(InputBitStream stream) throws IOException {
-    code    = ActionConstants.GO_TO_FRAME;
+    super(ActionType.GO_TO_FRAME);
     frame   = stream.readUI16();
   }
 
@@ -90,7 +93,7 @@ public final class GoToFrame extends Action {
    * @return <code>"GoToFrame"</code>
    */
   public String toString() {
-    return "GoToFrame " + frame;
+    return super.toString() + " " + frame;
   }
 
   protected void writeData(

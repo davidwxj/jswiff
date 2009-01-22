@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class StringLength extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new StringLength action.
    */
   public StringLength() {
-    code = ActionConstants.STRING_LENGTH;
+    super(ActionType.STRING_LENGTH);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"StringLength"</code>
-   */
-  public String toString() {
-    return "StringLength";
-  }
 }

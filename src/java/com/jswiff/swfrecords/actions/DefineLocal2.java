@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class DefineLocal2 extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new DefineLocal2 action.
    */
   public DefineLocal2() {
-    code = ActionConstants.DEFINE_LOCAL_2;
+    super(ActionType.DEFINE_LOCAL_2);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"DefineLocal2"</code>
-   */
-  public String toString() {
-    return "DefineLocal2";
-  }
 }

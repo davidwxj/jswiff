@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -42,19 +43,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 6
  */
 public final class StringGreater extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new StringGreater action.
    */
   public StringGreater() {
-    code = ActionConstants.STRING_GREATER;
+    super(ActionType.STRING_GREATER);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"StringGreater"</code>
-   */
-  public String toString() {
-    return "StringGreater";
-  }
 }

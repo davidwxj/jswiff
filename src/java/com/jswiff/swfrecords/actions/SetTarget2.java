@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -45,19 +46,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class SetTarget2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new SetTarget2 action.
    */
   public SetTarget2() {
-    code = ActionConstants.SET_TARGET_2;
+    super(ActionType.SET_TARGET_2);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"SetTarget2"</code>
-   */
-  public String toString() {
-    return "SetTarget2";
-  }
 }

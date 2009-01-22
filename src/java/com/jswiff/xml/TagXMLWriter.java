@@ -25,14 +25,12 @@ import java.util.List;
 
 import org.dom4j.Element;
 
-import com.jswiff.constants.TagConstants;
-import com.jswiff.swfrecords.BlendMode;
+import com.jswiff.constants.TagConstants.LangCode;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.CXform;
 import com.jswiff.swfrecords.FrameData;
 import com.jswiff.swfrecords.KerningRecord;
-import com.jswiff.swfrecords.LangCode;
 import com.jswiff.swfrecords.MorphFillStyles;
 import com.jswiff.swfrecords.MorphLineStyles;
 import com.jswiff.swfrecords.SceneData;
@@ -111,197 +109,205 @@ import com.jswiff.util.StringUtilities;
  * Writes SWF tags to XML.
  */
 class TagXMLWriter {
+  
   static void writeTag(Element parentElement, Tag tag) {
-    int tagCode = tag.getCode();
-    switch (tagCode) {
-      case TagConstants.DEBUG_ID:
+    switch (tag.tagType()) {
+      case DEBUG_ID:
         writeDebugId(parentElement, (DebugId) tag);
         break;
-      case TagConstants.DEFINE_BINARY_DATA:
+      case DEFINE_BINARY_DATA:
         writeDefineBinaryData(parentElement, (DefineBinaryData) tag);
         break;
-      case TagConstants.DEFINE_BITS:
+      case DEFINE_BITS:
         writeDefineBits(parentElement, (DefineBits) tag);
         break;
-      case TagConstants.DEFINE_BITS_JPEG_2:
+      case DEFINE_BITS_JPEG_2:
         writeDefineBitsJPEG2(parentElement, (DefineBitsJPEG2) tag);
         break;
-      case TagConstants.DEFINE_BITS_JPEG_3:
+      case DEFINE_BITS_JPEG_3:
         writeDefineBitsJPEG3(parentElement, (DefineBitsJPEG3) tag);
         break;
-      case TagConstants.DEFINE_BITS_LOSSLESS:
+      case DEFINE_BITS_LOSSLESS:
         writeDefineBitsLossless(parentElement, (DefineBitsLossless) tag);
         break;
-      case TagConstants.DEFINE_BITS_LOSSLESS_2:
+      case DEFINE_BITS_LOSSLESS_2:
         writeDefineBitsLossless2(parentElement, (DefineBitsLossless2) tag);
         break;
-      case TagConstants.DEFINE_BUTTON:
+      case DEFINE_BUTTON:
         writeDefineButton(parentElement, (DefineButton) tag);
         break;
-      case TagConstants.DEFINE_BUTTON_2:
+      case DEFINE_BUTTON_2:
         writeDefineButton2(parentElement, (DefineButton2) tag);
         break;
-      case TagConstants.DEFINE_BUTTON_C_XFORM:
+      case DEFINE_BUTTON_C_XFORM:
         writeDefineButtonCXform(parentElement, (DefineButtonCXform) tag);
         break;
-      case TagConstants.DEFINE_BUTTON_SOUND:
+      case DEFINE_BUTTON_SOUND:
         writeDefineButtonSound(parentElement, (DefineButtonSound) tag);
         break;
-      case TagConstants.DEFINE_EDIT_TEXT:
+      case DEFINE_EDIT_TEXT:
         writeDefineEditText(parentElement, (DefineEditText) tag);
         break;
-      case TagConstants.DEFINE_FONT:
+      case DEFINE_FONT:
         writeDefineFont(parentElement, (DefineFont) tag);
         break;
-      case TagConstants.DEFINE_FONT_2:
+      case DEFINE_FONT_2:
         writeDefineFont2(parentElement, (DefineFont2) tag);
         break;
-      case TagConstants.DEFINE_FONT_3:
+      case DEFINE_FONT_3:
         writeDefineFont3(parentElement, (DefineFont3) tag);
         break;
-      case TagConstants.DEFINE_FONT_INFO:
+      case DEFINE_FONT_INFO:
         writeDefineFontInfo(parentElement, (DefineFontInfo) tag);
         break;
-      case TagConstants.DEFINE_FONT_INFO_2:
+      case DEFINE_FONT_INFO_2:
         writeDefineFontInfo2(parentElement, (DefineFontInfo2) tag);
         break;
-      case TagConstants.DEFINE_FONT_ALIGNMENT:
+      case DEFINE_FONT_ALIGNMENT:
         writeDefineFontAlignment(parentElement, (DefineFontAlignment) tag);
         break;
-      case TagConstants.DEFINE_FONT_NAME:
+      case DEFINE_FONT_NAME:
         writeDefineFontName(parentElement, (DefineFontName) tag);
         break;
-      case TagConstants.FLASHTYPE_SETTINGS:
+      case FLASHTYPE_SETTINGS:
         writeFlashTypeSettings(parentElement, (FlashTypeSettings) tag);
         break;
-      case TagConstants.DEFINE_MORPH_SHAPE:
+      case DEFINE_MORPH_SHAPE:
         writeDefineMorphShape(parentElement, (DefineMorphShape) tag);
         break;
-      case TagConstants.DEFINE_MORPH_SHAPE_2:
+      case DEFINE_MORPH_SHAPE_2:
         writeDefineMorphShape2(parentElement, (DefineMorphShape2) tag);
         break;
-      case TagConstants.DEFINE_SCENE_FRAME_DATA:
+      case DEFINE_SCENE_FRAME_DATA:
         writeDefineSceneFrameData(parentElement, (DefineSceneFrameData) tag);
         break;
-      case TagConstants.DEFINE_SHAPE:
+      case DEFINE_SHAPE:
         writeDefineShape(parentElement, (DefineShape) tag);
         break;
-      case TagConstants.DEFINE_SHAPE_2:
+      case DEFINE_SHAPE_2:
         writeDefineShape2(parentElement, (DefineShape2) tag);
         break;
-      case TagConstants.DEFINE_SHAPE_3:
+      case DEFINE_SHAPE_3:
         writeDefineShape3(parentElement, (DefineShape3) tag);
         break;
-      case TagConstants.DEFINE_SHAPE_4:
+      case DEFINE_SHAPE_4:
         writeDefineShape4(parentElement, (DefineShape4) tag);
         break;
-      case TagConstants.DEFINE_SOUND:
+      case DEFINE_SOUND:
         writeDefineSound(parentElement, (DefineSound) tag);
         break;
-      case TagConstants.DEFINE_SPRITE:
+      case DEFINE_SPRITE:
         writeDefineSprite(parentElement, (DefineSprite) tag);
         break;
-      case TagConstants.DEFINE_TEXT:
+      case DEFINE_TEXT:
         writeDefineText(parentElement, (DefineText) tag);
         break;
-      case TagConstants.DEFINE_TEXT_2:
+      case DEFINE_TEXT_2:
         writeDefineText2(parentElement, (DefineText2) tag);
         break;
-      case TagConstants.DEFINE_VIDEO_STREAM:
+      case DEFINE_VIDEO_STREAM:
         writeDefineVideoStream(parentElement, (DefineVideoStream) tag);
         break;
-      case TagConstants.DO_ABC:
+      case DO_ABC:
         writeDoAbc(parentElement, (DoAbc) tag);
         break;
-      case TagConstants.DO_ABC_DEFINE:
+      case DO_ABC_DEFINE:
         writeDoAbcDefine(parentElement, (DoAbcDefine) tag);
         break;
-      case TagConstants.DO_ACTION:
+      case DO_ACTION:
         writeDoAction(parentElement, (DoAction) tag);
         break;
-      case TagConstants.DO_INIT_ACTION:
+      case DO_INIT_ACTION:
         writeDoInitAction(parentElement, (DoInitAction) tag);
         break;
-      case TagConstants.ENABLE_DEBUGGER:
+      case ENABLE_DEBUGGER:
         writeEnableDebugger(parentElement, (EnableDebugger) tag);
         break;
-      case TagConstants.ENABLE_DEBUGGER_2:
+      case ENABLE_DEBUGGER_2:
         writeEnableDebugger2(parentElement, (EnableDebugger2) tag);
         break;
-      case TagConstants.EXPORT_ASSETS:
+      case EXPORT_ASSETS:
         writeExportAssets(parentElement, (ExportAssets) tag);
         break;
-      case TagConstants.FRAME_LABEL:
+      case FRAME_LABEL:
         writeFrameLabel(parentElement, (FrameLabel) tag);
         break;
-      case TagConstants.FREE_CHARACTER:
+      case FREE_CHARACTER:
         writeFreeCharacter(parentElement, (FreeCharacter) tag);
         break;
-      case TagConstants.IMPORT_ASSETS:
+      case IMPORT_ASSETS:
         writeImportAssets(parentElement, (ImportAssets) tag);
         break;
-      case TagConstants.IMPORT_ASSETS_2:
+      case IMPORT_ASSETS_2:
         writeImportAssets2(parentElement, (ImportAssets2) tag);
         break;
-      case TagConstants.JPEG_TABLES:
+      case JPEG_TABLES:
         writeJPEGTables(parentElement, (JPEGTables) tag);
         break;
-      case TagConstants.MALFORMED:
+      case MALFORMED:
         writeMalformedTag(parentElement, (MalformedTag) tag);
         break;
-      case TagConstants.PLACE_OBJECT:
+      case PLACE_OBJECT:
         writePlaceObject(parentElement, (PlaceObject) tag);
         break;
-      case TagConstants.PLACE_OBJECT_2:
+      case PLACE_OBJECT_2:
         writePlaceObject2(parentElement, (PlaceObject2) tag);
         break;
-      case TagConstants.PLACE_OBJECT_3:
+      case PLACE_OBJECT_3:
         writePlaceObject3(parentElement, (PlaceObject3) tag);
         break;
-      case TagConstants.PRODUCT_INFO:
+      case PRODUCT_INFO:
         writeProductInfo(parentElement, (ProductInfo) tag);
         break;
-      case TagConstants.PROTECT:
+      case PROTECT:
         writeProtect(parentElement, (Protect) tag);
         break;
-      case TagConstants.REMOVE_OBJECT:
+      case REMOVE_OBJECT:
         writeRemoveObject(parentElement, (RemoveObject) tag);
         break;
-      case TagConstants.REMOVE_OBJECT_2:
+      case REMOVE_OBJECT_2:
         writeRemoveObject2(parentElement, (RemoveObject2) tag);
         break;
-      case TagConstants.SCRIPT_LIMITS:
+      case SCRIPT_LIMITS:
         writeScriptLimits(parentElement, (ScriptLimits) tag);
         break;
-      case TagConstants.SET_TAB_INDEX:
+      case SET_TAB_INDEX:
         writeSetTabIndex(parentElement, (SetTabIndex) tag);
         break;
-      case TagConstants.SHOW_FRAME:
+      case SHOW_FRAME:
         writeShowFrame(parentElement, (ShowFrame) tag);
         break;
-      case TagConstants.SCALE_9_GRID:
+      case SCALE_9_GRID:
         writeScale9Grid(parentElement, (Scale9Grid) tag);
         break;
-      case TagConstants.SOUND_STREAM_BLOCK:
+      case SOUND_STREAM_BLOCK:
         writeSoundStreamBlock(parentElement, (SoundStreamBlock) tag);
         break;
-      case TagConstants.SOUND_STREAM_HEAD:
+      case SOUND_STREAM_HEAD:
         writeSoundStreamHead(parentElement, (SoundStreamHead) tag);
         break;
-      case TagConstants.SOUND_STREAM_HEAD_2:
+      case SOUND_STREAM_HEAD_2:
         writeSoundStreamHead2(parentElement, (SoundStreamHead2) tag);
         break;
-      case TagConstants.START_SOUND:
+      case START_SOUND:
         writeStartSound(parentElement, (StartSound) tag);
         break;
-      case TagConstants.SYMBOL_CLASS:
+      case SYMBOL_CLASS:
         writeSymbolClass(parentElement, (SymbolClass) tag);
         break;
-      case TagConstants.VIDEO_FRAME:
+      case VIDEO_FRAME:
         writeVideoFrame(parentElement, (VideoFrame) tag);
         break;
+      case UNKNOWN_TAG:
+        writeUnknownTag(parentElement, (UnknownTag)tag);
+        break;
+     //Not covered (header tags):
+     //case END:
+     //case FILE_ATTRIBUTES:
+     //case METADATA:
+     //case SET_BACKGROUND_COLOR:
       default:
-        writeUnknownTag(parentElement, (UnknownTag) tag);
+        throw new AssertionError("Tag type '" + tag.tagType() + "' not handled!");
     }
   }
 
@@ -1089,36 +1095,14 @@ class TagXMLWriter {
 
   private static void writeLanguage(Element parentElement, LangCode langCode) {
     if (langCode != null) {
-      switch (langCode.getLanguageCode()) {
-        case LangCode.LATIN:
-          parentElement.addAttribute("language", "latin");
-          break;
-        case LangCode.UNDEFINED:
-          parentElement.addAttribute("language", "undefined");
-          break;
-        case LangCode.JAPANESE:
-          parentElement.addAttribute("language", "japanese");
-          break;
-        case LangCode.KOREAN:
-          parentElement.addAttribute("language", "korean");
-          break;
-        case LangCode.SIMPLIFIED_CHINESE:
-          parentElement.addAttribute("language", "simpchinese");
-          break;
-        case LangCode.TRADITIONAL_CHINESE:
-          parentElement.addAttribute("language", "tradchinese");
-          break;
-        default:
-          throw new IllegalArgumentException(
-            "Illegal language code: " + langCode.getLanguageCode());
-      }
+      parentElement.addAttribute("language", langCode.toString());
     }
   }
 
   private static void writeMalformedTag(
     Element parentElement, MalformedTag tag) {
     Element element = parentElement.addElement("malformedtag");
-    element.addAttribute("code", Integer.toString(tag.getCode()));
+    element.addAttribute("code", Integer.toString(tag.tagCode()));
     Exception exception      = tag.getException();
     Element exceptionElement = element.addElement("exception");
     exceptionElement.addAttribute("class", exception.getClass().getName());
@@ -1207,8 +1191,7 @@ class TagXMLWriter {
       RecordXMLWriter.writeClipActions(element, tag.getClipActions());
     }
     if (tag.hasBlendMode()) {
-      element.addAttribute(
-        "blendmode", BlendMode.getDescription(tag.getBlendMode()));
+      element.addAttribute("blendmode", tag.getBlendMode().toString());
     }
     if (tag.isCacheAsBitmap()) {
       element.addAttribute("cacheasbitmap", "true");
@@ -1349,7 +1332,7 @@ class TagXMLWriter {
 
   private static void writeUnknownTag(Element parentElement, UnknownTag tag) {
     Element element = parentElement.addElement("unknowntag");
-    element.addAttribute("code", Integer.toString(tag.getCode()));
+    element.addAttribute("code", Integer.toString(tag.tagCode()));
     String data = XMLWriter.isOmitBinaryData() ? "" : Base64.encode(tag.getData());
     element.addText(data);
   }

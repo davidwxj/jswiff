@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -47,6 +48,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 7
  */
 public final class Try extends Action {
+
+  private static final long serialVersionUID = 1L;
+  
   private boolean catchInRegister;
   private String catchVariable;
   private short catchRegister;
@@ -78,8 +82,8 @@ public final class Try extends Action {
   }
 
   Try(InputBitStream stream, InputBitStream mainStream)
-    throws IOException {
-    code = ActionConstants.TRY;
+    throws IOException, InvalidCodeException {
+    super(ActionType.TRY);
     short flags = stream.readUI8(); // 5 reserved bits - ignore
     catchInRegister = ((flags & 4) != 0);
     boolean hasFinallyBlock = ((flags & 2) != 0);
@@ -125,7 +129,7 @@ public final class Try extends Action {
   }
 
   private Try() {
-    code           = ActionConstants.TRY;
+    super(ActionType.TRY);
     tryBlock       = new ActionBlock();
     catchBlock     = new ActionBlock();
     finallyBlock   = new ActionBlock();
@@ -177,8 +181,10 @@ public final class Try extends Action {
    * @see Action#getSize()
    */
   public int getSize() {
-    int size = 15 + tryBlock.getSize() + catchBlock.getSize() +
-      finallyBlock.getSize();
+    //Try size = [ 10 bytes if no catch block || 15 bytes if there is as we compensate for removed jump ] 
+    //         + [ 1 byte if catchInRegister || size of catch variable name if not ]
+    int size = ( catchBlock.getActions().size() > 0 ? 15 : 10 ) 
+      + tryBlock.getSize() + catchBlock.getSize() + finallyBlock.getSize();
     if (catchInRegister) {
       size++; // one byte
     } else {
@@ -297,7 +303,7 @@ public final class Try extends Action {
     List<Action> actions = tryBlock.getActions();
     if (actions.size() > 0) {
       Action lastAction = actions.get(actions.size() - 1);
-      if (lastAction.getCode() == ActionConstants.JUMP) {
+      if (ActionType.JUMP.equals(lastAction.actionType())) {
         if (((Jump) lastAction).getBranchLabel().equals(ActionBlock.LABEL_OUT)) {
           actions.remove(actions.size() - 1);
         }
@@ -306,8 +312,8 @@ public final class Try extends Action {
       String lastActionLabel = lastAction.getLabel();
       if (lastActionLabel != null ) {
         for (Action action : actions) {
-          if (action.getCode() ==  ActionConstants.IF 
-              || action.getCode() ==  ActionConstants.JUMP) {
+          if ( ActionType.IF.equals(action.actionType()) 
+            || ActionType.JUMP.equals(action.actionType()) ) {
             Branch branch = (Branch) action;
             if (branch.getBranchLabel().equals(lastActionLabel)) {
               branch.setBranchLabel(ActionBlock.LABEL_END);

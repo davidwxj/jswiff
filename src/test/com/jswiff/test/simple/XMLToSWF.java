@@ -20,13 +20,13 @@
 
 package com.jswiff.test.simple;
 
-import com.jswiff.xml.Transformer;
-
-import org.dom4j.DocumentException;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import org.dom4j.DocumentException;
+
+import com.jswiff.xml.Transformer;
 
 
 /**

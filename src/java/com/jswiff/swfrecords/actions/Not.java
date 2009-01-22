@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -46,19 +47,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class Not extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Not action.
    */
   public Not() {
-    code = ActionConstants.NOT;
+    super(ActionType.NOT);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Not"</code>
-   */
-  public String toString() {
-    return "Not";
-  }
 }

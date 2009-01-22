@@ -23,6 +23,7 @@ package com.jswiff.swfrecords;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.actions.ActionBlock;
@@ -73,6 +74,25 @@ import com.jswiff.swfrecords.actions.ActionBlock;
  * </p>
  */
 public final class ButtonCondAction implements Serializable {
+  
+  private static final long serialVersionUID = 1L;
+  
+  public static final byte KEY_LEFT      = 1;
+  public static final byte KEY_RIGHT     = 2;
+  public static final byte KEY_HOME      = 3;
+  public static final byte KEY_END       = 4;
+  public static final byte KEY_INSERT    = 5;
+  public static final byte KEY_DELETE    = 6;
+  public static final byte KEY_BACKSPACE = 8;
+  public static final byte KEY_ENTER     = 13;
+  public static final byte KEY_UP        = 14;
+  public static final byte KEY_DOWN      = 15;
+  public static final byte KEY_PAGE_UP   = 16;
+  public static final byte KEY_PAGE_DOWN = 17;
+  public static final byte KEY_TAB       = 18;
+  public static final byte KEY_ESCAPE    = 19;
+  public static final byte KEY_SPACE     = 32;
+  
   private boolean outDownToIdle; // releaseOutside
   private boolean outDownToOverDown; // dragOver
   private boolean idleToOverDown; // dragOver
@@ -98,8 +118,10 @@ public final class ButtonCondAction implements Serializable {
    * @param stream the input bit stream
    *
    * @throws IOException if an I/O error has occured
+   * @throws InvalidCodeException if the tag header contains an invalid code.
+   * This normally means invalid or corrupted data.
    */
-  public ButtonCondAction(InputBitStream stream) throws IOException {
+  public ButtonCondAction(InputBitStream stream) throws IOException, InvalidCodeException {
     idleToOverDown      = stream.readBooleanBit();
     outDownToIdle       = stream.readBooleanBit();
     outDownToOverDown   = stream.readBooleanBit();
@@ -159,9 +181,8 @@ public final class ButtonCondAction implements Serializable {
 
   /**
    * Sets the key code in order to react on pressing the corresponding key. For
-   * special keys (e.g. escape) use the constants provided in
-   * <code>KeyCodes</code> (e.g. KEY_ESCAPE). For ASCII keys, use their ASCII
-   * code.
+   * special keys (e.g. escape) use the constants provided. For ASCII keys, 
+   * use their ASCII code.
    *
    * @param keyPress the key code
    *

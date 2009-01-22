@@ -28,6 +28,7 @@ import java.io.IOException;
 
 import com.jswiff.SWFDocument;
 import com.jswiff.SWFWriter;
+import com.jswiff.constants.TagConstants;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.FillStyle;
 import com.jswiff.swfrecords.FillStyleArray;
@@ -229,7 +230,7 @@ public class ImageDocumentFactory {
       (float) shapeXMax / (image.getWidth()),
       (float) shapeYMax / (image.getHeight()));
     FillStyle fillStyle       = new FillStyle(
-        imageCharacterId, bitmapMatrix, FillStyle.TYPE_CLIPPED_BITMAP);
+        imageCharacterId, bitmapMatrix, TagConstants.FillType.CLIPPED_BITMAP);
     FillStyleArray fillStyles = new FillStyleArray();
     fillStyles.addStyle(fillStyle);
     ShapeRecord[] shapeRecords          = new ShapeRecord[5];

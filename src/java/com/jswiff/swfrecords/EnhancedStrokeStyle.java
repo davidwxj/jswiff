@@ -22,28 +22,79 @@ package com.jswiff.swfrecords;
 
 import java.io.Serializable;
 
+import com.jswiff.constants.TagConstants.CapStyle;
+import com.jswiff.constants.TagConstants.JointStyle;
+import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
+
 /**
  * Base class for the new enhanced stroke line styles introduced in SWF 8.
  */
 public abstract class EnhancedStrokeStyle implements Serializable {
-  /** TODO: Comments */
-  public static final byte SCALE_NONE       = 0;
-  /** TODO: Comments */
-  public static final byte SCALE_VERTICAL   = 1;
-  /** TODO: Comments */
-  public static final byte SCALE_HORIZONTAL = 2;
-  /** TODO: Comments */
-  public static final byte SCALE_BOTH       = 3;
-  /** TODO: Comments */
-  public static final byte CAPS_ROUND       = 0;
-  /** TODO: Comments */
-  public static final byte CAPS_NONE        = 1;
-  /** TODO: Comments */
-  public static final byte CAPS_SQUARE      = 2;
-  /** TODO: Comments */
-  public static final byte JOINT_ROUND      = 0;
-  /** TODO: Comments */
-  public static final byte JOINT_BEVEL      = 1;
-  /** TODO: Comments */
-  public static final byte JOINT_MITER      = 2;
+  
+  private static final long serialVersionUID = 1L;
+  
+  private CapStyle startCapStyle  = CapStyle.ROUND;
+  private CapStyle endCapStyle    = CapStyle.ROUND;
+  private JointStyle jointStyle   = JointStyle.ROUND;
+  private ScaleStrokeMethod scaleStroke = ScaleStrokeMethod.BOTH;
+  private boolean close           = true;
+  private double miterLimit       = 3;
+  private boolean pixelHinting;
+  
+  public void setClose(boolean close) {
+    this.close = close;
+  }
+
+  public boolean isClose() {
+    return close;
+  }
+  
+  public void setStartCapStyle(CapStyle startCapStyle) {
+    this.startCapStyle = startCapStyle;
+  }
+
+  public CapStyle getStartCapStyle() {
+    return startCapStyle;
+  }
+  
+  public void setEndCapStyle(CapStyle endCapStyle) {
+    this.endCapStyle = endCapStyle;
+  }
+
+  public CapStyle getEndCapStyle() {
+    return endCapStyle;
+  }
+  
+  public void setJointStyle(JointStyle jointStyle) {
+    this.jointStyle = jointStyle;
+  }
+
+  public JointStyle getJointStyle() {
+    return jointStyle;
+  }
+  
+  public void setScaleStroke(ScaleStrokeMethod scaleStroke) {
+    this.scaleStroke = scaleStroke;
+  }
+
+  public ScaleStrokeMethod getScaleStroke() {
+    return scaleStroke;
+  }
+
+  public void setMiterLimit(double miterLimit) {
+    this.miterLimit = miterLimit;
+  }
+
+  public double getMiterLimit() {
+    return miterLimit;
+  }
+
+  public void setPixelHinting(boolean pixelHinting) {
+    this.pixelHinting = pixelHinting;
+  }
+
+  public boolean isPixelHinting() {
+    return pixelHinting;
+  }
+  
 }

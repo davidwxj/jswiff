@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -46,19 +47,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class NewObject extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new NewObject action.
    */
   public NewObject() {
-    code = ActionConstants.NEW_OBJECT;
+    super(ActionType.NEW_OBJECT);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"NewObject"</code>
-   */
-  public String toString() {
-    return "NewObject";
-  }
 }

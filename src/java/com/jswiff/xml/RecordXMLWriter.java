@@ -20,18 +20,20 @@
 
 package com.jswiff.xml;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.dom4j.Element;
 
+import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.CapStyle;
+import com.jswiff.constants.TagConstants.JointStyle;
+import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.AlphaColorMapData;
 import com.jswiff.swfrecords.BevelFilter;
 import com.jswiff.swfrecords.BitmapData;
 import com.jswiff.swfrecords.BitmapPixelData;
-import com.jswiff.swfrecords.BlendMode;
 import com.jswiff.swfrecords.BlurFilter;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
@@ -46,9 +48,9 @@ import com.jswiff.swfrecords.ColorMatrixFilter;
 import com.jswiff.swfrecords.ConvolutionFilter;
 import com.jswiff.swfrecords.CurvedEdgeRecord;
 import com.jswiff.swfrecords.DropShadowFilter;
-import com.jswiff.swfrecords.EnhancedStrokeStyle;
 import com.jswiff.swfrecords.FillStyle;
 import com.jswiff.swfrecords.FillStyleArray;
+import com.jswiff.swfrecords.Filter;
 import com.jswiff.swfrecords.FocalGradient;
 import com.jswiff.swfrecords.FocalMorphGradient;
 import com.jswiff.swfrecords.GlowFilter;
@@ -122,10 +124,8 @@ class RecordXMLWriter {
   }
   
   static void writeActionBlock(Element parentElement, ActionBlock actionBlock) {
-    List actions    = actionBlock.getActions();
     Element element = parentElement.addElement("actionblock");
-    for (Iterator it = actions.iterator(); it.hasNext();) {
-      Action action = (Action) it.next();
+    for (Action action : actionBlock.getActions()) {
       ActionXMLWriter.writeAction(element, action);
     }
   }
@@ -196,8 +196,7 @@ class RecordXMLWriter {
     element.addAttribute(
       "depth", Integer.toString(buttonRecord.getPlaceDepth()));
     if (buttonRecord.hasBlendMode()) {
-      element.addAttribute(
-        "blendmode", BlendMode.getDescription(buttonRecord.getBlendMode()));
+      element.addAttribute("blendmode", buttonRecord.getBlendMode().toString());
     }
     Element state = element.addElement("state");
     if (buttonRecord.isUpState()) {
@@ -266,9 +265,7 @@ class RecordXMLWriter {
   static void writeClipActions(Element parentElement, ClipActions clipActions) {
     Element element = parentElement.addElement("clipactions");
     writeClipEventFlags(element, clipActions.getEventFlags());
-    List records = clipActions.getClipActionRecords();
-    for (Iterator it = records.iterator(); it.hasNext();) {
-      ClipActionRecord record   = (ClipActionRecord) it.next();
+    for (ClipActionRecord record : clipActions.getClipActionRecords()) {
       Element recordElement     = element.addElement("clipactionrecord");
       ClipEventFlags eventFlags = record.getEventFlags();
       writeClipEventFlags(recordElement, eventFlags);
@@ -289,26 +286,31 @@ class RecordXMLWriter {
     }
   }
 
-  static void writeFilters(Element parentElement, List filters) {
+  static void writeFilters(Element parentElement, List<Filter> filters) {
     Element element = parentElement.addElement("filters");
+    Element filterElement, pointsElement;
+    float[] matrix; short[] ratios; RGBA[] colors;
+    int controlPointsCount;
     for (int j = 0; j < filters.size(); j++) {
-      Object filter = filters.get(j);
-      if (filter instanceof ColorMatrixFilter) {
+      Filter filter = filters.get(j);
+      switch (filter.type) {
+      case COLOR_MATRIX:
         ColorMatrixFilter colorMatrixFilter = (ColorMatrixFilter) filter;
-        Element filterElement               = element.addElement("colormatrix");
-        float[] matrix                      = colorMatrixFilter.getMatrix();
+        filterElement = element.addElement("colormatrix");
+        matrix        = colorMatrixFilter.getMatrix();
         for (int i = 0; i < matrix.length; i++) {
           filterElement.addElement("val").addText(
             StringUtilities.doubleToString(matrix[i]));
         }
-      } else if (filter instanceof ConvolutionFilter) {
+        break;
+      case CONVOLUTION:
         ConvolutionFilter convolutionFilter = (ConvolutionFilter) filter;
-        Element filterElement               = element.addElement("convolution");
+        filterElement               = element.addElement("convolution");
         Element matrixElement               = filterElement.addElement(
             "matrix");
         matrixElement.addAttribute(
           "rows", Integer.toString(convolutionFilter.getMatrixRows()));
-        float[] matrix = convolutionFilter.getMatrix();
+        matrix = convolutionFilter.getMatrix();
         for (int i = 0; i < matrix.length; i++) {
           matrixElement.addElement("val").addText(
             StringUtilities.doubleToString(matrix[i]));
@@ -325,18 +327,20 @@ class RecordXMLWriter {
         if (convolutionFilter.isPreserveAlpha()) {
           filterElement.addAttribute("preservealpha", "true");
         }
-      } else if (filter instanceof BlurFilter) {
+        break;
+      case BLUR:
         BlurFilter blurFilter = (BlurFilter) filter;
-        Element filterElement = element.addElement("blur");
+        filterElement = element.addElement("blur");
         filterElement.addAttribute(
           "x", StringUtilities.doubleToString(blurFilter.getX()));
         filterElement.addAttribute(
           "y", StringUtilities.doubleToString(blurFilter.getY()));
         filterElement.addAttribute(
           "quality", Integer.toString(blurFilter.getQuality()));
-      } else if (filter instanceof DropShadowFilter) {
+        break;
+      case DROP_SHADOW:
         DropShadowFilter dropShadowFilter = (DropShadowFilter) filter;
-        Element filterElement             = element.addElement("dropshadow");
+        filterElement             = element.addElement("dropshadow");
         writeRGBA(filterElement, "color", dropShadowFilter.getColor());
         filterElement.addAttribute(
           "x", StringUtilities.doubleToString(dropShadowFilter.getX()));
@@ -361,9 +365,10 @@ class RecordXMLWriter {
         if (dropShadowFilter.isHideObject()) {
           filterElement.addAttribute("hideobject", "true");
         }
-      } else if (filter instanceof GlowFilter) {
+        break;
+      case GLOW:
         GlowFilter glowFilter = (GlowFilter) filter;
-        Element filterElement = element.addElement("glow");
+        filterElement = element.addElement("glow");
         writeRGBA(filterElement, "color", glowFilter.getColor());
         filterElement.addAttribute(
           "x", StringUtilities.doubleToString(glowFilter.getX()));
@@ -379,9 +384,10 @@ class RecordXMLWriter {
         if (glowFilter.isKnockout()) {
           filterElement.addAttribute("knockout", "true");
         }
-      } else if (filter instanceof BevelFilter) {
+        break;
+      case BEVEL:
         BevelFilter bevelFilter = (BevelFilter) filter;
-        Element filterElement   = element.addElement("bevel");
+        filterElement   = element.addElement("bevel");
         writeRGBA(
           filterElement, "highlightcolor", bevelFilter.getHighlightColor());
         writeRGBA(filterElement, "shadowcolor", bevelFilter.getShadowColor());
@@ -406,15 +412,14 @@ class RecordXMLWriter {
         if (bevelFilter.isOnTop()) {
           filterElement.addAttribute("ontop", "true");
         }
-      } else if (filter instanceof GradientGlowFilter) {
+        break;
+      case GRADIENT_GLOW:
         GradientGlowFilter gradientGlowFilter = (GradientGlowFilter) filter;
-        Element filterElement                 = element.addElement(
-            "gradientglow");
-        RGBA[] colors                         = gradientGlowFilter.getColors();
-        short[] ratios                        = gradientGlowFilter.getRatios();
-        int controlPointsCount                = colors.length;
-        Element pointsElement                 = filterElement.addElement(
-            "controlpoints");
+        filterElement      = element.addElement("gradientglow");
+        colors             = gradientGlowFilter.getColors();
+        ratios             = gradientGlowFilter.getRatios();
+        controlPointsCount = colors.length;
+        pointsElement      = filterElement.addElement("controlpoints");
         for (int i = 0; i < controlPointsCount; i++) {
           Element pointElement = pointsElement.addElement("controlpoint");
           pointElement.addAttribute("ratio", Short.toString(ratios[i]));
@@ -444,15 +449,14 @@ class RecordXMLWriter {
         if (gradientGlowFilter.isOnTop()) {
           filterElement.addAttribute("ontop", "true");
         }
-      } else if (filter instanceof GradientBevelFilter) {
+        break;
+      case GRADIENT_BEVEL:
         GradientBevelFilter gradientBevelFilter = (GradientBevelFilter) filter;
-        Element filterElement                   = element.addElement(
-            "gradientbevel");
-        RGBA[] colors                           = gradientBevelFilter.getColors();
-        short[] ratios                          = gradientBevelFilter.getRatios();
-        int controlPointsCount                  = colors.length;
-        Element pointsElement                   = filterElement.addElement(
-            "controlpoints");
+        filterElement      = element.addElement("gradientbevel");
+        colors             = gradientBevelFilter.getColors();
+        ratios             = gradientBevelFilter.getRatios();
+        controlPointsCount = colors.length;
+        pointsElement      = filterElement.addElement("controlpoints");
         for (int i = 0; i < controlPointsCount; i++) {
           Element pointElement = pointsElement.addElement("controlpoint");
           pointElement.addAttribute("ratio", Short.toString(ratios[i]));
@@ -482,6 +486,7 @@ class RecordXMLWriter {
         if (gradientBevelFilter.isOnTop()) {
           filterElement.addAttribute("ontop", "true");
         }
+        break;
       }
     }
   }
@@ -807,67 +812,19 @@ class RecordXMLWriter {
   }
 
   private static void writeEnhancedStrokeStyles(
-    Element parentElement, byte jointStyle, byte startCapStyle, byte endCapStyle,
-    double miterLimit, byte scaleStroke) {
-    switch (jointStyle) {
-      case EnhancedStrokeStyle.JOINT_ROUND:
-        parentElement.addAttribute("joint", "round");
-        break;
-      case EnhancedStrokeStyle.JOINT_MITER:
-        parentElement.addAttribute("joint", "miter");
-        parentElement.addAttribute(
-          "miterlimit", StringUtilities.doubleToString(miterLimit));
-        break;
-      case EnhancedStrokeStyle.JOINT_BEVEL:
-        parentElement.addAttribute("joint", "bevel");
-        break;
-      default:
-        // write unknown value as byte value
-        parentElement.addAttribute("joint", Byte.toString(jointStyle));
+      Element parentElement, JointStyle jointStyle, CapStyle startCapStyle,
+      CapStyle endCapStyle, double miterLimit, ScaleStrokeMethod scaleStroke) {
+    //Joint Style
+    parentElement.addAttribute("joint", jointStyle.toString());
+    if (JointStyle.MITER.equals(jointStyle)) {
+      parentElement.addAttribute("miterlimit", StringUtilities.doubleToString(miterLimit));
     }
+    //Cap Styles
     Element capStyleElement = parentElement.addElement("capstyle");
-    switch (startCapStyle) {
-      case EnhancedStrokeStyle.CAPS_NONE:
-        capStyleElement.addAttribute("start", "none");
-        break;
-      case EnhancedStrokeStyle.CAPS_ROUND:
-        capStyleElement.addAttribute("start", "round");
-        break;
-      case EnhancedStrokeStyle.CAPS_SQUARE:
-        capStyleElement.addAttribute("start", "square");
-        break;
-      default:
-        // write unknown value as byte value
-        capStyleElement.addAttribute("start", Byte.toString(startCapStyle));
-    }
-    switch (endCapStyle) {
-      case EnhancedStrokeStyle.CAPS_NONE:
-        capStyleElement.addAttribute("end", "none");
-        break;
-      case EnhancedStrokeStyle.CAPS_ROUND:
-        capStyleElement.addAttribute("end", "round");
-        break;
-      case EnhancedStrokeStyle.CAPS_SQUARE:
-        capStyleElement.addAttribute("end", "square");
-        break;
-      default:
-        // write unknown value as byte value
-        capStyleElement.addAttribute("end", Byte.toString(endCapStyle));
-    }
-    switch (scaleStroke) {
-      case EnhancedStrokeStyle.SCALE_NONE:
-        parentElement.addAttribute("scalestroke", "none");
-        break;
-      case EnhancedStrokeStyle.SCALE_HORIZONTAL:
-        parentElement.addAttribute("scalestroke", "horizontal");
-        break;
-      case EnhancedStrokeStyle.SCALE_VERTICAL:
-        parentElement.addAttribute("scalestroke", "vertical");
-        break;
-      case EnhancedStrokeStyle.SCALE_BOTH:
-        parentElement.addAttribute("scalestroke", "both");
-        break;
-    }
+    capStyleElement.addAttribute("start", startCapStyle.toString());
+    capStyleElement.addAttribute("end", endCapStyle.toString());
+    //Stroke scaling
+    parentElement.addAttribute("scalestroke", scaleStroke.toString());
   }
 
   private static void writeFillStyle(
@@ -876,43 +833,20 @@ class RecordXMLWriter {
     boolean isGradient       = false;
     boolean isFocal          = false;
     boolean isBitmap         = false;
-    switch (fillStyle.getType()) {
-      case FillStyle.TYPE_SOLID:
-        fillStyleElement.addAttribute("type", "solid");
+    fillStyleElement.addAttribute("type", fillStyle.getType().toString());
+    switch (fillStyle.getType().getGroup()) {
+      case SOLID:
         writeColor(fillStyleElement, "color", fillStyle.getColor());
         break;
-      case FillStyle.TYPE_LINEAR_GRADIENT:
-        fillStyleElement.addAttribute("type", "lineargradient");
+      case GRADIENT:
         isGradient = true;
+        isFocal = fillStyle.getType().equals(TagConstants.FillType.FOCAL_RADIAL_GRADIENT);
         break;
-      case FillStyle.TYPE_FOCAL_RADIAL_GRADIENT:
-        fillStyleElement.addAttribute("type", "focalradialgradient");
-        isGradient = true;
-        isFocal = true;
-        break;
-      case FillStyle.TYPE_RADIAL_GRADIENT:
-        fillStyleElement.addAttribute("type", "radialgradient");
-        isGradient = true;
-        break;
-      case FillStyle.TYPE_TILED_BITMAP:
-        fillStyleElement.addAttribute("type", "tiledbitmap");
-        isBitmap = true;
-        break;
-      case FillStyle.TYPE_CLIPPED_BITMAP:
-        fillStyleElement.addAttribute("type", "clippedbitmap");
-        isBitmap = true;
-        break;
-      case FillStyle.TYPE_NONSMOOTHED_TILED_BITMAP:
-        fillStyleElement.addAttribute("type", "nonsmoothedtiledbitmap");
-        isBitmap = true;
-        break;
-      case FillStyle.TYPE_NONSMOOTHED_CLIPPED_BITMAP:
-        fillStyleElement.addAttribute("type", "nonsmoothedclippedbitmap");
+      case BITMAP:
         isBitmap = true;
         break;
       default:
-        throw new IllegalArgumentException(
-          "Illegal fill type: " + fillStyle.getType());
+        throw new AssertionError("Unhandled fill type: " + fillStyle.getType());
     }
     if (isGradient) {
       if (isFocal) {
@@ -963,33 +897,8 @@ class RecordXMLWriter {
   }
 
   private static void writeGradient(Element gradientElement, Gradient gradient) {
-    byte interpolationMethod = gradient.getInterpolationMethod();
-    switch (interpolationMethod) {
-      case Gradient.INTERPOLATION_LINEAR_RGB:
-        gradientElement.addAttribute("interpolation", "linear-rgb");
-        break;
-      case Gradient.INTERPOLATION_RGB:
-        gradientElement.addAttribute("interpolation", "rgb");
-        break;
-      default:
-        // write unknown value as byte value
-        gradientElement.addAttribute("interpolation", Byte.toString(interpolationMethod));
-    }
-    byte spreadMethod = gradient.getSpreadMethod();
-    switch (spreadMethod) {
-      case Gradient.SPREAD_PAD:
-        gradientElement.addAttribute("spread", "pad");
-        break;
-      case Gradient.SPREAD_REFLECT:
-        gradientElement.addAttribute("spread", "reflect");
-        break;
-      case Gradient.SPREAD_REPEAT:
-        gradientElement.addAttribute("spread", "repeat");
-        break;
-      default:
-        // write unknown value as byte value
-        gradientElement.addAttribute("spread", Byte.toString(spreadMethod));
-    }
+    gradientElement.addAttribute("interpolation", gradient.getInterpolationMethod().toString());
+    gradientElement.addAttribute("spread", gradient.getSpreadMethod().toString());
     GradRecord[] records = gradient.getGradientRecords();
     for (int i = 0; i < records.length; i++) {
       GradRecord record     = records[i];
@@ -1044,44 +953,21 @@ class RecordXMLWriter {
     boolean isGradient       = false;
     boolean isFocal          = false;
     boolean isBitmap         = false;
-    switch (fillStyle.getType()) {
-      case FillStyle.TYPE_SOLID:
-        fillStyleElement.addAttribute("type", "solid");
+    fillStyleElement.addAttribute("type", fillStyle.getType().toString());
+    switch (fillStyle.getType().getGroup()) {
+      case SOLID:
         writeRGBA(start, "color", fillStyle.getStartColor());
         writeRGBA(end, "color", fillStyle.getEndColor());
         break;
-      case FillStyle.TYPE_LINEAR_GRADIENT:
-        fillStyleElement.addAttribute("type", "lineargradient");
+      case GRADIENT:
         isGradient = true;
+        isFocal = fillStyle.getType().equals(TagConstants.FillType.FOCAL_RADIAL_GRADIENT);
         break;
-      case FillStyle.TYPE_FOCAL_RADIAL_GRADIENT:
-        fillStyleElement.addAttribute("type", "focalradialgradient");
-        isGradient = true;
-        isFocal = true;
-        break;
-      case FillStyle.TYPE_RADIAL_GRADIENT:
-        fillStyleElement.addAttribute("type", "radialgradient");
-        isGradient = true;
-        break;
-      case FillStyle.TYPE_TILED_BITMAP:
-        fillStyleElement.addAttribute("type", "tiledbitmap");
-        isBitmap = true;
-        break;
-      case FillStyle.TYPE_CLIPPED_BITMAP:
-        fillStyleElement.addAttribute("type", "clippedbitmap");
-        isBitmap = true;
-        break;
-      case FillStyle.TYPE_NONSMOOTHED_TILED_BITMAP:
-        fillStyleElement.addAttribute("type", "nonsmoothedtiledbitmap");
-        isBitmap = true;
-        break;
-      case FillStyle.TYPE_NONSMOOTHED_CLIPPED_BITMAP:
-        fillStyleElement.addAttribute("type", "nonsmoothedclippedbitmap");
+      case BITMAP:
         isBitmap = true;
         break;
       default:
-        throw new IllegalArgumentException(
-          "Illegal morph fill type: " + fillStyle.getType());
+        throw new AssertionError("Unhandled morph fill type: " + fillStyle.getType());
     }
     if (isGradient) {
       if (isFocal) {
@@ -1102,35 +988,9 @@ class RecordXMLWriter {
     }
   }
 
-  private static void writeMorphGradient(
-    Element gradientElement, MorphGradient gradient) {
-    byte interpolationMethod = gradient.getInterpolationMethod();
-    switch (interpolationMethod) {
-      case Gradient.INTERPOLATION_LINEAR_RGB:
-        gradientElement.addAttribute("interpolation", "linear-rgb");
-        break;
-      case Gradient.INTERPOLATION_RGB:
-        gradientElement.addAttribute("interpolation", "rgb");
-        break;
-      default:
-        // write unknown value as byte value
-        gradientElement.addAttribute("interpolation", Byte.toString(interpolationMethod));
-    }
-    byte spreadMethod = gradient.getSpreadMethod();
-    switch (spreadMethod) {
-      case Gradient.SPREAD_PAD:
-        gradientElement.addAttribute("spread", "pad");
-        break;
-      case Gradient.SPREAD_REFLECT:
-        gradientElement.addAttribute("spread", "reflect");
-        break;
-      case Gradient.SPREAD_REPEAT:
-        gradientElement.addAttribute("spread", "repeat");
-        break;
-      default:
-        // write unknown value as byte value
-        gradientElement.addAttribute("spread", Byte.toString(spreadMethod));
-    }
+  private static void writeMorphGradient(Element gradientElement, MorphGradient gradient) {
+    gradientElement.addAttribute("interpolation", gradient.getInterpolationMethod().toString());
+    gradientElement.addAttribute("spread", gradient.getSpreadMethod().toString());
     MorphGradRecord[] records = gradient.getGradientRecords();
     for (int i = 0; i < records.length; i++) {
       MorphGradRecord record = records[i];

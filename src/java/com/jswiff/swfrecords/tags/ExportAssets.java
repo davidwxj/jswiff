@@ -23,10 +23,9 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.io.Serializable;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * <p>
@@ -44,58 +43,62 @@ import com.jswiff.io.OutputBitStream;
  * character IDs within <code>ImportAssets</code> (using
  * <code>ImportMapping</code> instances).
  * </p>
- *
+ * 
  * @see ImportAssets
  * @since SWF 5
  */
 public final class ExportAssets extends Tag {
-	private ExportMapping[] exportMappings;
 
-	/**
-	 * Creates a new ExportAssets instance. Supply an array of export mappings
-	 * (for each  exported character one).
-	 *
-	 * @param exportMappings character export mappings
-	 */
-	public ExportAssets(ExportMapping[] exportMappings) {
-		code				    = TagConstants.EXPORT_ASSETS;
-		this.exportMappings     = exportMappings;
-	}
+  private static final long serialVersionUID = 1L;
 
-	ExportAssets() {
-		// empty
-	}
+  private ExportMapping[] exportMappings;
 
-	/**
-	 * Sets the export mappings defined in this tag.
-	 *
-	 * @param exportMappings character export mappings
-	 */
-	public void setExportMappings(ExportMapping[] exportMappings) {
-		this.exportMappings = exportMappings;
-	}
+  /**
+   * Creates a new ExportAssets instance. Supply an array of export mappings
+   * (for each exported character one).
+   * 
+   * @param exportMappings
+   *          character export mappings
+   */
+  public ExportAssets(ExportMapping[] exportMappings) {
+    super(TagType.EXPORT_ASSETS);
+    this.exportMappings = exportMappings;
+  }
 
-	/**
-	 * Returns the export mappings defined in this tag.
-	 *
-	 * @return character export mappings
-	 */
-	public ExportMapping[] getExportMappings() {
-		return exportMappings;
-	}
+  ExportAssets() {
+    super(TagType.EXPORT_ASSETS);
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		int count = exportMappings.length;
-		outStream.writeUI16(count);
-		for (int i = 0; i < count; i++) {
-			outStream.writeUI16(exportMappings[i].getCharacterId());
-			outStream.writeString(exportMappings[i].getName());
-		}
-	}
+  /**
+   * Sets the export mappings defined in this tag.
+   * 
+   * @param exportMappings
+   *          character export mappings
+   */
+  public void setExportMappings(ExportMapping[] exportMappings) {
+    this.exportMappings = exportMappings;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
+  /**
+   * Returns the export mappings defined in this tag.
+   * 
+   * @return character export mappings
+   */
+  public ExportMapping[] getExportMappings() {
+    return exportMappings;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    int count = exportMappings.length;
+    outStream.writeUI16(count);
+    for (int i = 0; i < count; i++) {
+      outStream.writeUI16(exportMappings[i].getCharacterId());
+      outStream.writeString(exportMappings[i].getName());
+    }
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {
         inStream.setShiftJIS(true);
@@ -103,50 +106,54 @@ public final class ExportAssets extends Tag {
         inStream.setANSI(true);
       }
     }
-		int count			    = inStream.readUI16();
-		exportMappings		    = new ExportMapping[count];
-		for (int i = 0; i < count; i++) {
-			exportMappings[i] = new ExportMapping(
-					inStream.readUI16(), inStream.readString());
-		}
-	}
+    int count = inStream.readUI16();
+    exportMappings = new ExportMapping[count];
+    for (int i = 0; i < count; i++) {
+      exportMappings[i] = new ExportMapping(inStream.readUI16(), inStream.readString());
+    }
+  }
 
-	/**
-	 * Defines an (immutable) export mapping for a character to be exported,
-	 * containing its ID and its export name.
-	 */
-	public static class ExportMapping implements Serializable {
-		private int characterId;
-		private String name;
+  /**
+   * Defines an (immutable) export mapping for a character to be exported,
+   * containing its ID and its export name.
+   */
+  public static class ExportMapping implements Serializable {
 
-		/**
-		 * Creates a new export mapping. Supply ID of exported character and
-		 * export name.
-		 *
-		 * @param characterId character ID
-		 * @param name export name
-		 */
-		public ExportMapping(int characterId, String name) {
-			this.characterId     = characterId;
-			this.name			 = name;
-		}
+    private static final long serialVersionUID = 1L;
+    
+    private int characterId;
+    private String name;
 
-		/**
-		 * Returns the ID of the exported character.
-		 *
-		 * @return character ID
-		 */
-		public int getCharacterId() {
-			return characterId;
-		}
+    /**
+     * Creates a new export mapping. Supply ID of exported character and export
+     * name.
+     * 
+     * @param characterId
+     *          character ID
+     * @param name
+     *          export name
+     */
+    public ExportMapping(int characterId, String name) {
+      this.characterId = characterId;
+      this.name = name;
+    }
 
-		/**
-		 * Returns the export name of the character.
-		 *
-		 * @return export name
-		 */
-		public String getName() {
-			return name;
-		}
-	}
+    /**
+     * Returns the ID of the exported character.
+     * 
+     * @return character ID
+     */
+    public int getCharacterId() {
+      return characterId;
+    }
+
+    /**
+     * Returns the export name of the character.
+     * 
+     * @return export name
+     */
+    public String getName() {
+      return name;
+    }
+  }
 }

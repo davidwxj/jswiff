@@ -22,39 +22,44 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.Rect;
-
 
 /**
  * @since SWF 8
  */
 public class Scale9Grid extends Tag {
+
+  private static final long serialVersionUID = 1L;
+  
   private int characterId;
   private Rect grid;
 
   /**
    * Creates a new Scale9Grid instance.
-   *
-   * @param characterId TODO: Comments
-   * @param grid TODO: Comments
+   * 
+   * @param characterId
+   *          TODO: Comments
+   * @param grid
+   *          TODO: Comments
    */
   public Scale9Grid(int characterId, Rect grid) {
-    code               = TagConstants.SCALE_9_GRID;
-    this.characterId   = characterId;
-    this.grid          = grid;
+    super(TagType.SCALE_9_GRID);
+    this.characterId = characterId;
+    this.grid = grid;
   }
 
   Scale9Grid() {
-    // empty
+    super(TagType.SCALE_9_GRID);
   }
 
   /**
    * TODO: Comments
-   *
-   * @param characterId TODO: Comments
+   * 
+   * @param characterId
+   *          TODO: Comments
    */
   public void setCharacterId(int characterId) {
     this.characterId = characterId;
@@ -62,7 +67,7 @@ public class Scale9Grid extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public int getCharacterId() {
@@ -71,8 +76,9 @@ public class Scale9Grid extends Tag {
 
   /**
    * TODO: Comments
-   *
-   * @param grid TODO: Comments
+   * 
+   * @param grid
+   *          TODO: Comments
    */
   public void setGrid(Rect grid) {
     this.grid = grid;
@@ -80,7 +86,7 @@ public class Scale9Grid extends Tag {
 
   /**
    * TODO: Comments
-   *
+   * 
    * @return TODO: Comments
    */
   public Rect getGrid() {

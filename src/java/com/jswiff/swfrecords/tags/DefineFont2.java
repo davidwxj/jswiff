@@ -22,24 +22,27 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.LangCode;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.KerningRecord;
-import com.jswiff.swfrecords.LangCode;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.Shape;
 
-
 /**
  * This tag is used to supply font information. Unlike with
- * <code>DefineFont</code>, fonts defined with this tag can be used for
- * dynamic text. Font metrics for improved layout can be supplied. Mapping to
- * device fonts is also possible.
- *
+ * <code>DefineFont</code>, fonts defined with this tag can be used for dynamic
+ * text. Font metrics for improved layout can be supplied. Mapping to device
+ * fonts is also possible.
+ * 
  * @since SWF 3.
  */
 public class DefineFont2 extends DefinitionTag {
+
+  private static final long serialVersionUID = 1L;
+
   private boolean shiftJIS;
   private boolean smallText;
   private boolean ansi;
@@ -60,8 +63,8 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * <p>
-   * Creates a new DefineFont2 tag. Requires the font's character ID and name,
-   * a glyph shape table and a code table.
+   * Creates a new DefineFont2 tag. Requires the font's character ID and name, a
+   * glyph shape table and a code table.
    * </p>
    * 
    * <p>
@@ -74,41 +77,52 @@ public class DefineFont2 extends DefinitionTag {
    * The code table is an array of characters equal in size to the shape table.
    * It assigns a character to each glyph.
    * </p>
-   *
-   * @param characterId character ID of the font
-   * @param fontName font name, either direct, e.g. 'Times New Roman', or
-   *        indirect, like '_serif'
-   * @param glyphShapeTable array of shapes (for each glyph one)
-   * @param codeTable array of chars (for each glyph one)
-   *
-   * @throws IllegalArgumentException if code table is different from glyph
-   *         count
+   * 
+   * @param characterId
+   *          character ID of the font
+   * @param fontName
+   *          font name, either direct, e.g. 'Times New Roman', or indirect,
+   *          like '_serif'
+   * @param glyphShapeTable
+   *          array of shapes (for each glyph one)
+   * @param codeTable
+   *          array of chars (for each glyph one)
+   * 
+   * @throws IllegalArgumentException
+   *           if code table is different from glyph count
    */
-  public DefineFont2(
-    int characterId, String fontName, Shape[] glyphShapeTable, char[] codeTable) {
-    code               = TagConstants.DEFINE_FONT_2;
-    this.characterId   = characterId;
-    this.fontName      = fontName;
+  public DefineFont2(int characterId, String fontName, Shape[] glyphShapeTable, char[] codeTable) {
+    this(characterId, fontName, glyphShapeTable, codeTable, TagType.DEFINE_FONT_2);
+  }
+  
+  DefineFont2(int characterId, String fontName, Shape[] glyphShapeTable, char[] codeTable, TagType t) {
+    super(t);
+    this.characterId = characterId;
+    this.fontName = fontName;
     if (glyphShapeTable != null) {
-      this.glyphShapeTable   = glyphShapeTable;
-      numGlyphs              = glyphShapeTable.length;
+      this.glyphShapeTable = glyphShapeTable;
+      numGlyphs = glyphShapeTable.length;
       if (codeTable.length != numGlyphs) {
-        throw new IllegalArgumentException(
-          "Size of codeTable must be equal to glyph count!");
+        throw new IllegalArgumentException("Size of codeTable must be equal to glyph count!");
       }
       this.codeTable = codeTable;
     }
   }
-
+  
   DefineFont2() {
-    // empty
+    this(TagType.DEFINE_FONT_2);
+  }
+  
+  DefineFont2(TagType t) {
+    super(t);
   }
 
   /**
    * Sets the value of the ANSI flag. If ANSI is set, the shiftJIS flag is
    * cleared. If neither ANSI nor shiftJIS are set, UCS-2 is used.
-   *
-   * @param ansi <code>true</code> if flag set, else <code>false</code>
+   * 
+   * @param ansi
+   *          <code>true</code> if flag set, else <code>false</code>
    */
   public void setANSI(boolean ansi) {
     this.ansi = ansi;
@@ -118,9 +132,9 @@ public class DefineFont2 extends DefinitionTag {
   }
 
   /**
-   * Checks if the ANSI flag is set. If neither ANSI nor shiftJIS are set,
-   * UCS-2 is used.
-   *
+   * Checks if the ANSI flag is set. If neither ANSI nor shiftJIS are set, UCS-2
+   * is used.
+   * 
    * @return <code>true</code> if flag set, else <code>false</code>
    */
   public boolean isANSI() {
@@ -129,7 +143,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns an array containing the advance value for each glyph of the font.
-   *
+   * 
    * @return advance table
    */
   public short[] getAdvanceTable() {
@@ -139,7 +153,7 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Returns the font's ascent. The ascent is the distance from the baseline to
    * the ascender line (i.e. to the highest ascender of the font).
-   *
+   * 
    * @return font ascent (in EM square coords)
    */
   public short getAscent() {
@@ -148,8 +162,9 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Sets/clears bold style.
-   *
-   * @param bold <code>true</code> for bold, otherwise <code>false</code>
+   * 
+   * @param bold
+   *          <code>true</code> for bold, otherwise <code>false</code>
    */
   public void setBold(boolean bold) {
     this.bold = bold;
@@ -157,7 +172,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Checks if the text is bold.
-   *
+   * 
    * @return <code>true</code> if text is bold, otherwise <code>false</code>
    */
   public boolean isBold() {
@@ -166,7 +181,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns the font's bounds table.
-   *
+   * 
    * @return bounds table.
    */
   public Rect[] getBoundsTable() {
@@ -175,8 +190,9 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Sets the font's code table containing a character for each glyph.
-   *
-   * @param codeTable font's code table
+   * 
+   * @param codeTable
+   *          font's code table
    */
   public void setCodeTable(char[] codeTable) {
     this.codeTable = codeTable;
@@ -184,7 +200,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns the font's code table containing a character for each glyph.
-   *
+   * 
    * @return code table of font
    */
   public char[] getCodeTable() {
@@ -193,9 +209,9 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns the font's descent. The descent is the space below the baseline
-   * required by the lowest descender (distance between base line and
-   * descender line).
-   *
+   * required by the lowest descender (distance between base line and descender
+   * line).
+   * 
    * @return font descent (in EM square coords)
    */
   public short getDescent() {
@@ -205,8 +221,9 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Sets the name of the font. This can be either a direct (e.g. 'Times New
    * Roman') or an indirect font name (e.g. '_serif').
-   *
-   * @param fontName string containing the font's name
+   * 
+   * @param fontName
+   *          string containing the font's name
    */
   public void setFontName(String fontName) {
     this.fontName = fontName;
@@ -215,7 +232,7 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Returns the name of the font. This can be either a direct (e.g. 'Times New
    * Roman') or an indirect font name (e.g. '_serif').
-   *
+   * 
    * @return font name as string
    */
   public String getFontName() {
@@ -224,8 +241,9 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Sets the glyph shape table, containing a shape for each defined glyph.
-   *
-   * @param glyphShapeTable glyph shapes array
+   * 
+   * @param glyphShapeTable
+   *          glyph shapes array
    */
   public void setGlyphShapeTable(Shape[] glyphShapeTable) {
     this.glyphShapeTable = glyphShapeTable;
@@ -233,7 +251,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns the glyph shape table, containing a shape for each defined glyph.
-   *
+   * 
    * @return glyph shapes array
    */
   public Shape[] getGlyphShapeTable() {
@@ -242,8 +260,9 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Sets/clears italic style.
-   *
-   * @param italic <code>true</code> for italic, otherwise <code>false</code>
+   * 
+   * @param italic
+   *          <code>true</code> for italic, otherwise <code>false</code>
    */
   public void setItalic(boolean italic) {
     this.italic = italic;
@@ -251,7 +270,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Checks if the text is italic.
-   *
+   * 
    * @return <code>true</code> if text is italic, otherwise <code>false</code>
    */
   public boolean isItalic() {
@@ -260,7 +279,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns the font's kerning table.
-   *
+   * 
    * @return kerning table
    */
   public KerningRecord[] getKerningTable() {
@@ -269,8 +288,9 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Sets the language code of this font.
-   *
-   * @param languageCode a language code
+   * 
+   * @param languageCode
+   *          a language code
    */
   public void setLanguageCode(LangCode languageCode) {
     this.languageCode = languageCode;
@@ -278,7 +298,7 @@ public class DefineFont2 extends DefinitionTag {
 
   /**
    * Returns the font's language code.
-   *
+   * 
    * @return a language code
    */
   public LangCode getLanguageCode() {
@@ -301,53 +321,56 @@ public class DefineFont2 extends DefinitionTag {
    * </p>
    * 
    * <p>
-   * The <code>leading</code> is the spacing between descender and ascender
-   * line of two successive lines (vertical line spacing).
+   * The <code>leading</code> is the spacing between descender and ascender line
+   * of two successive lines (vertical line spacing).
    * </p>
    * 
    * <p>
-   * This method allows the specification of a bounds table and a kerning
-   * table. Supply arrays equal in size to the glyph count (which is
-   * determined by the size of the glyph shape table), or use
-   * <code>null</code> to simplify matters.
+   * This method allows the specification of a bounds table and a kerning table.
+   * Supply arrays equal in size to the glyph count (which is determined by the
+   * size of the glyph shape table), or use <code>null</code> to simplify
+   * matters.
    * </p>
-   *
-   * @param ascent font ascender height (in EM square coords)
-   * @param descent font descender height (in EM square coords)
-   * @param leading vertical spacing between lines (from descender to next
-   *        line's ascender, in EM square coords)
-   * @param advanceTable advance values (for each glyph one, in EM square
-   *        coords)
-   * @param boundsTable glyph bounds table
-   * @param kerningTable kerning table
-   *
-   * @throws IllegalArgumentException if size of boundsTable or kerningTable is
-   *         not equal to glyph count
+   * 
+   * @param ascent
+   *          font ascender height (in EM square coords)
+   * @param descent
+   *          font descender height (in EM square coords)
+   * @param leading
+   *          vertical spacing between lines (from descender to next line's
+   *          ascender, in EM square coords)
+   * @param advanceTable
+   *          advance values (for each glyph one, in EM square coords)
+   * @param boundsTable
+   *          glyph bounds table
+   * @param kerningTable
+   *          kerning table
+   * 
+   * @throws IllegalArgumentException
+   *           if size of boundsTable or kerningTable is not equal to glyph
+   *           count
    */
-  public void setLayout(
-    short ascent, short descent, short leading, short[] advanceTable,
-    Rect[] boundsTable, KerningRecord[] kerningTable) {
-    hasLayout           = true;
-    this.ascent         = ascent;
-    this.descent        = descent;
-    this.leading        = leading;
-    this.advanceTable   = advanceTable;
+  public void setLayout(short ascent, short descent, short leading, short[] advanceTable, Rect[] boundsTable,
+      KerningRecord[] kerningTable) {
+    hasLayout = true;
+    this.ascent = ascent;
+    this.descent = descent;
+    this.leading = leading;
+    this.advanceTable = advanceTable;
     if ((advanceTable == null) || (advanceTable.length != numGlyphs)) {
-      throw new IllegalArgumentException(
-        "Size of advanceTable must be equal to glyph count!");
+      throw new IllegalArgumentException("Size of advanceTable must be equal to glyph count!");
     }
     if ((boundsTable != null) && (boundsTable.length != numGlyphs)) {
-      throw new IllegalArgumentException(
-        "Size of boundsTable must be equal to glyph count!");
+      throw new IllegalArgumentException("Size of boundsTable must be equal to glyph count!");
     }
-    this.boundsTable    = boundsTable;
-    this.kerningTable   = kerningTable;
+    this.boundsTable = boundsTable;
+    this.kerningTable = kerningTable;
   }
 
   /**
-   * Returns the font leading, i.e. the vertical spacing  between the bottom of
+   * Returns the font leading, i.e. the vertical spacing between the bottom of
    * the descender of one line and the top of the next line's ascender.
-   *
+   * 
    * @return font leading (in EM square coords)
    */
   public short getLeading() {
@@ -357,8 +380,9 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Sets the value of the shiftJIS flag. If shiftJIS is set, then ANSI is
    * cleared. If neither ANSI nor shiftJIS are set, UCS-2 is used.
-   *
-   * @param shiftJIS <code>true</code> if flag set, else <code>false</code>
+   * 
+   * @param shiftJIS
+   *          <code>true</code> if flag set, else <code>false</code>
    */
   public void setShiftJIS(boolean shiftJIS) {
     this.shiftJIS = shiftJIS;
@@ -370,7 +394,7 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Checks if the shiftJIS flag is set. If neither ANSI nor shiftJIS are set,
    * UCS-2 is used.
-   *
+   * 
    * @return <code>true</code> if flag set, else <code>false</code>
    */
   public boolean isShiftJIS() {
@@ -380,17 +404,18 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Sets the value of the smallFont flag. When this flag is set, the font is
    * optimized for small text (anti-aliasing is disabled).
-   *
-   * @param smallText <code>true</code> if flag set, else <code>false</code>
+   * 
+   * @param smallText
+   *          <code>true</code> if flag set, else <code>false</code>
    */
   public void setSmallText(boolean smallText) {
     this.smallText = smallText;
   }
 
   /**
-   * Checks the smallFont flag. When this flag is set, the font is optimized
-   * for small text (anti-aliasing is disabled).
-   *
+   * Checks the smallFont flag. When this flag is set, the font is optimized for
+   * small text (anti-aliasing is disabled).
+   * 
    * @return <code>true</code> if set, else <code>false</code>
    */
   public boolean isSmallText() {
@@ -400,7 +425,7 @@ public class DefineFont2 extends DefinitionTag {
   /**
    * Checks if layout information is supplied (ascent, descent, leading,
    * advance).
-   *
+   * 
    * @return <code>true</code> if layout info supplied, else <code>false</code>
    */
   public boolean hasLayout() {
@@ -414,11 +439,12 @@ public class DefineFont2 extends DefinitionTag {
     outStream.writeBooleanBit(smallText);
     outStream.writeBooleanBit(ansi);
     // compute offsetTable (offsets start at 0
-    long[] offsetTable               = new long[numGlyphs];
+    long[] offsetTable = new long[numGlyphs];
 
     // implicit: offsetTable[0] = 0;
     // later on, we apply correction to the offsets:
-    // we add the offsetTable size and the size of codeTableOffset (2 or 4) to each offset
+    // we add the offsetTable size and the size of codeTableOffset (2 or 4) to
+    // each offset
     //
     // use a byte array bit stream for writing shapeTable to compute the offsets
     OutputBitStream shapeTableStream = new OutputBitStream();
@@ -436,7 +462,7 @@ public class DefineFont2 extends DefinitionTag {
 
     // last offset is the biggest - do we need 32 bits, or just 16?
     // apply correction (offsetTable and codeTableOffset) and compare to 2^16-1
-    boolean wideOffsets  = false; // we don't need wide offsets if tables empty 
+    boolean wideOffsets = false; // we don't need wide offsets if tables empty
     if (numGlyphs > 0) {
       wideOffsets = ((offsetTable[numGlyphs - 1] + (2 * (numGlyphs + 1))) > 65535);
     }
@@ -455,12 +481,11 @@ public class DefineFont2 extends DefinitionTag {
     outStream.writeBooleanBit(italic);
     outStream.writeBooleanBit(bold);
     if (languageCode != null) {
-      outStream.writeUI8(languageCode.getLanguageCode());
+      outStream.writeUI8(languageCode.getCode());
     } else {
       outStream.writeUI8((short) 0);
     }
-    byte[] fontNameBuffer = (fontName != null) ? fontName.getBytes("UTF-8")
-                                               : new byte[0];
+    byte[] fontNameBuffer = (fontName != null) ? fontName.getBytes("UTF-8") : new byte[0];
 
     // null-terminated or not... Flash 2004 terminates with 0, so we do this too
     outStream.writeUI8((short) (fontNameBuffer.length + 1));
@@ -527,25 +552,25 @@ public class DefineFont2 extends DefinitionTag {
     }
   }
 
-  void setData(byte[] data) throws IOException {
+  void setData(byte[] data) throws IOException, InvalidCodeException {
     InputBitStream inStream = new InputBitStream(data);
-    characterId    = inStream.readUI16();
-    hasLayout      = inStream.readBooleanBit();
-    shiftJIS       = inStream.readBooleanBit();
-    smallText      = inStream.readBooleanBit();
-    ansi           = inStream.readBooleanBit();
+    characterId = inStream.readUI16();
+    hasLayout = inStream.readBooleanBit();
+    shiftJIS = inStream.readBooleanBit();
+    smallText = inStream.readBooleanBit();
+    ansi = inStream.readBooleanBit();
     boolean wideOffsets = inStream.readBooleanBit();
     boolean wideCodes = inStream.readBooleanBit();
-    italic         = inStream.readBooleanBit();
-    bold           = inStream.readBooleanBit();
-    languageCode   = new LangCode((byte) inStream.readUI8());
+    italic = inStream.readBooleanBit();
+    bold = inStream.readBooleanBit();
+    languageCode = LangCode.lookup(inStream.readUI8());
     short fontNameLen = inStream.readUI8();
     byte[] fontNameBuffer = inStream.readBytes(fontNameLen);
     if ((fontNameLen > 0) && (fontNameBuffer[fontNameLen - 1] == 0)) {
       fontNameLen--;
     }
-    fontName    = new String(fontNameBuffer, 0, fontNameLen, "UTF-8");
-    numGlyphs   = inStream.readUI16();
+    fontName = new String(fontNameBuffer, 0, fontNameLen, "UTF-8");
+    numGlyphs = inStream.readUI16();
     // skip offsets, we don't need them
     if (wideOffsets) {
       // skip offsetTable, UI32
@@ -575,9 +600,9 @@ public class DefineFont2 extends DefinitionTag {
       }
     }
     if (hasLayout) {
-      ascent    = inStream.readSI16();
-      descent   = inStream.readSI16();
-      leading   = inStream.readSI16();
+      ascent = inStream.readSI16();
+      descent = inStream.readSI16();
+      leading = inStream.readSI16();
       if (numGlyphs > 0) {
         advanceTable = new short[numGlyphs];
         for (int i = 0; i < numGlyphs; i++) {

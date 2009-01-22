@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jswiff.constants.AbcConstants.TraitKind;
-import com.jswiff.exception.UnknownCodeException;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -47,14 +47,13 @@ public abstract class AbcTrait implements Serializable {
     this.type = type;
   }
   
-  public static AbcTrait read(InputBitStream stream) throws IOException {
+  public static AbcTrait read(InputBitStream stream) throws IOException, InvalidCodeException {
     int nameIndex = stream.readAbcInt();
     short flagsAndKind = stream.readUI8();
     int flags = flagsAndKind >> 4;
     int kind = flagsAndKind & 0x0f;
     AbcTrait trait;
-    TraitKind traitType = TraitKind.getKind((short)kind);
-    if (traitType == null) throw new UnknownCodeException("Unknown trait type: " + kind, (short)kind);
+    TraitKind traitType = TraitKind.lookup((short)kind);
     switch (traitType) {
       case SLOT:
       case CONST:
@@ -89,7 +88,7 @@ public abstract class AbcTrait implements Serializable {
         trait = functionTrait;
         break;
       default:
-        throw new AssertionError("Unknown trait type: " + traitType);
+        throw new AssertionError("Unhandled trait type: '" + traitType.name() + "'");
     }
     if ((flags & METADATA_FLAG) != 0) {
       int metadataCount = stream.readAbcInt();

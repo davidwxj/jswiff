@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -30,6 +31,9 @@ import com.jswiff.io.OutputBitStream;
  * Use only with <code>DefineShape4</code>.
  */
 public class FocalGradient extends Gradient {
+
+  private static final long serialVersionUID = 1L;
+  
   private double focalPointRatio;
 
   /**
@@ -43,7 +47,7 @@ public class FocalGradient extends Gradient {
     this.focalPointRatio = focalPointRatio;
   }
 
-  FocalGradient(InputBitStream stream) throws IOException {
+  FocalGradient(InputBitStream stream) throws IOException, InvalidCodeException {
     super(stream, true);
     focalPointRatio = stream.readFP16();
   }

@@ -22,22 +22,24 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * This tag is used as of SWF 8 to define SWF properties like access mode and
  * the presence of metadata. Do NOT add this tag to your
  * <code>SWFDocument</code>, use its <code>setAccessMode</code> and
  * <code>setMetadata</code> methods instead!
- *
+ * 
  * @see com.jswiff.SWFDocument#setAccessMode(byte)
  * @see com.jswiff.SWFDocument#setMetadata(String)
  * @since SWF 8
  */
 public class FileAttributes extends Tag {
+
+  private static final long serialVersionUID = 1L;
+  
   private boolean allowNetworkAccess;
   private boolean hasMetadata;
   private boolean hasABC;
@@ -46,13 +48,14 @@ public class FileAttributes extends Tag {
    * Creates a new FileAttributes instance.
    */
   public FileAttributes() {
-    code = TagConstants.FILE_ATTRIBUTES;
+    super(TagType.FILE_ATTRIBUTES);
   }
 
   /**
    * Specifies whether the SWF is granted network or local access.
-   *
-   * @param allowNetworkAccess true for network access, false for local access
+   * 
+   * @param allowNetworkAccess
+   *          true for network access, false for local access
    */
   public void setAllowNetworkAccess(boolean allowNetworkAccess) {
     this.allowNetworkAccess = allowNetworkAccess;
@@ -60,7 +63,7 @@ public class FileAttributes extends Tag {
 
   /**
    * Checks whether the SWF is granted network or local access.
-   *
+   * 
    * @return true for network access, false for local access
    */
   public boolean isAllowNetworkAccess() {
@@ -69,8 +72,9 @@ public class FileAttributes extends Tag {
 
   /**
    * Specifies whether the SWF contains metadata (in a Metadata tag).
-   *
-   * @param hasMetadata true if Metadata tag contained
+   * 
+   * @param hasMetadata
+   *          true if Metadata tag contained
    */
   public void setHasMetadata(boolean hasMetadata) {
     this.hasMetadata = hasMetadata;
@@ -78,19 +82,19 @@ public class FileAttributes extends Tag {
 
   /**
    * Checks whether the SWF contains metadata (in a Metadata tag).
-   *
+   * 
    * @return true if Metadata tag contained
    */
   public boolean hasMetadata() {
     return hasMetadata;
   }
-  
+
   public void setHasABC(boolean hasABC) {
-	  this.hasABC = hasABC;
+    this.hasABC = hasABC;
   }
-  
+
   public boolean hasABC() {
-	  return hasABC;
+    return hasABC;
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
@@ -109,9 +113,9 @@ public class FileAttributes extends Tag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
-    int flags               = inStream.readSI32();
-    allowNetworkAccess      = ((flags & 0x01) != 0);
-    hasABC                  = ((flags & 0x08) != 0);
-    hasMetadata             = ((flags & 0x10) != 0);
+    int flags = inStream.readSI32();
+    allowNetworkAccess = ((flags & 0x01) != 0);
+    hasABC = ((flags & 0x08) != 0);
+    hasMetadata = ((flags & 0x10) != 0);
   }
 }

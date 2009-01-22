@@ -22,92 +22,97 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * This tag is used to override the default values for maximum recursion depth
  * (i.e. how often a function can call itself) and timeout regarding the
  * execution of actions.
- *
+ * 
  * @since SWF 7
  */
 public final class ScriptLimits extends Tag {
-	private int maxRecursionDepth;
-	private int scriptTimeoutSeconds;
 
-	/**
-	 * Creates a new ScriptLimits tag. Supply the maximum recursion depth and
-	 * the timeout in seconds.
-	 *
-	 * @param maxRecursionDepth maximum recursion depth (at most 65535)
-	 * @param scriptTimeoutSeconds timeout in seconds
-	 */
-	public ScriptLimits(int maxRecursionDepth, int scriptTimeoutSeconds) {
-		code						  = TagConstants.SCRIPT_LIMITS;
-		this.maxRecursionDepth		  = maxRecursionDepth;
-		this.scriptTimeoutSeconds     = scriptTimeoutSeconds;
-	}
+  private static final long serialVersionUID = 1L;
 
-	ScriptLimits() {
-		// empty
-	}
+  private int maxRecursionDepth;
+  private int scriptTimeoutSeconds;
 
-	/**
-	 * Sets the maximum recursion depth, i.e. how often a function can
-	 * successively call itself.
-	 *
-	 * @param maxRecursionDepth maximum recursion depth
-	 */
-	public void setMaxRecursionDepth(int maxRecursionDepth) {
-		this.maxRecursionDepth = maxRecursionDepth;
-	}
+  /**
+   * Creates a new ScriptLimits tag. Supply the maximum recursion depth and the
+   * timeout in seconds.
+   * 
+   * @param maxRecursionDepth
+   *          maximum recursion depth (at most 65535)
+   * @param scriptTimeoutSeconds
+   *          timeout in seconds
+   */
+  public ScriptLimits(int maxRecursionDepth, int scriptTimeoutSeconds) {
+    super(TagType.SCRIPT_LIMITS);
+    this.maxRecursionDepth = maxRecursionDepth;
+    this.scriptTimeoutSeconds = scriptTimeoutSeconds;
+  }
 
-	/**
-	 * Returns the maximum recursion depth, i.e. how often a function can
-	 * successively call itself.
-	 *
-	 * @return maximum recursion depth
-	 */
-	public int getMaxRecursionDepth() {
-		return maxRecursionDepth;
-	}
+  ScriptLimits() {
+    super(TagType.SCRIPT_LIMITS);
+  }
 
-	/**
-	 * Sets the timeout, i.e. the maximum time allowed for the execution of an
-	 * action block. If this time has elapsed and the execution hasn't
-	 * finished, Flash Player asks the user whether to continue or to abort
-	 * further execution.
-	 *
-	 * @param scriptTimeoutSeconds timeout value in seconds
-	 */
-	public void setScriptTimeoutSeconds(int scriptTimeoutSeconds) {
-		this.scriptTimeoutSeconds = scriptTimeoutSeconds;
-	}
+  /**
+   * Sets the maximum recursion depth, i.e. how often a function can
+   * successively call itself.
+   * 
+   * @param maxRecursionDepth
+   *          maximum recursion depth
+   */
+  public void setMaxRecursionDepth(int maxRecursionDepth) {
+    this.maxRecursionDepth = maxRecursionDepth;
+  }
 
-	/**
-	 * Returns the timeout, i.e. the maximum time allowed for the execution of
-	 * an action block. If this time has elapsed and the execution hasn't
-	 * finished, Flash Player asks the user whether to continue or to abort
-	 * further execution.
-	 *
-	 * @return timeout value in seconds
-	 */
-	public int getScriptTimeoutSeconds() {
-		return scriptTimeoutSeconds;
-	}
+  /**
+   * Returns the maximum recursion depth, i.e. how often a function can
+   * successively call itself.
+   * 
+   * @return maximum recursion depth
+   */
+  public int getMaxRecursionDepth() {
+    return maxRecursionDepth;
+  }
 
-	protected void writeData(OutputBitStream outStream)
-		throws IOException {
-		outStream.writeUI16(maxRecursionDepth);
-		outStream.writeUI16(scriptTimeoutSeconds);
-	}
+  /**
+   * Sets the timeout, i.e. the maximum time allowed for the execution of an
+   * action block. If this time has elapsed and the execution hasn't finished,
+   * Flash Player asks the user whether to continue or to abort further
+   * execution.
+   * 
+   * @param scriptTimeoutSeconds
+   *          timeout value in seconds
+   */
+  public void setScriptTimeoutSeconds(int scriptTimeoutSeconds) {
+    this.scriptTimeoutSeconds = scriptTimeoutSeconds;
+  }
 
-	void setData(byte[] data) throws IOException {
-		InputBitStream inStream = new InputBitStream(data);
-		maxRecursionDepth		 = inStream.readUI16();
-		scriptTimeoutSeconds     = inStream.readUI16();
-	}
+  /**
+   * Returns the timeout, i.e. the maximum time allowed for the execution of an
+   * action block. If this time has elapsed and the execution hasn't finished,
+   * Flash Player asks the user whether to continue or to abort further
+   * execution.
+   * 
+   * @return timeout value in seconds
+   */
+  public int getScriptTimeoutSeconds() {
+    return scriptTimeoutSeconds;
+  }
+
+  protected void writeData(OutputBitStream outStream) throws IOException {
+    outStream.writeUI16(maxRecursionDepth);
+    outStream.writeUI16(scriptTimeoutSeconds);
+  }
+
+  void setData(byte[] data) throws IOException {
+    InputBitStream inStream = new InputBitStream(data);
+    maxRecursionDepth = inStream.readUI16();
+    scriptTimeoutSeconds = inStream.readUI16();
+  }
 }

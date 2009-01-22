@@ -25,6 +25,9 @@ package com.jswiff.exception;
  * element.
  */
 public class MissingAttributeException extends MissingNodeException {
+
+  private static final long serialVersionUID = 1L;
+  
   private String missingAttributeName;
   private String parentElementPath;
 

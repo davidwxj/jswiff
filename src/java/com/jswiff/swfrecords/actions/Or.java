@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -46,19 +47,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class Or extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Or action.
    */
   public Or() {
-    code = ActionConstants.OR;
+    super(ActionType.OR);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Or"</code>
-   */
-  public String toString() {
-    return "Or";
-  }
 }

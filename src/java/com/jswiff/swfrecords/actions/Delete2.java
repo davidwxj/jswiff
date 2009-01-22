@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -44,19 +45,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class Delete2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Delete2 action.
    */
   public Delete2() {
-    code = ActionConstants.DELETE_2;
+    super(ActionType.DELETE_2);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Delete2"</code>
-   */
-  public String toString() {
-    return "Delete2";
-  }
 }

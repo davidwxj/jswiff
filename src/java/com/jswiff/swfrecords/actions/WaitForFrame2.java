@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -46,6 +46,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class WaitForFrame2 extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private short skipCount;
 
   /**
@@ -55,12 +58,12 @@ public final class WaitForFrame2 extends Action {
    *        yet
    */
   public WaitForFrame2(short skipCount) {
-    code             = ActionConstants.WAIT_FOR_FRAME_2;
+    super(ActionType.WAIT_FOR_FRAME_2);
     this.skipCount   = skipCount;
   }
 
   WaitForFrame2(InputBitStream stream) throws IOException {
-    code        = ActionConstants.WAIT_FOR_FRAME_2;
+    super(ActionType.WAIT_FOR_FRAME_2);
     skipCount   = stream.readUI8();
   }
 
@@ -92,7 +95,7 @@ public final class WaitForFrame2 extends Action {
    * @return <code>"WaitForFrame", skipCount</code>
    */
   public String toString() {
-    return "WaitForFrame2 skipCount: " + skipCount;
+    return super.toString() + " skipCount: " + skipCount;
   }
 
   protected void writeData(

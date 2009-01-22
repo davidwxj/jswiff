@@ -22,7 +22,8 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -45,13 +46,16 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 5
  */
 public final class With extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   private ActionBlock actionBlock;
 
   /**
    * Creates a new With action.
    */
   public With() {
-    code          = ActionConstants.WITH;
+    super(ActionType.WITH);
     actionBlock   = new ActionBlock();
   }
 
@@ -59,8 +63,8 @@ public final class With extends Action {
    * Creates a new With instance.
    */
   With(InputBitStream stream, InputBitStream mainStream)
-    throws IOException {
-    code = ActionConstants.WITH;
+    throws IOException, InvalidCodeException {
+    super(ActionType.WITH);
     int blockSize              = stream.readUI16();
     byte[] blockBuffer         = mainStream.readBytes(blockSize);
     InputBitStream blockStream = new InputBitStream(blockBuffer);
@@ -88,17 +92,6 @@ public final class With extends Action {
    */
   public ActionBlock getWithBlock() {
     return actionBlock;
-  }
-
-  /**
-   * Returns a short description of this action, along with the size in bytes
-   * of the contained action block and the number of contained actions.
-   *
-   * @return <code>"With"</code>, action block size (in bytes), number of
-   *         actions
-   */
-  public String toString() {
-    return "With";
   }
 
   protected void writeData(

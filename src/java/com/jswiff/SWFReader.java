@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.listeners.SWFListener;
 import com.jswiff.swfrecords.SWFHeader;
@@ -108,6 +108,11 @@ public final class SWFReader {
    * 
    * Returns the SWF document created during parsing.
    * 
+   * Read errors while processing a tag will cause an exception to be thrown,
+   * this behaviour can changed to instead create a MalformedTag (and thus
+   * allowing the code to continue albeit with corrupt data) by using
+   * {@link SWFListener}. See {@link SWFListener#processTagReadError(TagHeader, byte[], Exception)}.
+   * 
    * @see SWFListener
    * @return the parsed <code>SWFDocument</code> instance
    * @throws IOException if an error occured while reading
@@ -148,7 +153,7 @@ public final class SWFReader {
         tagData   = TagReader.readTagData(bitStream, tagHeader);
         tag       = TagReader.readTag(
             tagHeader, tagData, header.getVersion(), japanese);
-        if (tag.getCode() == TagConstants.END) {
+        if (TagType.END.equals(tag.tagType())) {
           break;
         }
       } catch (Exception e) {
@@ -204,16 +209,16 @@ public final class SWFReader {
   }
 
   private void processTag(Tag tag, long streamOffset) {
-    switch (tag.getCode()) {
-    case TagConstants.SET_BACKGROUND_COLOR:
+    switch (tag.tagType()) {
+    case SET_BACKGROUND_COLOR:
       document.setBackgroundColor(((SetBackgroundColor) tag).getColor());
       return;
-    case TagConstants.FILE_ATTRIBUTES:
+    case FILE_ATTRIBUTES:
       if ( ((FileAttributes) tag).isAllowNetworkAccess() ) {
         document.setAccessMode(SWFDocument.ACCESS_MODE_NETWORK);
       }
       return;
-    case TagConstants.METADATA:
+    case METADATA:
       document.setMetadata( ((Metadata) tag).getDataString() );
       return;
     }
@@ -237,6 +242,7 @@ public final class SWFReader {
 
   private boolean processTagReadError(
       TagHeader tagHeader, byte[] tagData, Exception e) {
+    if (listeners.size() == 0) return true;
     boolean result = false;
     for (SWFListener l : listeners) {
       result = l.processTagReadError(tagHeader, tagData, e) || result;

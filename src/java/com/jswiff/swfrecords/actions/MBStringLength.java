@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class MBStringLength extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new MBStringLength action.
    */
   public MBStringLength() {
-    code = ActionConstants.M_B_STRING_LENGTH;
+    super(ActionType.M_B_STRING_LENGTH);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"MBSrtingLength"</code>
-   */
-  public String toString() {
-    return "MBSrtingLength";
-  }
 }

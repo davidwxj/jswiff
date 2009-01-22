@@ -725,7 +725,6 @@ public final class Investigator extends JFrame {
           refreshButton.setEnabled(true);
           treePanel.revalidate();
           treePanel.repaint();
-          System.gc(); // let's release some precious RAM
           if (listener.isProtected()) {
             JOptionPane.showMessageDialog(
               Investigator.this,
@@ -737,7 +736,7 @@ public final class Investigator extends JFrame {
     readThread.start();
   }
 
-  private final class SWFFileFilter extends FileFilter {
+  private static final class SWFFileFilter extends FileFilter {
     public String getDescription() {
       return "Flash files (*.swf)";
     }

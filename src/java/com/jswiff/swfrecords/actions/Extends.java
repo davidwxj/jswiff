@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -42,19 +43,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 7
  */
 public final class Extends extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Extends action.
    */
   public Extends() {
-    code = ActionConstants.EXTENDS;
+    super(ActionType.EXTENDS);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Extends"</code>
-   */
-  public String toString() {
-    return "Extends";
-  }
 }

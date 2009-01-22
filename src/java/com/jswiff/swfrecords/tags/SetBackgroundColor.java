@@ -22,40 +22,43 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.RGB;
 
-
 /**
  * This tag contains the background color of the SWF. Do NOT add this tag to
- * your <code>SWFDocument</code>, use its <code>setBackgroundColor</code>
- * method instead!
- *
+ * your <code>SWFDocument</code>, use its <code>setBackgroundColor</code> method
+ * instead!
+ * 
  * @see com.jswiff.SWFDocument#setBackgroundColor(RGB)
  * @since SWF 1
  */
 public final class SetBackgroundColor extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private RGB color;
 
   /**
    * Creates a new SetBackgroundColor tag.
-   *
-   * @param color background color
+   * 
+   * @param color
+   *          background color
    */
   public SetBackgroundColor(RGB color) {
-    code         = TagConstants.SET_BACKGROUND_COLOR;
-    this.color   = color;
+    super(TagType.SET_BACKGROUND_COLOR);
+    this.color = color;
   }
 
   SetBackgroundColor() {
-    // empty
+    super(TagType.SET_BACKGROUND_COLOR);
   }
 
   /**
    * Returns the background color.
-   *
+   * 
    * @return Returns the color.
    */
   public RGB getColor() {

@@ -22,36 +22,40 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * Contains XML metadata in Dublin Core RDF format. Do NOT add this tag to your
  * <code>SWFDocument</code>, use its <code>setMetadata</code> method instead!
  */
 public class Metadata extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private String dataString;
 
   /**
    * Creates a new Metadata instance.
-   *
-   * @param dataString metadata as Dublin Core RDF
+   * 
+   * @param dataString
+   *          metadata as Dublin Core RDF
    */
   public Metadata(String dataString) {
-    this.dataString   = dataString;
-    code              = TagConstants.METADATA;
+    super(TagType.METADATA);
+    this.dataString = dataString;
   }
 
   Metadata() {
-    // nothing to do
+    super(TagType.METADATA);
   }
 
   /**
    * Sets the metadata of the document. Use Dublin Core RDF.
-   *
-   * @param dataString metadata as Dublin Core RDF
+   * 
+   * @param dataString
+   *          metadata as Dublin Core RDF
    */
   public void setDataString(String dataString) {
     this.dataString = dataString;
@@ -59,7 +63,7 @@ public class Metadata extends Tag {
 
   /**
    * Returns the metadata of the document (if set). Dublin Core RDF is used.
-   *
+   * 
    * @return metadata as Dublin Core RDF
    */
   public String getDataString() {

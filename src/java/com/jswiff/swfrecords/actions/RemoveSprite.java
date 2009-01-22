@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * Removes a clone sprite created with <code>CloneSprite</code>.
@@ -37,19 +38,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class RemoveSprite extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new RemoveSprite action.
    */
   public RemoveSprite() {
-    code = ActionConstants.REMOVE_SPRITE;
+    super(ActionType.REMOVE_SPRITE);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"RemoveSprite"</code>
-   */
-  public String toString() {
-    return "RemoveSprite";
-  }
 }

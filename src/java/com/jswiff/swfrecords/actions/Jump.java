@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -45,6 +45,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 4
  */
 public final class Jump extends Branch {
+
+  private static final long serialVersionUID = 1L;
+  
   private short branchOffset;
   private String branchLabel;
 
@@ -60,17 +63,17 @@ public final class Jump extends Branch {
    *        continue at
    */
   public Jump(String branchLabel) {
-    code               = ActionConstants.JUMP;
+    super(ActionType.JUMP);
     this.branchLabel   = branchLabel;
   }
 
   Jump(short branchOffset) {
-    code                = ActionConstants.JUMP;
+    super(ActionType.JUMP);
     this.branchOffset   = branchOffset;
   }
 
   Jump(InputBitStream stream) throws IOException {
-    code           = ActionConstants.JUMP;
+    super(ActionType.JUMP);
     branchOffset   = stream.readSI16();
   }
 
@@ -109,7 +112,7 @@ public final class Jump extends Branch {
    * @return <code>"Jump", branchLabel</code>
    */
   public String toString() {
-    return "Jump branchLabel: " + branchLabel;
+    return super.toString() + " branchLabel: " + branchLabel;
   }
 
   protected void writeData(

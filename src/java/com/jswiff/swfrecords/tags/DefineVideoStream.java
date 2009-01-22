@@ -22,41 +22,43 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
-
 /**
- * This tag defines the format of a streaming video data contained in
- * subsequent <code>VideoFrame</code> tags.
- *
+ * This tag defines the format of a streaming video data contained in subsequent
+ * <code>VideoFrame</code> tags.
+ * 
  * @see VideoFrame
  * @since SWF 6
  */
 public final class DefineVideoStream extends DefinitionTag {
+
+  private static final long serialVersionUID = 1L;
+
   /** Use deblocking setting from video packet. */
-  public static final byte DEBLOCKING_PACKET      = 0;
+  public static final byte DEBLOCKING_PACKET = 0;
   /** Do not use deblocking filter. */
-  public static final byte DEBLOCKING_OFF         = 1;
+  public static final byte DEBLOCKING_OFF = 1;
   /** Use deblocking filter. */
-  public static final byte DEBLOCKING_ON          = 2;
+  public static final byte DEBLOCKING_ON = 2;
   /**
    * Some movies do not specify a codec ID. Do not use this value when creating
    * movies from scratch.
    */
-  public static final short CODEC_UNDEFINED       = 0;
+  public static final short CODEC_UNDEFINED = 0;
   /** Use Sorenson H.263 codec (an enhanced subset of ITU H.263v1). */
-  public static final short CODEC_SORENSON_H263   = 2;
+  public static final short CODEC_SORENSON_H263 = 2;
   /**
-   * Use Screen Video codec (optimized for screen captures in motion) (since
-   * SWF 7).
+   * Use Screen Video codec (optimized for screen captures in motion) (since SWF
+   * 7).
    */
-  public static final short CODEC_SCREEN_VIDEO    = 3;
+  public static final short CODEC_SCREEN_VIDEO = 3;
   /** TODO: Comments */
-  public static final short CODEC_VP6             = 4;
+  public static final short CODEC_VP6 = 4;
   /** TODO: Comments */
-  public static final short CODEC_VP6_ALPHA       = 5;
+  public static final short CODEC_VP6_ALPHA = 5;
   /** TODO: Comments */
   public static final short CODEC_SCREEN_VIDEO_V2 = 6;
   private int numFrames;
@@ -67,41 +69,47 @@ public final class DefineVideoStream extends DefinitionTag {
   private short codecId;
 
   /**
-   * Creates a new DefineVideoStream tag. Supply the character ID, the number
-   * of frames (i.e. subsequent <code>VideoFrame</code> tags) and the
-   * dimensions of the video. Specify if a deblocking filter should be used at
-   * playback to reduce blocking artifacts (use <code>DEBLOCKING_...</code>
-   * constants) and whether to apply smoothing. Finally, specify which codec
-   * is used for video encoding. Supported codecs are Sorenson H.263 (an
-   * enhanced subset of ITU H.263v1) and, since SWF 7, Screen Video, a format
-   * optimized for screen captures in motion (use either
-   * <code>CODEC_SORENSON_H263</code> or <code>CODEC_SCREEN_VIDEO</code>).
-   *
-   * @param characterId character ID of video
-   * @param numFrames number of video frames
-   * @param width video width in pixels
-   * @param height video height in pixels
-   * @param deblocking deblocking setting (on /off / use packet setting - see
-   *        <code>DEBLOCKING_...</code> constants)
-   * @param smoothing if <code>true</code>, video is smoothed
-   * @param codecId video encoding algorithm (<code>CODEC_SORENSON_H263</code>
-   *        or <code>CODEC_SCREEN_VIDEO</code>)
+   * Creates a new DefineVideoStream tag. Supply the character ID, the number of
+   * frames (i.e. subsequent <code>VideoFrame</code> tags) and the dimensions of
+   * the video. Specify if a deblocking filter should be used at playback to
+   * reduce blocking artifacts (use <code>DEBLOCKING_...</code> constants) and
+   * whether to apply smoothing. Finally, specify which codec is used for video
+   * encoding. Supported codecs are Sorenson H.263 (an enhanced subset of ITU
+   * H.263v1) and, since SWF 7, Screen Video, a format optimized for screen
+   * captures in motion (use either <code>CODEC_SORENSON_H263</code> or
+   * <code>CODEC_SCREEN_VIDEO</code>).
+   * 
+   * @param characterId
+   *          character ID of video
+   * @param numFrames
+   *          number of video frames
+   * @param width
+   *          video width in pixels
+   * @param height
+   *          video height in pixels
+   * @param deblocking
+   *          deblocking setting (on /off / use packet setting - see
+   *          <code>DEBLOCKING_...</code> constants)
+   * @param smoothing
+   *          if <code>true</code>, video is smoothed
+   * @param codecId
+   *          video encoding algorithm (<code>CODEC_SORENSON_H263</code> or
+   *          <code>CODEC_SCREEN_VIDEO</code>)
    */
-  public DefineVideoStream(
-    int characterId, int numFrames, int width, int height, byte deblocking,
-    boolean smoothing, short codecId) {
-    code               = TagConstants.DEFINE_VIDEO_STREAM;
-    this.characterId   = characterId;
-    this.numFrames     = numFrames;
-    this.width         = width;
-    this.height        = height;
-    this.deblocking    = deblocking;
-    this.smoothing     = smoothing;
-    this.codecId       = codecId;
+  public DefineVideoStream(int characterId, int numFrames, int width, int height, byte deblocking, boolean smoothing,
+      short codecId) {
+    super(TagType.DEFINE_VIDEO_STREAM);
+    this.characterId = characterId;
+    this.numFrames = numFrames;
+    this.width = width;
+    this.height = height;
+    this.deblocking = deblocking;
+    this.smoothing = smoothing;
+    this.codecId = codecId;
   }
 
   DefineVideoStream() {
-    // empty
+    super(TagType.DEFINE_VIDEO_STREAM);
   }
 
   /**
@@ -109,9 +117,10 @@ public final class DefineVideoStream extends DefinitionTag {
    * H.263 bitstream format (an enhanced subset of ITU H.263v1) and, as of SWF
    * 7, the Screen Video bitstream format, a format optimized for screen
    * captures in motion.
-   *
-   * @param codecId video codec (<code>CODEC_SORENSON_H263</code> or
-   *        <code>CODEC_SCREEN_VIDEO</code>)
+   * 
+   * @param codecId
+   *          video codec (<code>CODEC_SORENSON_H263</code> or
+   *          <code>CODEC_SCREEN_VIDEO</code>)
    */
   public void setCodecId(short codecId) {
     this.codecId = codecId;
@@ -119,10 +128,10 @@ public final class DefineVideoStream extends DefinitionTag {
 
   /**
    * Returns the codec used for video encoding. Supported codecs are the
-   * Sorenson H.263 bitstream format (an enhanced subset of ITU H.263v1) and,
-   * as of SWF 7, the Screen Video bitstream format, a format optimized for
-   * screen captures in motion.
-   *
+   * Sorenson H.263 bitstream format (an enhanced subset of ITU H.263v1) and, as
+   * of SWF 7, the Screen Video bitstream format, a format optimized for screen
+   * captures in motion.
+   * 
    * @return video codec (<code>CODEC_SORENSON_H263</code> or
    *         <code>CODEC_SCREEN_VIDEO</code>)
    */
@@ -134,9 +143,10 @@ public final class DefineVideoStream extends DefinitionTag {
    * Sets the deblocking setting for the video, i.e. if a deblocking filter
    * should be used at playback to reduce blocking artifacts and improve
    * subjective visual quality.
-   *
-   * @param deblocking deblocking setting (one of the
-   *        <code>DEBLOCKING_...</code> constants)
+   * 
+   * @param deblocking
+   *          deblocking setting (one of the <code>DEBLOCKING_...</code>
+   *          constants)
    */
   public void setDeblocking(byte deblocking) {
     this.deblocking = deblocking;
@@ -146,7 +156,7 @@ public final class DefineVideoStream extends DefinitionTag {
    * Checks the deblocking setting for the video, i.e. if a deblocking filter
    * should be used at playback to reduce blocking artifacts and improve
    * subjective visual quality.
-   *
+   * 
    * @return deblocking setting (one of the <code>DEBLOCKING_...</code>
    *         constants)
    */
@@ -156,8 +166,9 @@ public final class DefineVideoStream extends DefinitionTag {
 
   /**
    * Sets the height of the video in pixels.
-   *
-   * @param height video height in px
+   * 
+   * @param height
+   *          video height in px
    */
   public void setHeight(int height) {
     this.height = height;
@@ -165,7 +176,7 @@ public final class DefineVideoStream extends DefinitionTag {
 
   /**
    * Returns the height of the video in pixels.
-   *
+   * 
    * @return video height in px
    */
   public int getHeight() {
@@ -173,10 +184,11 @@ public final class DefineVideoStream extends DefinitionTag {
   }
 
   /**
-   * Sets the number of video frames, i.e. the number of
-   * <code>VideoFrame</code> tags following this video stream definition.
-   *
-   * @param numFrames video frame count
+   * Sets the number of video frames, i.e. the number of <code>VideoFrame</code>
+   * tags following this video stream definition.
+   * 
+   * @param numFrames
+   *          video frame count
    */
   public void setNumFrames(int numFrames) {
     this.numFrames = numFrames;
@@ -185,7 +197,7 @@ public final class DefineVideoStream extends DefinitionTag {
   /**
    * Returns the number of video frames, i.e. the number of
    * <code>VideoFrame</code> tags following this video stream definition.
-   *
+   * 
    * @return video frame count
    */
   public int getNumFrames() {
@@ -195,9 +207,10 @@ public final class DefineVideoStream extends DefinitionTag {
   /**
    * Specifies whether smoothing is supposed to be applied to the video at
    * playback.
-   *
-   * @param smoothing <code>true</code> if smoothing enabled, otherwise
-   *        <code>false</code>
+   * 
+   * @param smoothing
+   *          <code>true</code> if smoothing enabled, otherwise
+   *          <code>false</code>
    */
   public void setSmoothing(boolean smoothing) {
     this.smoothing = smoothing;
@@ -206,7 +219,7 @@ public final class DefineVideoStream extends DefinitionTag {
   /**
    * Checks whether smoothing is supposed to be applied to the video at
    * playback.
-   *
+   * 
    * @return <code>true</code> if smoothing enabled, otherwise
    *         <code>false</code>
    */
@@ -216,8 +229,9 @@ public final class DefineVideoStream extends DefinitionTag {
 
   /**
    * Sets the width of the video in pixels.
-   *
-   * @param width video width in px
+   * 
+   * @param width
+   *          video width in px
    */
   public void setWidth(int width) {
     this.width = width;
@@ -225,7 +239,7 @@ public final class DefineVideoStream extends DefinitionTag {
 
   /**
    * Returns the width of the video in pixels.
-   *
+   * 
    * @return video width in px
    */
   public int getWidth() {
@@ -245,13 +259,13 @@ public final class DefineVideoStream extends DefinitionTag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
-    characterId   = inStream.readUI16();
-    numFrames     = inStream.readUI16();
-    width         = inStream.readUI16();
-    height        = inStream.readUI16();
+    characterId = inStream.readUI16();
+    numFrames = inStream.readUI16();
+    width = inStream.readUI16();
+    height = inStream.readUI16();
     inStream.readUnsignedBits(5); // 5 reserved bits
-    deblocking   = (byte) inStream.readUnsignedBits(2);
-    smoothing    = inStream.readBooleanBit();
-    codecId      = inStream.readUI8();
+    deblocking = (byte) inStream.readUnsignedBits(2);
+    smoothing = inStream.readBooleanBit();
+    codecId = inStream.readUI8();
   }
 }

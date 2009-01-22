@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -41,19 +42,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class PushDuplicate extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new PushDuplicate action.
    */
   public PushDuplicate() {
-    code = ActionConstants.PUSH_DUPLICATE;
+    super(ActionType.PUSH_DUPLICATE);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"PushDuplicate"</code>
-   */
-  public String toString() {
-    return "PushDuplicate";
-  }
 }

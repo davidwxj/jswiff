@@ -22,6 +22,7 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -30,6 +31,10 @@ import com.jswiff.io.OutputBitStream;
  * This class implements a placeholder for unknown action records.
  */
 public final class UnknownAction extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
+  private final short unknownActionCode;
   private InputBitStream inStream;
   private byte[] actionData;
 
@@ -40,13 +45,15 @@ public final class UnknownAction extends Action {
    * @param data data contained in the action record
    */
   public UnknownAction(short code, byte[] data) {
-    this.code    = code;
-    actionData   = data;
+    super(ActionType.UNKNOWN_ACTION);
+    this.unknownActionCode = code;
+    actionData = data;
   }
 
   UnknownAction(InputBitStream stream, short code) throws IOException {
-    inStream    = stream;
-    this.code   = code;
+    super(ActionType.UNKNOWN_ACTION);
+    inStream = stream;
+    this.unknownActionCode = code;
     if (inStream != null) {
       actionData = inStream.readBytes(inStream.available());
     } else {
@@ -69,7 +76,7 @@ public final class UnknownAction extends Action {
    * @return <code>"Unknown action", code, data length</code>
    */
   public String toString() {
-    return "Unknown action (code: " + getCode() + ", length: " +
+    return super.toString() + " (code: " + this.unknownActionCode + ", length: " +
     actionData.length + ")";
   }
 
@@ -82,4 +89,10 @@ public final class UnknownAction extends Action {
     throws IOException {
     dataStream.writeBytes(actionData);
   }
+  
+  @Override
+  public short actionCode() {
+    return this.unknownActionCode;
+  }
+  
 }

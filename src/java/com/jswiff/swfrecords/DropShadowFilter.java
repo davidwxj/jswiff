@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -45,6 +46,7 @@ public final class DropShadowFilter extends Filter {
    * Creates a new DropShadowFilter instance.
    */
   public DropShadowFilter() {
+    super(FilterType.DROP_SHADOW);
     initDefaults();
   }
 
@@ -56,6 +58,7 @@ public final class DropShadowFilter extends Filter {
    * @throws IOException TODO: Comments
    */
   public DropShadowFilter(InputBitStream stream) throws IOException {
+    super(FilterType.DROP_SHADOW);
     color        = new RGBA(stream);
     x            = stream.readFP32();
     y            = stream.readFP32();

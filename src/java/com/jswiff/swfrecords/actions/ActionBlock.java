@@ -27,7 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -49,6 +50,9 @@ import com.jswiff.io.OutputBitStream;
  * </p>
  */
 public final class ActionBlock implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+  
   /** Label name pointing to the end of the current action block. */
   public static String LABEL_END = "__end";
   /**
@@ -74,13 +78,15 @@ public final class ActionBlock implements Serializable {
    * @param stream the source bit stream
    *
    * @throws IOException if an I/O error has occured
+   * @throws InvalidCodeException if the tag header contains an invalid code.
+   * This normally means invalid or corrupted data.
    */
-  public ActionBlock(InputBitStream stream) throws IOException {
+  public ActionBlock(InputBitStream stream) throws IOException, InvalidCodeException {
     int startOffset      = (int) stream.getOffset();
     boolean hasEndAction = false;
     while (stream.available() > 0) {
       Action record = ActionReader.readRecord(stream);
-      if (record.code != ActionConstants.END) {
+      if (!ActionType.END.equals(record.actionType())) {
         actions.add(record);
       } else {
         hasEndAction = true;
@@ -104,9 +110,8 @@ public final class ActionBlock implements Serializable {
       action.setOffset(newOffset);
       actionMap.put(new Integer(newOffset), action);
       // collect labels from Jump and If actions
-      if (
-        (action.getCode() == ActionConstants.IF) ||
-            (action.getCode() == ActionConstants.JUMP)) {
+      if ( (ActionType.IF.equals(action.actionType())) ||
+           (ActionType.JUMP.equals(action.actionType())) ) {
         Branch branchAction = (Branch) action;
 
         // temporarily put the offset into the label map
@@ -238,9 +243,9 @@ public final class ActionBlock implements Serializable {
 
     // second pass: replace branch labels with branch offsets and write actions
     for (Action action : actions) {
-      switch (action.getCode()) {
-        case ActionConstants.JUMP:
-        case ActionConstants.IF:
+      switch (action.actionType()) {
+        case JUMP:
+        case IF:
           Branch branchAction = (Branch) action;
           if (!LABEL_OUT.equals(branchAction.getBranchLabel())) {
             replaceBranchLabelWithRelOffset(branchAction); // replace branch label with offset relative to subsequent action

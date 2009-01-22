@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -40,19 +41,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class Add2 extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new Add2 action.
    */
   public Add2() {
-    code = ActionConstants.ADD_2;
+    super(ActionType.ADD_2);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Add2"</code>
-   */
-  public String toString() {
-    return "Add2";
-  }
 }

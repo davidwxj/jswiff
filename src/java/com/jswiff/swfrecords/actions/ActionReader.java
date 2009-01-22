@@ -22,7 +22,8 @@ package com.jswiff.swfrecords.actions;
 
 import java.io.IOException;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 
 
@@ -37,322 +38,333 @@ final class ActionReader {
   /*
    * Reads an action record from a bit stream.
    */
-  static Action readRecord(InputBitStream stream) throws IOException {
+  static Action readRecord(InputBitStream stream) throws IOException, InvalidCodeException {
     Action action;
     InputBitStream actionStream = null; // contains action record data
     int offset                  = (int) stream.getOffset();
     short actionCode            = stream.readUI8();
     boolean longHeader          = (actionCode >= 0x80);
     int length                  = longHeader ? stream.readUI16() : 0;
+    
     if (length > 0) {
       actionStream = new InputBitStream(stream.readBytes(length));
       actionStream.setANSI(stream.isANSI());
       actionStream.setShiftJIS(stream.isShiftJIS());
     }
-    switch (actionCode) {
-      case ActionConstants.ADD:
+    
+    ActionType actionType;
+    try {
+      actionType = ActionType.lookup(actionCode);
+    } catch (InvalidCodeException e) {
+      actionType = ActionType.UNKNOWN_ACTION;
+    }
+    switch (actionType) {
+      case ADD:
         action = new Add();
         break;
-      case ActionConstants.ADD_2:
+      case ADD_2:
         action = new Add2();
         break;
-      case ActionConstants.AND:
+      case AND:
         action = new And();
         break;
-      case ActionConstants.ASCII_TO_CHAR:
+      case ASCII_TO_CHAR:
         action = new AsciiToChar();
         break;
-      case ActionConstants.BIT_AND:
+      case BIT_AND:
         action = new BitAnd();
         break;
-      case ActionConstants.BIT_L_SHIFT:
+      case BIT_L_SHIFT:
         action = new BitLShift();
         break;
-      case ActionConstants.BIT_OR:
+      case BIT_OR:
         action = new BitOr();
         break;
-      case ActionConstants.BIT_R_SHIFT:
+      case BIT_R_SHIFT:
         action = new BitRShift();
         break;
-      case ActionConstants.BIT_U_R_SHIFT:
+      case BIT_U_R_SHIFT:
         action = new BitURShift();
         break;
-      case ActionConstants.BIT_XOR:
+      case BIT_XOR:
         action = new BitXor();
         break;
-      case ActionConstants.CALL:
+      case CALL:
         // MM bug here: high bit of code set although length=0
         action = new Call();
         break;
-      case ActionConstants.CALL_FUNCTION:
+      case CALL_FUNCTION:
         action = new CallFunction();
         break;
-      case ActionConstants.CALL_METHOD:
+      case CALL_METHOD:
         action = new CallMethod();
         break;
-      case ActionConstants.CAST_OP:
+      case CAST_OP:
         action = new CastOp();
         break;
-      case ActionConstants.CHAR_TO_ASCII:
+      case CHAR_TO_ASCII:
         action = new CharToAscii();
         break;
-      case ActionConstants.CLONE_SPRITE:
+      case CLONE_SPRITE:
         action = new CloneSprite();
         break;
-      case ActionConstants.CONSTANT_POOL:
+      case CONSTANT_POOL:
         action = new ConstantPool(actionStream);
         break;
-      case ActionConstants.DECREMENT:
+      case DECREMENT:
         action = new Decrement();
         break;
-      case ActionConstants.DEFINE_FUNCTION:
+      case DEFINE_FUNCTION:
         action = new DefineFunction(actionStream, stream);
         break;
-      case ActionConstants.DEFINE_FUNCTION_2:
+      case DEFINE_FUNCTION_2:
         action = new DefineFunction2(actionStream, stream);
         break;
-      case ActionConstants.DEFINE_LOCAL:
+      case DEFINE_LOCAL:
         action = new DefineLocal();
         break;
-      case ActionConstants.DEFINE_LOCAL_2:
+      case DEFINE_LOCAL_2:
         action = new DefineLocal2();
         break;
-      case ActionConstants.DELETE:
+      case DELETE:
         action = new Delete();
         break;
-      case ActionConstants.DELETE_2:
+      case DELETE_2:
         action = new Delete2();
         break;
-      case ActionConstants.DIVIDE:
+      case DIVIDE:
         action = new Divide();
         break;
-      case ActionConstants.END:
+      case END:
         action = new End();
         break;
-      case ActionConstants.END_DRAG:
+      case END_DRAG:
         action = new EndDrag();
         break;
-      case ActionConstants.ENUMERATE:
+      case ENUMERATE:
         action = new Enumerate();
         break;
-      case ActionConstants.ENUMERATE_2:
+      case ENUMERATE_2:
         action = new Enumerate2();
         break;
-      case ActionConstants.EQUALS:
+      case EQUALS:
         action = new Equals();
         break;
-      case ActionConstants.EQUALS_2:
+      case EQUALS_2:
         action = new Equals2();
         break;
-      case ActionConstants.EXTENDS:
+      case EXTENDS:
         action = new Extends();
         break;
-      case ActionConstants.GET_MEMBER:
+      case GET_MEMBER:
         action = new GetMember();
         break;
-      case ActionConstants.GET_PROPERTY:
+      case GET_PROPERTY:
         action = new GetProperty();
         break;
-      case ActionConstants.GET_TIME:
+      case GET_TIME:
         action = new GetTime();
         break;
-      case ActionConstants.GET_URL:
+      case GET_URL:
         action = new GetURL(actionStream);
         break;
-      case ActionConstants.GET_URL_2:
+      case GET_URL_2:
         action = new GetURL2(actionStream);
         break;
-      case ActionConstants.GET_VARIABLE:
+      case GET_VARIABLE:
         action = new GetVariable();
         break;
-      case ActionConstants.GO_TO_FRAME:
+      case GO_TO_FRAME:
         action = new GoToFrame(actionStream);
         break;
-      case ActionConstants.GO_TO_FRAME_2:
+      case GO_TO_FRAME_2:
         action = new GoToFrame2(actionStream);
         break;
-      case ActionConstants.GO_TO_LABEL:
+      case GO_TO_LABEL:
         action = new GoToLabel(actionStream);
         break;
-      case ActionConstants.GREATER:
+      case GREATER:
         action = new Greater();
         break;
-      case ActionConstants.IF:
+      case IF:
         action = new If(actionStream);
         break;
-      case ActionConstants.IMPLEMENTS_OP:
+      case IMPLEMENTS_OP:
         action = new ImplementsOp();
         break;
-      case ActionConstants.INCREMENT:
+      case INCREMENT:
         action = new Increment();
         break;
-      case ActionConstants.INIT_ARRAY:
+      case INIT_ARRAY:
         action = new InitArray();
         break;
-      case ActionConstants.INIT_OBJECT:
+      case INIT_OBJECT:
         action = new InitObject();
         break;
-      case ActionConstants.INSTANCE_OF:
+      case INSTANCE_OF:
         action = new InstanceOf();
         break;
-      case ActionConstants.JUMP:
+      case JUMP:
         action = new Jump(actionStream);
         break;
-      case ActionConstants.LESS:
+      case LESS:
         action = new Less();
         break;
-      case ActionConstants.LESS_2:
+      case LESS_2:
         action = new Less2();
         break;
-      case ActionConstants.M_B_ASCII_TO_CHAR:
+      case M_B_ASCII_TO_CHAR:
         action = new MBAsciiToChar();
         break;
-      case ActionConstants.M_B_CHAR_TO_ASCII:
+      case M_B_CHAR_TO_ASCII:
         action = new MBCharToAscii();
         break;
-      case ActionConstants.M_B_STRING_EXTRACT:
+      case M_B_STRING_EXTRACT:
         action = new MBStringExtract();
         break;
-      case ActionConstants.M_B_STRING_LENGTH:
+      case M_B_STRING_LENGTH:
         action = new MBStringLength();
         break;
-      case ActionConstants.MODULO:
+      case MODULO:
         action = new Modulo();
         break;
-      case ActionConstants.MULTIPLY:
+      case MULTIPLY:
         action = new Multiply();
         break;
-      case ActionConstants.NEW_METHOD:
+      case NEW_METHOD:
         action = new NewMethod();
         break;
-      case ActionConstants.NEW_OBJECT:
+      case NEW_OBJECT:
         action = new NewObject();
         break;
-      case ActionConstants.NEXT_FRAME:
+      case NEXT_FRAME:
         action = new NextFrame();
         break;
-      case ActionConstants.NOT:
+      case NOT:
         action = new Not();
         break;
-      case ActionConstants.OR:
+      case OR:
         action = new Or();
         break;
-      case ActionConstants.PLAY:
+      case PLAY:
         action = new Play();
         break;
-      case ActionConstants.POP:
+      case POP:
         action = new Pop();
         break;
-      case ActionConstants.PREVIOUS_FRAME:
+      case PREVIOUS_FRAME:
         action = new PreviousFrame();
         break;
-      case ActionConstants.PUSH:
+      case PUSH:
         action = new Push(actionStream);
         break;
-      case ActionConstants.PUSH_DUPLICATE:
+      case PUSH_DUPLICATE:
         action = new PushDuplicate();
         break;
-      case ActionConstants.RANDOM_NUMBER:
+      case RANDOM_NUMBER:
         action = new RandomNumber();
         break;
-      case ActionConstants.REMOVE_SPRITE:
+      case REMOVE_SPRITE:
         action = new RemoveSprite();
         break;
-      case ActionConstants.RETURN:
+      case RETURN:
         action = new Return();
         break;
-      case ActionConstants.SET_MEMBER:
+      case SET_MEMBER:
         action = new SetMember();
         break;
-      case ActionConstants.SET_PROPERTY:
+      case SET_PROPERTY:
         action = new SetProperty();
         break;
-      case ActionConstants.SET_TARGET:
+      case SET_TARGET:
         action = new SetTarget(actionStream);
         break;
-      case ActionConstants.SET_TARGET_2:
+      case SET_TARGET_2:
         action = new SetTarget2();
         break;
-      case ActionConstants.SET_VARIABLE:
+      case SET_VARIABLE:
         action = new SetVariable();
         break;
-      case ActionConstants.STACK_SWAP:
+      case STACK_SWAP:
         action = new StackSwap();
         break;
-      case ActionConstants.START_DRAG:
+      case START_DRAG:
         action = new StartDrag();
         break;
-      case ActionConstants.STOP:
+      case STOP:
         action = new Stop();
         break;
-      case ActionConstants.STOP_SOUNDS:
+      case STOP_SOUNDS:
         action = new StopSounds();
         break;
-      case ActionConstants.STORE_REGISTER:
+      case STORE_REGISTER:
         action = new StoreRegister(actionStream);
         break;
-      case ActionConstants.STRICT_EQUALS:
+      case STRICT_EQUALS:
         action = new StrictEquals();
         break;
-      case ActionConstants.STRING_ADD:
+      case STRING_ADD:
         action = new StringAdd();
         break;
-      case ActionConstants.STRING_EQUALS:
+      case STRING_EQUALS:
         action = new StringEquals();
         break;
-      case ActionConstants.STRING_EXTRACT:
+      case STRING_EXTRACT:
         action = new StringExtract();
         break;
-      case ActionConstants.STRING_GREATER:
+      case STRING_GREATER:
         action = new StringGreater();
         break;
-      case ActionConstants.STRING_LENGTH:
+      case STRING_LENGTH:
         action = new StringLength();
         break;
-      case ActionConstants.STRING_LESS:
+      case STRING_LESS:
         action = new StringLess();
         break;
-      case ActionConstants.SUBTRACT:
+      case SUBTRACT:
         action = new Subtract();
         break;
-      case ActionConstants.TARGET_PATH:
+      case TARGET_PATH:
         action = new TargetPath();
         break;
-      case ActionConstants.THROW:
+      case THROW:
         action = new Throw();
         break;
-      case ActionConstants.TOGGLE_QUALITY:
+      case TOGGLE_QUALITY:
         action = new ToggleQuality();
         break;
-      case ActionConstants.TO_INTEGER:
+      case TO_INTEGER:
         action = new ToInteger();
         break;
-      case ActionConstants.TO_NUMBER:
+      case TO_NUMBER:
         action = new ToNumber();
         break;
-      case ActionConstants.TO_STRING:
+      case TO_STRING:
         action = new ToString();
         break;
-      case ActionConstants.TRACE:
+      case TRACE:
         action = new Trace();
         break;
-      case ActionConstants.TRY:
+      case TRY:
         action = new Try(actionStream, stream);
         break;
-      case ActionConstants.TYPE_OF:
+      case TYPE_OF:
         action = new TypeOf();
         break;
-      case ActionConstants.WAIT_FOR_FRAME:
+      case WAIT_FOR_FRAME:
         action = new WaitForFrame(actionStream);
         break;
-      case ActionConstants.WAIT_FOR_FRAME_2:
+      case WAIT_FOR_FRAME_2:
         action = new WaitForFrame2(actionStream);
         break;
-      case ActionConstants.WITH:
+      case WITH:
         action = new With(actionStream, stream);
         break;
-      default:
+      case UNKNOWN_ACTION:
         action = new UnknownAction(actionStream, actionCode);
+        break;
+      default:
+        throw new AssertionError("Action type '" + actionType.name() + "' not handled!");
     }
 
     // fool a decompilation protection which pretends an action record to be

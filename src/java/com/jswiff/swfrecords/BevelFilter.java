@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -30,6 +31,9 @@ import com.jswiff.io.OutputBitStream;
  * TODO: Comments
  */
 public final class BevelFilter extends Filter {
+  
+  private static final long serialVersionUID = 1L;
+  
   private RGBA highlightColor;
   private RGBA shadowColor;
   private double x;
@@ -46,6 +50,7 @@ public final class BevelFilter extends Filter {
    * Creates a new BevelFilter instance.
    */
   public BevelFilter() {
+    super(FilterType.BEVEL);
     initDefaults();
   }
 
@@ -57,6 +62,7 @@ public final class BevelFilter extends Filter {
    * @throws IOException TODO: Comments
    */
   public BevelFilter(InputBitStream stream) throws IOException {
+    super(FilterType.BEVEL);
     highlightColor   = new RGBA(stream);
     shadowColor      = new RGBA(stream);
     x                = stream.readFP32();

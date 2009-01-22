@@ -22,6 +22,7 @@ package com.jswiff.swfrecords;
 
 import java.io.IOException;
 
+import com.jswiff.constants.TagConstants.FilterType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -49,6 +50,7 @@ public final class GradientBevelFilter extends Filter {
    * @param ratios TODO: Comments
    */
   public GradientBevelFilter(RGBA[] colors, short[] ratios) {
+    super(FilterType.GRADIENT_BEVEL);
     setControlPoints(colors, ratios);
     initDefaults();
   }
@@ -61,6 +63,7 @@ public final class GradientBevelFilter extends Filter {
    * @throws IOException TODO: Comments
    */
   public GradientBevelFilter(InputBitStream stream) throws IOException {
+    super(FilterType.GRADIENT_BEVEL);
     int count = stream.readUI8();
     colors     = new RGBA[count];
     ratios     = new short[count];

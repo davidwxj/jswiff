@@ -239,18 +239,14 @@ public class Base64 {
     for (i = off; i < (off + len); i++) {
       sbiCrop     = (byte) (data[i] & 0x7f); // Only the low seven bits
       sbiDecode   = DECODABET[sbiCrop];
-      if (sbiDecode >= WHITE_SPACE_ENC) // White space, Equals sign or better
-       {
-        if (sbiDecode >= EQUALS_SIGN_ENC) {
-          b4[b4Posn++] = sbiCrop;
-          if (b4Posn > 3) {
-            outBuffPosn += decode4to3(b4, 0, outBuff, outBuffPosn);
-            b4Posn = 0;
-            // If that was the equals sign, break out of 'for' loop
-            if (sbiCrop == EQUALS_SIGN) {
-              break;
-            }
-          }
+      if (sbiDecode >= WHITE_SPACE_ENC) { // White space, Equals sign or better
+        if (sbiDecode < EQUALS_SIGN_ENC) continue;
+        b4[b4Posn++] = sbiCrop;
+        if (b4Posn > 3) {
+          outBuffPosn += decode4to3(b4, 0, outBuff, outBuffPosn);
+          b4Posn = 0;
+          // If that was the equals sign, break out of 'for' loop
+          if (sbiCrop == EQUALS_SIGN) break;
         }
       } else {
         throw new IllegalArgumentException(

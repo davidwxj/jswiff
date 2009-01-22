@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -46,19 +47,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class And extends Action {
+
+  private static final long serialVersionUID = 1L;
+
   /**
    * Creates a new And action.
    */
   public And() {
-    code = ActionConstants.AND;
+    super(ActionType.AND);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"And"</code>
-   */
-  public String toString() {
-    return "And";
-  }
 }

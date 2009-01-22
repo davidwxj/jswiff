@@ -23,7 +23,7 @@ package com.jswiff.swfrecords.tags;
 import java.io.IOException;
 import java.util.Date;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -35,6 +35,9 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 3
  */
 public final class ProductInfo extends DefinitionTag {
+
+  private static final long serialVersionUID = 1L;
+
   private int productId;
   private int edition;
   private short majorVersion;
@@ -42,19 +45,19 @@ public final class ProductInfo extends DefinitionTag {
   private long buildNumber;
   private Date buildDate;
 
-  public ProductInfo(int productId, int edition, short majorVersion,
-      short minorVersion, long buildNumber, Date buildDate) {
+  public ProductInfo(int productId, int edition, short majorVersion, short minorVersion, long buildNumber,
+      Date buildDate) {
+    super(TagType.PRODUCT_INFO);
     this.productId = productId;
     this.edition = edition;
     this.majorVersion = majorVersion;
     this.minorVersion = minorVersion;
     this.buildNumber = buildNumber;
     this.buildDate = buildDate;
-    code = TagConstants.PRODUCT_INFO;
   }
 
   ProductInfo() {
-    // empty
+    super(TagType.PRODUCT_INFO);
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {

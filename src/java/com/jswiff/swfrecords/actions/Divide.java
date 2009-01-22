@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -48,19 +49,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 4
  */
 public final class Divide extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new Divide action.
    */
   public Divide() {
-    code = ActionConstants.DIVIDE;
+    super(ActionType.DIVIDE);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"Divide"</code>
-   */
-  public String toString() {
-    return "Divide";
-  }
 }

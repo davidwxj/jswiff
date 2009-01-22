@@ -20,28 +20,37 @@
 
 package com.jswiff.swfrecords.tags;
 
+import com.jswiff.constants.TagConstants.TagType;
+
 /**
  * Base class for definition tags, which define new characters.
  */
 public abstract class DefinitionTag extends Tag {
-	protected int characterId;
 
-	/**
-	 * Sets the character ID. Character IDs start at 1 and have to be unique.
-	 *
-	 * @param characterId character ID
-	 */
-	public void setCharacterId(int characterId) {
-		this.characterId = characterId;
-	}
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Returns the character ID. Character IDs start at 1 and have to be
-	 * unique.
-	 *
-	 * @return character ID
-	 */
-	public int getCharacterId() {
-		return characterId;
-	}
+  protected int characterId;
+
+  public DefinitionTag(TagType tagType) {
+    super(tagType);
+  }
+
+  /**
+   * Sets the character ID. Character IDs start at 1 and have to be unique.
+   * 
+   * @param characterId
+   *          character ID
+   */
+  public void setCharacterId(int characterId) {
+    this.characterId = characterId;
+  }
+
+  /**
+   * Returns the character ID. Character IDs start at 1 and have to be unique.
+   * 
+   * @return character ID
+   */
+  public int getCharacterId() {
+    return characterId;
+  }
 }

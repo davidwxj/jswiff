@@ -22,37 +22,41 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
-
 
 /**
  * This tag removes a character with a given ID, thereby freeing memory from
  * Flash Player.
  */
 public final class FreeCharacter extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private int characterId;
 
   /**
    * Creates a new FreeCharacter tag. Supply the ID of the character to be
    * removed.
-   *
-   * @param characterId character ID to be removed
+   * 
+   * @param characterId
+   *          character ID to be removed
    */
   public FreeCharacter(int characterId) {
-    code               = TagConstants.FREE_CHARACTER;
-    this.characterId   = characterId;
+    super(TagType.FREE_CHARACTER);
+    this.characterId = characterId;
   }
 
   FreeCharacter() {
-    // empty
+    super(TagType.FREE_CHARACTER);
   }
 
   /**
    * Sets the ID of the character to be removed
-   *
-   * @param characterId character ID to be removed
+   * 
+   * @param characterId
+   *          character ID to be removed
    */
   public void setCharacterId(int characterId) {
     this.characterId = characterId;
@@ -60,7 +64,7 @@ public final class FreeCharacter extends Tag {
 
   /**
    * Returns the ID of the character to be removed from memory.
-   *
+   * 
    * @return character ID to be removed
    */
   public int getCharacterId() {

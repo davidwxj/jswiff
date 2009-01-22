@@ -22,7 +22,7 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -34,23 +34,27 @@ import com.jswiff.io.OutputBitStream;
  * @since SWF 9
  */
 public final class DefineBinaryData extends DefinitionTag {
+
+  private static final long serialVersionUID = 1L;
+
   private byte[] binaryData;
 
   /**
    * Creates a new DefineBinaryData tag.
    * 
-   * @param characterId character ID of the bitmap
+   * @param characterId
+   *          character ID of the bitmap
    * @param binaryData
-   *            binary data storing product information
+   *          binary data storing product information
    */
   public DefineBinaryData(int characterId, byte[] binaryData) {
-    code             = TagConstants.DEFINE_BINARY_DATA;
+    super(TagType.DEFINE_BINARY_DATA);
     this.characterId = characterId;
-    this.binaryData  = binaryData;
+    this.binaryData = binaryData;
   }
-
+  
   DefineBinaryData() {
-    // empty
+    super(TagType.DEFINE_BINARY_DATA);
   }
 
   /**
@@ -70,9 +74,9 @@ public final class DefineBinaryData extends DefinitionTag {
 
   void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
-    characterId     = inStream.readUI16();
+    characterId = inStream.readUI16();
     inStream.move(4);
-    binaryData      = new byte[data.length - 6];
+    binaryData = new byte[data.length - 6];
     System.arraycopy(data, 6, binaryData, 0, binaryData.length);
   }
 }

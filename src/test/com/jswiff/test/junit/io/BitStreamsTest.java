@@ -20,13 +20,13 @@
 
 package com.jswiff.test.junit.io;
 
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
 
 
 /**

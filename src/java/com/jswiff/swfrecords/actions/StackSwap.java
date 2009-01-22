@@ -20,7 +20,8 @@
 
 package com.jswiff.swfrecords.actions;
 
-import com.jswiff.constants.ActionConstants;
+import com.jswiff.constants.TagConstants.ActionType;
+
 
 /**
  * <p>
@@ -42,19 +43,14 @@ import com.jswiff.constants.ActionConstants;
  * @since SWF 5
  */
 public final class StackSwap extends Action {
+  
+  private static final long serialVersionUID = 1L;
+  
   /**
    * Creates a new StackSwap action.
    */
   public StackSwap() {
-    code = ActionConstants.STACK_SWAP;
+    super(ActionType.STACK_SWAP);
   }
 
-  /**
-   * Returns a short description of this action.
-   *
-   * @return <code>"StackSwap"</code>
-   */
-  public String toString() {
-    return "StackSwap";
-  }
 }

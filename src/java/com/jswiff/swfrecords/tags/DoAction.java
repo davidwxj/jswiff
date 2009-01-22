@@ -22,35 +22,37 @@ package com.jswiff.swfrecords.tags;
 
 import java.io.IOException;
 
-import com.jswiff.constants.TagConstants;
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
 
-
 /**
  * This tag instructs Flash Player to execute a series of actions when
  * encountering the next <code>ShowFrame</code> tag, after all drawing for the
  * current frame has completed.
- *
+ * 
  * @since SWF 3
  */
 public final class DoAction extends Tag {
+
+  private static final long serialVersionUID = 1L;
+
   private ActionBlock actions;
 
   /**
    * Creates a new DoAction instance.
    */
   public DoAction() {
-    code = TagConstants.DO_ACTION;
+    super(TagType.DO_ACTION);
   }
 
   /**
    * Returns the action block containing actions this tag is supposed to
-   * perform. Use <code>addAction()</code> to add action records to this
-   * block.
-   *
+   * perform. Use <code>addAction()</code> to add action records to this block.
+   * 
    * @return contained actions
    */
   public ActionBlock getActions() {
@@ -62,19 +64,20 @@ public final class DoAction extends Tag {
 
   /**
    * Adds an action record.
-   *
-   * @param action action record
+   * 
+   * @param action
+   *          action record
    */
   public void addAction(Action action) {
     getActions().addAction(action);
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
-    forceLongHeader = true;
+    this.setForceLongHeader(true);
     getActions().write(outStream, true);
   }
 
-  void setData(byte[] data) throws IOException {
+  void setData(byte[] data) throws IOException, InvalidCodeException {
     InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {
