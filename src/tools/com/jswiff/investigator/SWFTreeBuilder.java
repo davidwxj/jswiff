@@ -431,38 +431,20 @@ final class SWFTreeBuilder {
     String result = "Push";
     for (StackValue value : push.getValues()) {
       switch (value.getType()) {
-      case Push.StackValue.TYPE_STRING:
-        result += (" string: '" + value.getString() + "'");
+      case CONSTANT_8:
+        result += (" c8[" + value.asString() + "]: '" + constants.get((Integer)value.getValue()) + "'");
         break;
-      case Push.StackValue.TYPE_FLOAT:
-        result += (" float: " + value.getFloat());
+      case CONSTANT_16:
+        result += (" c8[" + value.asString() + "]: '" + constants.get((Integer)value.getValue()) + "'");
         break;
-      case Push.StackValue.TYPE_REGISTER:
-        result += (" register: " + value.getRegisterNumber());
-        break;
-      case Push.StackValue.TYPE_BOOLEAN:
-        result += (" boolean: " + value.getBoolean());
-        break;
-      case Push.StackValue.TYPE_DOUBLE:
-        result += (" double: " + value.getDouble());
-        break;
-      case Push.StackValue.TYPE_INTEGER:
-        result += (" integer: " + value.getInteger());
-        break;
-      case Push.StackValue.TYPE_CONSTANT_8:
-        int index8 = value.getConstant8();
-        result += (" c8[" + index8 + "]: '" + constants.get(index8) + "'");
-        break;
-      case Push.StackValue.TYPE_CONSTANT_16:
-        int index16 = value.getConstant16();
-        result += (" c8[" + index16 + "]: '" + constants.get(index16) + "'");
-        break;
-      case Push.StackValue.TYPE_UNDEFINED:
+      case UNDEFINED:
         result += " <b>undefined</b>";
         break;
-      case Push.StackValue.TYPE_NULL:
+      case NULL:
         result += " <b>null</b>";
         break;
+      default :
+        result += " " + value.toString();
       }
       result += ";";
     }

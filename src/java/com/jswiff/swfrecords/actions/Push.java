@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.constants.TagConstants.ValueType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 
@@ -63,7 +65,7 @@ public final class Push extends Action {
   /*
    * Reads a Push action from a bit stream.
    */
-  Push(InputBitStream stream) throws IOException {
+  Push(InputBitStream stream) throws IOException, InvalidCodeException {
     super(ActionType.PUSH);
     while (stream.available() > 0) {
       StackValue value = new StackValue(stream);
@@ -115,436 +117,243 @@ public final class Push extends Action {
 
   /**
    * This class contains a value which can be pushed to the stack.  The default
-   * value is <code>undefined</code>, the type is <code>TYPE_UNDEFINED</code>.
-   * Use setters to change.
+   * value is <code>undefined</code>.<br>
+   * Use getType to determine the actual value type, e.g.
+   * <code> if (ValueType.BOOLEAN.equals(stackVal.getType()) {
+   *    boolean val = (Boolean) stackVal.getValue();
+   * } </code>
    */
   public static class StackValue implements Serializable {
-    /** Indicates that the value to be pushed is a string. */
-    public static final short TYPE_STRING      = 0;
-    /** Indicates that the value to be pushed is a floating point number. */
-    public static final short TYPE_FLOAT       = 1;
-    /** Indicates that the value to be pushed is <code>null</code>. */
-    public static final short TYPE_NULL        = 2;
-    /** Indicates that the value to be pushed is <code>undefined</code>. */
-    public static final short TYPE_UNDEFINED   = 3;
-    /** Indicates that the value to be pushed is a register number. */
-    public static final short TYPE_REGISTER    = 4;
-    /** Indicates that the value to be pushed is a boolean. */
-    public static final short TYPE_BOOLEAN     = 5;
+    
+    private static final long serialVersionUID = 1L;
+    
     /**
-     * Indicates that the value to be pushed is double-precision floating point
-     * number.
+     * Create a stack value of type STRING.
+     * @param value a string value
+     * @return a stack value
      */
-    public static final short TYPE_DOUBLE      = 6;
-    /** Indicates that the value to be pushed is an integer. */
-    public static final short TYPE_INTEGER     = 7;
-    /** Indicates that the value to be pushed is an 8-bit constant pool index. */
-    public static final short TYPE_CONSTANT_8  = 8;
-    /** Indicates that the value to be pushed is a 16-bit constant pool index. */
-    public static final short TYPE_CONSTANT_16 = 9;
-    private short type                         = TYPE_UNDEFINED;
-    private String string;
-    private float floatValue;
-    private short registerNumber;
-    private boolean booleanValue;
-    private double doubleValue;
-    private long integerValue;
-    private short constant8;
-    private int constant16;
+    public static StackValue createStringValue(String value) {
+      return new StackValue(ValueType.STRING, value);
+    }
+    
+    /**
+     * Create a stack value of type INTEGER.
+     * @param value an integer value (of type <code>long</code>)
+     * @return a stack value
+     */
+    public static StackValue createIntegerValue(long value) {
+      return new StackValue(ValueType.INTEGER, value);
+    }
+    
+    /**
+     * Create a double-precision number stack value.
+     * @param value a double value
+     * @return a stack value
+     */
+    public static StackValue createDoubleValue(double value) {
+      return new StackValue(ValueType.DOUBLE, value);
+    }
+    
+    /**
+     * Create a (single-precision) float stack value.
+     * @param value a float value
+     * @return a stack value
+     */
+    public static StackValue createFloatValue(float value) {
+      return new StackValue(ValueType.FLOAT, value);
+    }
+    
+    /**
+     * Create a stack value of type BOOLEAN.
+     * @param value a boolean value
+     * @return a stack value
+     */
+    public static StackValue createBooleanValue(boolean value) {
+      return new StackValue(ValueType.BOOLEAN, value);
+    }
+    
+    /**
+     * Create a stack value holding a register number.
+     * @param value a register number
+     * @return a stack value
+     */
+    public static StackValue createRegisterValue(short value) {
+      return new StackValue(ValueType.REGISTER, value);
+    }
+    
+    /**
+     * Create an 8-bit constant pool index, used for indexes less
+     * than 256.
+     * @param value an 8-bit constant pool index
+     * @return a stack value
+     */
+    public static StackValue createConstant8Value(short value) {
+      return new StackValue(ValueType.CONSTANT_8, value);
+    }
+    
+    /**
+     * Create a 16-bit constant pool index, used for indexes more
+     * than 256.
+     * @param value an 16-bit constant pool index
+     * @return a stack value
+     */
+    public static StackValue createConstant16Value(int value) {
+      return new StackValue(ValueType.CONSTANT_16, value);
+    }
+    
+    /**
+     * Sets the type to <code>TYPE_UNDEFINED</code> (i.e. the push value is
+     * <code>undefined</code>).
+     */
+    public static StackValue createUndefinedValue() {
+      return new StackValue(ValueType.UNDEFINED, "");
+    }
+    
+    /**
+     * Sets the type to <code>TYPE_NULL</code> (i.e. the push value is
+     * <code>null</code>).
+     */
+    public static StackValue createNullValue() {
+      return new StackValue(ValueType.NULL, "");
+    }
+    
+    private final ValueType type;
+    private final Object value;
 
-    /**
-     * Creates a new StackValue instance. Initial type is
-     * <code>TYPE_UNDEFINED</code>.
-     */
-    public StackValue() {
-      // nothing to do
+    private StackValue(ValueType type, Object value) {
+      this.type = type;
+      this.value = value;
     }
 
     /*
      * Reads a PushEntry instance from a bit stream.
      */
-    StackValue(InputBitStream stream) throws IOException {
-      type = stream.readUI8();
+    StackValue(InputBitStream stream) throws IOException, InvalidCodeException {
+      type = ValueType.lookup(stream.readUI8());
       switch (type) {
-        case TYPE_STRING:
-          string = stream.readString();
+        case STRING:
+          this.value = stream.readString();
           break;
-        case TYPE_FLOAT:
-          floatValue = stream.readFloat();
+        case FLOAT:
+          this.value = stream.readFloat();
           break;
-        case TYPE_REGISTER:
-          registerNumber = stream.readUI8();
+        case BOOLEAN:
+          this.value = (stream.readUI8() != 0);
           break;
-        case TYPE_BOOLEAN:
-          booleanValue = (stream.readUI8() != 0);
+        case DOUBLE:
+          this.value = stream.readDouble();
           break;
-        case TYPE_DOUBLE:
-          doubleValue = stream.readDouble();
+        case INTEGER:
+          this.value = stream.readUI32();
           break;
-        case TYPE_INTEGER:
-          integerValue = stream.readUI32();
+        case CONSTANT_8:
+        case REGISTER:
+          this.value = stream.readUI8();
           break;
-        case TYPE_CONSTANT_8:
-          constant8 = stream.readUI8();
+        case CONSTANT_16:
+          this.value = stream.readUI16();
           break;
-        case TYPE_CONSTANT_16:
-          constant16 = stream.readUI16();
-          break;
+        default:
+          this.value = "";
       }
     }
 
     /**
-     * Sets the push value to a boolean, and the type to TYPE_BOOLEAN.
-     *
-     * @param value a boolean value
+     * Return the value.
+     * @return the value as an Object, use getType() to determine the actual type.
      */
-    public void setBoolean(boolean value) {
-      this.booleanValue   = value;
-      type                = TYPE_BOOLEAN;
+    public Object getValue() {
+      return this.value;
     }
 
     /**
-     * Returns the boolean the push value is set to. If the value type is not
-     * TYPE_BOOLEAN, an IllegalStateException is thrown.
-     *
-     * @return push value as boolean
-     */
-    public boolean getBoolean() {
-      return booleanValue;
-    }
-
-    /**
-     * Sets the push value to a 16-bit constant pool index, and the type to
-     * TYPE_BOOLEAN. Use 16-bit indexes when the constant pool contains more
-     * than 256 constants.
-     *
-     * @param value an 8-bit constant pool index
-     */
-    public void setConstant16(int value) {
-      this.constant16   = value;
-      type              = TYPE_CONSTANT_16;
-    }
-
-    /**
-     * Returns the 16-bit constant pool index the push value is set to. If the
-     * value type is not TYPE_CONSTANT_16, an IllegalStateException is thrown.
-     *
-     * @return push value as 16-bit constant pool index
-     *
-     * @throws IllegalStateException if type is not TYPE_CONSTANT_16
-     */
-    public int getConstant16() {
-      if (type != TYPE_CONSTANT_16) {
-        throw new IllegalStateException("Value type is not TYPE_CONSTANT_16!");
-      }
-      return constant16;
-    }
-
-    /**
-     * Sets the push value to an 8-bit constant pool index, and the type to
-     * TYPE_BOOLEAN. Use 8-bit indexes when the constant pool contains less
-     * than 256 constants.
-     *
-     * @param value an 8-bit constant pool index
-     */
-    public void setConstant8(short value) {
-      this.constant8   = value;
-      type             = TYPE_CONSTANT_8;
-    }
-
-    /**
-     * Returns the 8-bit constant pool index the push value is set to. If the
-     * value type is not TYPE_CONSTANT_8, an IllegalStateException is thrown.
-     *
-     * @return push value as 8-bit constant pool index
-     *
-     * @throws IllegalStateException if type is not TYPE_CONSTANT_8
-     */
-    public short getConstant8() {
-      if (type != TYPE_CONSTANT_8) {
-        throw new IllegalStateException("Value type is not TYPE_CONSTANT_8!");
-      }
-      return constant8;
-    }
-
-    /**
-     * Sets the push value to a double-precision number, and the type to
-     * TYPE_DOUBLE.
-     *
-     * @param value a double value
-     */
-    public void setDouble(double value) {
-      this.doubleValue   = value;
-      type               = TYPE_DOUBLE;
-    }
-
-    /**
-     * Returns the double the push value is set to. If the value type is not
-     * TYPE_DOUBLE, an IllegalStateException is thrown.
-     *
-     * @return push value as double
-     *
-     * @throws IllegalStateException if type is not TYPE_DOUBLE
-     */
-    public double getDouble() {
-      if (type != TYPE_DOUBLE) {
-        throw new IllegalStateException("Value type is not TYPE_DOUBLE!");
-      }
-      return doubleValue;
-    }
-
-    /**
-     * Sets the push value to a (single-precision) float, and the type to
-     * TYPE_FLOAT.
-     *
-     * @param value a float value
-     */
-    public void setFloat(float value) {
-      this.floatValue   = value;
-      type              = TYPE_FLOAT;
-    }
-
-    /**
-     * Returns the float the push value is set to. If the value type is not
-     * TYPE_FLOAT, an IllegalStateException is thrown.
-     *
-     * @return push value as float
-     *
-     * @throws IllegalStateException if type is not TYPE_FLOAT
-     */
-    public float getFloat() {
-      if (type != TYPE_FLOAT) {
-        throw new IllegalStateException("Value type is not TYPE_FLOAT!");
-      }
-      return floatValue;
-    }
-
-    /**
-     * Sets the push value to an integer, and the type to TYPE_INTEGER.
-     *
-     * @param value an integer value (of type <code>long</code>)
-     */
-    public void setInteger(long value) {
-      this.integerValue   = value;
-      type                = TYPE_INTEGER;
-    }
-
-    /**
-     * Returns the integer the push value is set to. If the value type is not
-     * TYPE_INTEGER, an IllegalStateException is thrown.
-     *
-     * @return push value as integer
-     *
-     * @throws IllegalStateException if type is not TYPE_INTEGER
-     */
-    public long getInteger() {
-      if (type != TYPE_INTEGER) {
-        throw new IllegalStateException("Value type is not TYPE_INTEGER!");
-      }
-      return integerValue;
-    }
-
-    /**
-     * Sets the type to <code>TYPE_NULL</code> (i.e. the push value is
-     * <code>null</code>).
-     */
-    public void setNull() {
-      type = TYPE_NULL;
-    }
-
-    /**
-     * Checks if the push value is <code>null</code>.
-     *
-     * @return true if <code>null</code>, else false.
-     */
-    public boolean isNull() {
-      return (type == TYPE_NULL);
-    }
-
-    /**
-     * Sets the push value to a register number, and the type to TYPE_REGISTER.
-     *
-     * @param value a register number
-     */
-    public void setRegisterNumber(short value) {
-      this.registerNumber   = value;
-      type                  = TYPE_REGISTER;
-    }
-
-    /**
-     * Returns the register number the push value is set to. If the value type
-     * is not TYPE_REGISTER, an IllegalStateException is thrown.
-     *
-     * @return push value as register number
-     *
-     * @throws IllegalStateException if type is not TYPE_REGISTER
-     */
-    public short getRegisterNumber() {
-      if (type != TYPE_REGISTER) {
-        throw new IllegalStateException("Value type is not TYPE_REGISTER!");
-      }
-      return registerNumber;
-    }
-
-    /**
-     * Sets the push value to a string, and the type to TYPE_STRING
-     *
-     * @param value a string value
-     */
-    public void setString(String value) {
-      this.string   = value;
-      type          = TYPE_STRING;
-    }
-
-    /**
-     * Returns the string the push value is set to. If the value type is not
-     * TYPE_STRING, an IllegalStateException is thrown
-     *
-     * @return push value as string
-     *
-     * @throws IllegalStateException if type is not TYPE_STRING
-     */
-    public String getString() {
-      if (type != TYPE_STRING) {
-        throw new IllegalStateException("Value type is not TYPE_STRING!");
-      }
-      return string;
-    }
-
-    /**
-     * Returns the type of the push value. The type is one of the constants
-     * <code>TYPE_BOOLEAN, TYPE_CONSTANT_8, TYPE_CONSTANT_16, TYPE_DOUBLE,
-     * TYPE_FLOAT, TYPE_INTEGER, TYPE_NULL, TYPE_REGISTER, TYPE_STRING,
-     * TYPE_UNDEFINED</code>.
-     *
+     * Returns the type of the push value. See {@link ValueType}
      * @return type of push value
      */
-    public short getType() {
+    public ValueType getType() {
       return type;
     }
-
+    
     /**
-     * Sets the type to <code>TYPE_UNDEFINED</code> (i.e. the push value is
-     * <code>undefined</code>).
+     * Get the value as a string regardless of actual type
+     * @return a string representation of the value.
      */
-    public void setUndefined() {
-      type = TYPE_UNDEFINED;
+    public String asString() {
+      return getValue().toString();
     }
 
     /**
-     * Checks if the push value is <code>undefined</code>.
-     *
-     * @return true if <code>undefined</code>, else false.
-     */
-    public boolean isUndefined() {
-      return (type == TYPE_UNDEFINED);
-    }
-
-    /**
-     * Returs a short description of the push value (type and value)
-     *
+     * Returns a short description of the push value (type and value)
      * @return type and value
      */
     public String toString() {
-      String result = "";
-      switch (type) {
-        case TYPE_STRING:
-          result += ("string: '" + string + "'");
-          break;
-        case TYPE_FLOAT:
-          result += ("float: " + floatValue);
-          break;
-        case TYPE_REGISTER:
-          result += ("register: " + registerNumber);
-          break;
-        case TYPE_BOOLEAN:
-          result += ("boolean: " + booleanValue);
-          break;
-        case TYPE_DOUBLE:
-          result += ("double: " + doubleValue);
-          break;
-        case TYPE_INTEGER:
-          result += ("integer: " + integerValue);
-          break;
-        case TYPE_CONSTANT_8:
-          result += ("c8[" + constant8 + "]");
-          break;
-        case TYPE_CONSTANT_16:
-          result += ("c16[" + constant16 + "]");
-          break;
-        case TYPE_UNDEFINED:
-          result += "undefined";
-          break;
-        case TYPE_NULL:
-          result += "null";
-          break;
+      String str = getType().getNiceName();
+      if (!ValueType.NULL.equals(getType()) && !ValueType.UNDEFINED.equals(getType())) {
+        str += ": " + getValue().toString();
       }
-      return result;
+      return str;
     }
 
     int getSize() {
       int size = 1; // type
       switch (type) {
-        case TYPE_STRING:
+        case STRING:
           try {
-            size += (string.getBytes("UTF-8").length + 1);
+            size += (getValue().toString().getBytes("UTF-8").length + 1);
           } catch (UnsupportedEncodingException e) {
             // UTF-8 should be available. If not, we have a big problem anyway
           }
           break;
-        case TYPE_FLOAT:
-          size += 4;
-          break;
-        case TYPE_REGISTER:
+        case BOOLEAN:
+        case CONSTANT_8:
+        case REGISTER:
           size++;
           break;
-        case TYPE_BOOLEAN:
-          size++;
-          break;
-        case TYPE_DOUBLE:
-          size += 8;
-          break;
-        case TYPE_INTEGER:
-          size += 4;
-          break;
-        case TYPE_CONSTANT_8:
-          size++;
-          break;
-        case TYPE_CONSTANT_16:
+        case CONSTANT_16:
           size += 2;
+          break;
+        case INTEGER:
+        case FLOAT:
+          size += 4;
+          break;
+        case DOUBLE:
+          size += 8;
           break;
       }
       return size;
     }
 
     void write(OutputBitStream outStream) throws IOException {
-      outStream.writeUI8(type);
+      outStream.writeUI8(getType().getCode());
+      Object val = getValue();
       switch (type) {
-        case TYPE_STRING:
-          outStream.writeString(string);
+        case STRING:
+          outStream.writeString(val.toString());
           break;
-        case TYPE_FLOAT:
-          outStream.writeFloat(floatValue);
+        case FLOAT:
+          outStream.writeFloat((Float) val);
           break;
-        case TYPE_REGISTER:
-          outStream.writeUI8(registerNumber);
+        case REGISTER:
+          outStream.writeUI8((Short) val);
           break;
-        case TYPE_BOOLEAN:
-          outStream.writeUI8((short) (booleanValue ? 1 : 0));
+        case BOOLEAN:
+          Boolean bVal = (Boolean) val;
+          outStream.writeUI8((short) (bVal ? 1 : 0));
           break;
-        case TYPE_DOUBLE:
-          outStream.writeDouble(doubleValue);
+        case DOUBLE:
+          outStream.writeDouble((Double) val);
           break;
-        case TYPE_INTEGER:
-          outStream.writeUI32(integerValue);
+        case INTEGER:
+          outStream.writeUI32((Long) val);
           break;
-        case TYPE_CONSTANT_8:
-          outStream.writeUI8(constant8);
+        case CONSTANT_8:
+          outStream.writeUI8((Short) val);
           break;
-        case TYPE_CONSTANT_16:
-          outStream.writeUI16(constant16);
+        case CONSTANT_16:
+          outStream.writeUI16((Integer) val);
           break;
       }
     }
   }
+  
 }

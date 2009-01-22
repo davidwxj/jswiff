@@ -27,10 +27,12 @@ import org.dom4j.Attribute;
 import org.dom4j.Element;
 
 import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.constants.TagConstants.ValueType;
 import com.jswiff.exception.InvalidNameException;
 import com.jswiff.exception.MissingNodeException;
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.*;
+import com.jswiff.swfrecords.actions.Push.StackValue;
 import com.jswiff.util.Base64;
 
 
@@ -500,45 +502,56 @@ class ActionXMLReader {
   }
 
   @SuppressWarnings("unchecked")
-  private static Push readPush(Element element) {
+  private static Push readPush(Element element) throws InvalidNameException {
     List valueElements = element.elements();
     Push push          = new Push();
     for (Iterator it = valueElements.iterator(); it.hasNext();) {
       Element valueElement  = (Element) it.next();
-      String type           = valueElement.getName();
-      Push.StackValue value = new Push.StackValue();
-      if (type.equals("boolean")) {
-        value.setBoolean(
-          RecordXMLReader.getBooleanAttribute("value", valueElement));
-      } else if (type.equals("constant16")) {
-        value.setConstant16(
-          RecordXMLReader.getIntAttribute("id", valueElement));
-      } else if (type.equals("constant8")) {
-        value.setConstant8(
-          RecordXMLReader.getShortAttribute("id", valueElement));
-      } else if (type.equals("double")) {
-        value.setDouble(
-          RecordXMLReader.getDoubleAttribute("value", valueElement));
-      } else if (type.equals("float")) {
-        value.setFloat(
-          RecordXMLReader.getFloatAttribute("value", valueElement));
-      } else if (type.equals("integer")) {
-        value.setInteger(
-          RecordXMLReader.getIntAttribute("value", valueElement));
-      } else if (type.equals("null")) {
-        value.setNull();
-      } else if (type.equals("register")) {
-        value.setRegisterNumber(
-          RecordXMLReader.getShortAttribute("number", valueElement));
-      } else if (type.equals("string")) {
-        value.setString(RecordXMLReader.getStringAttributeWithBase64Check("value", valueElement));
-      } else if (type.equals("undefined")) {
-        value.setUndefined();
-      } else {
-        throw new IllegalArgumentException(
-          "Unexpected stack value type: " + type);
+      ValueType type = ValueType.lookup(valueElement.getName());
+      StackValue stackVal;
+      switch (type) {
+      case BOOLEAN:
+        stackVal = StackValue.createBooleanValue(
+            RecordXMLReader.getBooleanAttribute("value", valueElement));
+        break;
+      case CONSTANT_16:
+        stackVal = StackValue.createConstant16Value(
+            RecordXMLReader.getIntAttribute("id", valueElement));
+        break;
+      case CONSTANT_8:
+        stackVal = StackValue.createConstant8Value(
+            RecordXMLReader.getShortAttribute("id", valueElement));
+        break;
+      case DOUBLE:
+        stackVal = StackValue.createDoubleValue(
+            RecordXMLReader.getDoubleAttribute("value", valueElement));
+        break;
+      case FLOAT:
+        stackVal = StackValue.createFloatValue(
+            RecordXMLReader.getFloatAttribute("value", valueElement));
+        break;
+      case INTEGER:
+        stackVal = StackValue.createIntegerValue(
+            RecordXMLReader.getIntAttribute("value", valueElement));
+        break;
+      case NULL:
+        stackVal = StackValue.createNullValue();
+        break;
+      case REGISTER:
+        stackVal = StackValue.createRegisterValue(
+            RecordXMLReader.getShortAttribute("number", valueElement));
+        break;
+      case STRING:
+        stackVal = StackValue.createStringValue(
+            RecordXMLReader.getStringAttributeWithBase64Check("value", valueElement));
+        break;
+      case UNDEFINED:
+        stackVal = StackValue.createUndefinedValue();
+        break;
+        default :
+          throw new AssertionError("Unhandled StackValue type '" + type.name() + "'");
       }
-      push.addValue(value);
+      push.addValue(stackVal);
     }
     return push;
   }

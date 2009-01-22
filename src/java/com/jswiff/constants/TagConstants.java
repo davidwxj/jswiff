@@ -444,6 +444,77 @@ public class TagConstants {
     }
 
   }
+  
+  public static enum ValueType implements ByteCodeConstant {
+    /** Indicates that the value to be pushed is a string. */
+    STRING(      (short)0,  "string"),
+    /** Indicates that the value to be pushed is a floating point number. */
+    FLOAT(       (short)1,  "float"),
+    /** Indicates that the value to be pushed is <code>null</code>. */
+    NULL(        (short)2,  "null"),
+    /** Indicates that the value to be pushed is <code>undefined</code>. */
+    UNDEFINED(   (short)3,  "undefined"),
+    /** Indicates that the value to be pushed is a register number. */
+    REGISTER(    (short)4,  "register"),
+    /** Indicates that the value to be pushed is a boolean. */
+    BOOLEAN(     (short)5,  "boolean"),
+    /** Indicates that the value to be pushed is double-precision floating point number. */
+    DOUBLE(      (short)6,  "double"),
+    /** Indicates that the value to be pushed is an integer. */
+    INTEGER(     (short)7,  "integer"),
+    /** Indicates that the value to be pushed is an 8-bit constant pool index. */
+    CONSTANT_8(  (short)8,  "constant8"),
+    /** Indicates that the value to be pushed is a 16-bit constant pool index. */
+    CONSTANT_16( (short)9,  "constant16");
+
+    private static ByteCodeConstantHelper<ValueType> helper;
+
+    static {
+      helper = new ByteCodeConstantHelper<ValueType>(ValueType.values(), "Blend Mode");
+    }
+
+    /**
+     * Lookup a value corresponding to the given code
+     * @param code the bytecode id
+     * @return the enum mapped to the given code
+     * @throws InvalidCodeException if no value exists for the given code.
+     */
+    public static ValueType lookup(short code) throws InvalidCodeException {
+      return helper.codeLookup(code);
+    }
+
+    /**
+     * Lookup a value based corresponding to the given string
+     * @param name the string id
+     * @return the enum mapped to the given name
+     * @throws InvalidNameException if no value exists for the given name
+     */
+    public static ValueType lookup(String name) throws InvalidNameException {
+      return helper.nameLookup(name);
+    }
+
+    private final short code;
+    private final String name;
+
+    private ValueType(short code, String name) {
+      this.code = code;
+      this.name = name;
+    }
+
+    public short getCode() {
+      return this.code;
+    }
+
+    public String getNiceName() {
+      return helper.getNiceName(this);
+    }
+
+    @Override
+    public String toString() {
+      return this.name;
+    }
+
+  }
 
   public static enum FillTypeGroup {
     SOLID, GRADIENT, BITMAP;

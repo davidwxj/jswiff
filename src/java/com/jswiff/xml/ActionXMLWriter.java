@@ -256,47 +256,25 @@ class ActionXMLWriter {
   }
 
   private static Element writePush(Element element, Push push) {
-    List<StackValue> values     = push.getValues();
+    List<StackValue> values = push.getValues();
     for (StackValue value : values) {
+      Element pushEle = element.addElement(value.getType().toString());
       switch (value.getType()) {
-        case Push.StackValue.TYPE_BOOLEAN:
-          element.addElement("boolean").addAttribute(
-            "value", Boolean.toString(value.getBoolean()));
+        case CONSTANT_16:
+        case CONSTANT_8:
+          pushEle.addAttribute("id", value.asString());
           break;
-        case Push.StackValue.TYPE_CONSTANT_16:
-          element.addElement("constant16").addAttribute(
-            "id", Integer.toString(value.getConstant16()));
+        case BOOLEAN:
+        case DOUBLE:
+        case FLOAT:
+        case INTEGER:
+          pushEle.addAttribute("value", value.asString());
           break;
-        case Push.StackValue.TYPE_CONSTANT_8:
-          element.addElement("constant8").addAttribute(
-            "id", Integer.toString(value.getConstant8()));
+        case REGISTER:
+          pushEle.addAttribute("number", value.asString());
           break;
-        case Push.StackValue.TYPE_DOUBLE:
-          element.addElement("double").addAttribute(
-            "value", Double.toString(value.getDouble()));
-          break;
-        case Push.StackValue.TYPE_FLOAT:
-          element.addElement("float").addAttribute(
-            "value", Float.toString(value.getFloat()));
-          break;
-        case Push.StackValue.TYPE_INTEGER:
-          element.addElement("integer").addAttribute(
-            "value", Long.toString(value.getInteger()));
-          break;
-        case Push.StackValue.TYPE_NULL:
-          element.addElement("null");
-          break;
-        case Push.StackValue.TYPE_REGISTER:
-          element.addElement("register").addAttribute(
-            "number", Short.toString(value.getRegisterNumber()));
-          break;
-        case Push.StackValue.TYPE_STRING:
-          String stringValue = value.getString();
-          Element stringElement = element.addElement("string");
-          RecordXMLWriter.addAttributeWithCharCheck(stringElement, "value", stringValue);
-          break;
-        case Push.StackValue.TYPE_UNDEFINED:
-          element.addElement("undefined");
+        case STRING:
+          RecordXMLWriter.addAttributeWithCharCheck(pushEle, "value", value.asString());
           break;
       }
     }
