@@ -116,12 +116,15 @@ public final class Push extends Action {
   }
 
   /**
-   * This class contains a value which can be pushed to the stack.  The default
-   * value is <code>undefined</code>.<br>
-   * Use getType to determine the actual value type, e.g.
-   * <code> if (ValueType.BOOLEAN.equals(stackVal.getType()) {
+   * This class contains a value which can be pushed to the stack.
+   * Use {@link #getType()} to determine the actual value type, e.g.
+   * <pre>
+   * <code>
+   * if (ValueType.BOOLEAN.equals(stackVal.getType()) {
    *    boolean val = (Boolean) stackVal.getValue();
-   * } </code>
+   * }
+   * </code>
+   * </pre>
    */
   public static class StackValue implements Serializable {
     

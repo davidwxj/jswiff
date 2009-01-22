@@ -185,8 +185,6 @@ public final class ButtonCondAction implements Serializable {
    * use their ASCII code.
    *
    * @param keyPress the key code
-   *
-   * @see KeyCodes
    */
   public void setKeyPress(byte keyPress) {
     this.keyPress = keyPress;
