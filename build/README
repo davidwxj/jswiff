@@ -7,6 +7,7 @@ In the "build" folder (the folder containing the file you are reading), enter
 "ant". A .jar file will be built within seconds.
 
 build.xml also contains other Ant targets:
+- cli: Creates a standalone jar providing a basic CLI
 - compile: compiles the source (to multiple .class files)
 - javadoc: generates Javadoc documentation
 - tgz: creates a .tar.gz archive

@@ -10,8 +10,8 @@
   <!-- set some properties -->
   <target name="init">
     <tstamp/>
-    <property name="projectName" value="jswiff" />
-    <property name="version" value="svn-${DSTAMP}" />
+    <property name="projectName" value="jswiff9" />
+    <property name="version" value="-svn-${DSTAMP}" />
     <property name="debug" value="on"/>
     <property name="srcDir" value="src/java" />
     <property name="testDir" value="src/test" />
@@ -21,8 +21,9 @@
     <property name="classDir" value="${buildDir}/classes" />
     <property name="libDir" value="lib" />
     <property name="javadocDir" value="api" />
-    <property name="archiveFile" value="${projectName}-${version}" />
+    <property name="archiveFile" value="${projectName}${version}" />
   	<property name="distDir" value="dist" />
+  	<property name="cliJar"  value="${distDir}/${projectName}-cli-${DSTAMP}.jar" />
   	<property name="jarFile" value="${distDir}/${archiveFile}.jar" />
   	<property name="zipFile" value="${distDir}/${archiveFile}.zip" />
     <property name="tarFile" value="${distDir}/${archiveFile}.tar" />
@@ -55,6 +56,20 @@
       </manifest>
     </jar>
     <delete dir="${classDir}" includeEmptyDirs="true" />
+  </target>
+	
+  <!-- create a CLI JAR file -->
+  <target name="cli" depends="compile">
+    <mkdir dir="${distDir}" />
+    <jar destfile="${cliJar}" basedir="${classDir}">
+      <zipfileset src="lib/dom4j-1.6.1.jar" includes="**/*.class"/>
+      <zipfileset src="lib/jaxen-1.1.1.jar" includes="**/*.class"/>
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Main-Class" value="com.jswiff.cli.JSwiffCli"/>
+      </manifest>
+    </jar>
+  	<delete dir="${classDir}" includeEmptyDirs="true" />
   </target>
 
   <!-- create javadoc -->
