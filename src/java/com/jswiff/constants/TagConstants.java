@@ -22,6 +22,7 @@ package com.jswiff.constants;
 
 import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.exception.InvalidNameException;
+import com.jswiff.swfrecords.actions.Push;
 
 public class TagConstants {
 
@@ -465,26 +466,29 @@ public class TagConstants {
 
   }
   
+  /**
+   * Possible types for values pushed onto the stack. Used with {@link Push.StackValue}.
+   */
   public static enum ValueType implements ByteCodeConstant {
-    /** Indicates that the value to be pushed is a string. */
+    /** Push value is a String (stored as a String). */
     STRING(      (short)0,  "string"),
-    /** Indicates that the value to be pushed is a floating point number. */
+    /** Push value is a floating point number (stored as a Float). */
     FLOAT(       (short)1,  "float"),
-    /** Indicates that the value to be pushed is <code>null</code>. */
+    /** Push value is null (stored as an empty String). */
     NULL(        (short)2,  "null"),
-    /** Indicates that the value to be pushed is <code>undefined</code>. */
+    /** Push value is undefined (stored as an empty String). */
     UNDEFINED(   (short)3,  "undefined"),
-    /** Indicates that the value to be pushed is a register number. */
+    /** Push value is a register number (stored as a Short). */
     REGISTER(    (short)4,  "register"),
-    /** Indicates that the value to be pushed is a boolean. */
+    /** Push value is a boolean (stored as a Boolean). */
     BOOLEAN(     (short)5,  "boolean"),
-    /** Indicates that the value to be pushed is double-precision floating point number. */
+    /** Push value is a double-precision floating point number (stored as a Double). */
     DOUBLE(      (short)6,  "double"),
-    /** Indicates that the value to be pushed is an integer. */
+    /** Push value is an integer (Stored as a Long). */
     INTEGER(     (short)7,  "integer"),
-    /** Indicates that the value to be pushed is an 8-bit constant pool index. */
+    /** Push value is an 8-bit constant pool index (stored as a Short). */
     CONSTANT_8(  (short)8,  "constant8"),
-    /** Indicates that the value to be pushed is a 16-bit constant pool index. */
+    /** Push value is a 16-bit constant pool index (stored as an Integer). */
     CONSTANT_16( (short)9,  "constant16");
 
     private static ByteCodeConstantHelper<ValueType> helper;

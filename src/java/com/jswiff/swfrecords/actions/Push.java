@@ -116,8 +116,9 @@ public final class Push extends Action {
   }
 
   /**
-   * This class contains a value which can be pushed to the stack.
-   * Use {@link #getType()} to determine the actual value type, e.g.
+   * Contains a value which can be pushed to the stack.
+   * Values are all returned as Objects and underneath stored as primitive wrapper types,
+   * use {@link #getType()} to determine the actual value type, e.g.
    * <pre>
    * <code>
    * if (ValueType.BOOLEAN.equals(stackVal.getType()) {
@@ -125,6 +126,7 @@ public final class Push extends Action {
    * }
    * </code>
    * </pre>
+   * See {@link ValueType}.
    */
   public static class StackValue implements Serializable {
     
@@ -262,7 +264,7 @@ public final class Push extends Action {
     }
 
     /**
-     * Return the value.
+     * Returns the value.
      * @return the value as an Object, use getType() to determine the actual type.
      */
     public Object getValue() {
