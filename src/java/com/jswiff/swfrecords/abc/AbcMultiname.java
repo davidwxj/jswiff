@@ -102,6 +102,7 @@ public class AbcMultiname implements Serializable {
         mn.namespaceIndex = stream.readAbcInt();
         break;
     }
+    mn.kind = mnKind;
     return mn;
   }
 
