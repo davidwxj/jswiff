@@ -262,19 +262,19 @@ class ActionXMLWriter {
       switch (value.getType()) {
         case CONSTANT_16:
         case CONSTANT_8:
-          pushEle.addAttribute("id", value.asString());
+          pushEle.addAttribute("id", value.valueString());
           break;
         case BOOLEAN:
         case DOUBLE:
         case FLOAT:
         case INTEGER:
-          pushEle.addAttribute("value", value.asString());
+          pushEle.addAttribute("value", value.valueString());
           break;
         case REGISTER:
-          pushEle.addAttribute("number", value.asString());
+          pushEle.addAttribute("number", value.valueString());
           break;
         case STRING:
-          RecordXMLWriter.addAttributeWithCharCheck(pushEle, "value", value.asString());
+          RecordXMLWriter.addAttributeWithCharCheck(pushEle, "value", value.valueString());
           break;
       }
     }

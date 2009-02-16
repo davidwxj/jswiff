@@ -432,10 +432,10 @@ final class SWFTreeBuilder {
     for (StackValue value : push.getValues()) {
       switch (value.getType()) {
       case CONSTANT_8:
-        result += (" c8[" + value.asString() + "]: '" + constants.get((Integer)value.getValue()) + "'");
+        result += (" c8[" + value.valueString() + "]: '" + constants.get((Integer)value.getValue()) + "'");
         break;
       case CONSTANT_16:
-        result += (" c8[" + value.asString() + "]: '" + constants.get((Integer)value.getValue()) + "'");
+        result += (" c8[" + value.valueString() + "]: '" + constants.get((Integer)value.getValue()) + "'");
         break;
       case UNDEFINED:
         result += " <b>undefined</b>";

@@ -20,8 +20,22 @@
 
 package com.jswiff.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.exception.InvalidNameException;
+import com.jswiff.swfrecords.abc.AbcSlotTrait;
+import com.jswiff.swfrecords.abc.opcode.AbcOpArgs;
+import com.jswiff.swfrecords.abc.opcode.AbcOpBranch;
+import com.jswiff.swfrecords.abc.opcode.AbcOpDebug;
+import com.jswiff.swfrecords.abc.opcode.AbcOpHasNext2;
+import com.jswiff.swfrecords.abc.opcode.AbcOpIndex;
+import com.jswiff.swfrecords.abc.opcode.AbcOpIndexArgs;
+import com.jswiff.swfrecords.abc.opcode.AbcOpLookupSwitch;
+import com.jswiff.swfrecords.abc.opcode.AbcOpSimple;
+import com.jswiff.swfrecords.abc.opcode.AbcOpValueByte;
+import com.jswiff.swfrecords.abc.opcode.AbcOpValueInt;
 
 public class AbcConstants {
   
@@ -89,16 +103,27 @@ public class AbcConstants {
    *
    */
   public static enum OpCodeType {
+    /** Op is a {@link AbcOpArgs} */
     ARGS,
-    BRANCH, 
-    DEBUG, 
-    HAS_NEXT2, 
-    INDEX, 
-    INDEX_ARGS, 
-    LOOKUP_SWITCH, 
-    SIMPLE, 
-    VALUE_BYTE, 
+    /** Op is a {@link AbcOpBranch} */
+    BRANCH,
+    /** Op is a {@link AbcOpDebug} */
+    DEBUG,
+    /** Op is a {@link AbcOpHasNext2} */
+    HAS_NEXT2,
+    /** Op is a {@link AbcOpIndex} */
+    INDEX,
+    /** Op is a {@link AbcOpIndexArgs} */
+    INDEX_ARGS,
+    /** Op is a {@link AbcOpLookupSwitch} */
+    LOOKUP_SWITCH,
+    /** Op is a {@link AbcOpSimple} */
+    SIMPLE,
+    /** Op is a {@link AbcOpValueByte} */
+    VALUE_BYTE,
+    /** Op is a {@link AbcOpValueInt} */
     VALUE_INT,
+    /** Op is a dynamic profiling instruction */
     PROFILING;
   }
 
@@ -507,6 +532,66 @@ public class AbcConstants {
     
     public short getCode() {
       return this.code;
+    }
+    
+    @Override
+    public String toString() {
+      return this.name;
+    }
+  }
+  
+  /**
+   * Represents Constant types. Indicates which constant-pool to locate a value in based
+   * on type code. For types {@code UNDEFINED}, {@code TRUE}, {@code FALSE}, and {@code NULL}
+   * the constant-pool should be considered as a special type containing only one value 
+   * (e.g. 'True' for TRUE).
+   */
+  public static enum ConstantType {
+    
+    UNDEFINED ("undefined", (short)0x00),
+    FALSE     ("false",     (short)0x0A),
+    TRUE      ("true",      (short)0x0B),
+    NULL      ("null",      (short)0x0C),
+    STRING    ("string",    (short)0x01),
+    INT       ("int",       (short)0x03),
+    U_INT     ("u_int",     (short)0x04),
+    DOUBLE    ("double",    (short)0x06),
+    NAMESPACE ("namespace", (short)0x05, 
+                            (short)0x08,
+                            (short)0x16,
+                            (short)0x17,
+                            (short)0x18,
+                            (short)0x19,
+                            (short)0x1A);
+    
+    private static final Map<Short, ConstantType> lookupMap = 
+      new HashMap<Short, ConstantType>(values().length);
+    
+    static {
+      for (ConstantType type : values()) {
+        for (short code : type.codes) {
+          lookupMap.put(code, type);
+        }
+      }
+    }
+    
+    /**
+     * Get the type of constant pool the given code references, for example
+     * determining which constant pool type {@link AbcSlotTrait#getValueIndex()}
+     * is an index into based on {@link AbcSlotTrait#getValueKind()}.
+     * @param code the code used to determine the constant pool type
+     * @return the appropriate constant pool type, or null if there is none.
+     */
+    public static ConstantType getConstantType(short code) {
+      return lookupMap.get(code);
+    }
+    
+    private final Short[] codes;
+    private final String name;
+    
+    ConstantType(String name, Short... codes) {
+      this.codes = codes;
+      this.name = name;
     }
     
     @Override

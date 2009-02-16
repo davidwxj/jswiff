@@ -138,7 +138,7 @@ public final class Push extends Action {
      * @return a stack value
      */
     public static StackValue createStringValue(String value) {
-      return new StackValue(ValueType.STRING, value);
+      return new StackValue(ValueType.STRING, value != null ? value : "");
     }
     
     /**
@@ -283,8 +283,8 @@ public final class Push extends Action {
      * Get the value as a string regardless of actual type
      * @return a string representation of the value.
      */
-    public String asString() {
-      return getValue().toString();
+    public String valueString() {
+      return this.value.toString();
     }
 
     /**
@@ -294,7 +294,7 @@ public final class Push extends Action {
     public String toString() {
       String str = getType().getNiceName();
       if (!ValueType.NULL.equals(getType()) && !ValueType.UNDEFINED.equals(getType())) {
-        str += ": " + getValue().toString();
+        str += ": " + this.valueString();
       }
       return str;
     }
