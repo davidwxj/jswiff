@@ -267,7 +267,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -454,7 +454,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -465,7 +465,7 @@ public class TagConstants {
     }
 
   }
-  
+
   /**
    * Possible types for values pushed onto the stack. Used with {@link Push.StackValue}.
    */
@@ -593,7 +593,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -658,19 +658,19 @@ public class TagConstants {
 
   public static enum BlendMode implements ByteCodeConstant {
     NORMAL(     (short)1,  "normal"),
-    LAYER(      (short)2,  "layer"), 
-    MULTIPLY(   (short)3,  "multiply"), 
-    SCREEN(     (short)4,  "screen"), 
-    LIGHTEN(    (short)5,  "lighten"), 
-    DARKEN(     (short)6,  "darken"), 
-    DIFFERENCE( (short)7,  "difference"), 
-    ADD(        (short)8,  "add"), 
-    SUBTRACT(   (short)9,  "subtract"), 
-    INVERT(     (short)10, "invert"), 
-    ALPHA(      (short)11, "alpha"), 
-    ERASE(      (short)12, "erase"), 
-    OVERLAY(    (short)13, "overlay"), 
-    HARD_LIGHT( (short)14, "hard light"); 
+    LAYER(      (short)2,  "layer"),
+    MULTIPLY(   (short)3,  "multiply"),
+    SCREEN(     (short)4,  "screen"),
+    LIGHTEN(    (short)5,  "lighten"),
+    DARKEN(     (short)6,  "darken"),
+    DIFFERENCE( (short)7,  "difference"),
+    ADD(        (short)8,  "add"),
+    SUBTRACT(   (short)9,  "subtract"),
+    INVERT(     (short)10, "invert"),
+    ALPHA(      (short)11, "alpha"),
+    ERASE(      (short)12, "erase"),
+    OVERLAY(    (short)13, "overlay"),
+    HARD_LIGHT( (short)14, "hard light");
 
     private static ByteCodeConstantHelper<BlendMode> helper;
 
@@ -709,7 +709,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -723,8 +723,9 @@ public class TagConstants {
 
   public static enum SpreadMethod implements ByteCodeConstant {
     PAD(     (short)0, "pad"),
-    REFLECT( (short)1, "reflect"), 
-    REPEAT(  (short)2, "repeat"); 
+    REFLECT( (short)1, "reflect"),
+    REPEAT(  (short)2, "repeat"),
+    RESERVED((short)3, "reserved");
 
     private static ByteCodeConstantHelper<SpreadMethod> helper;
 
@@ -763,7 +764,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -777,7 +778,9 @@ public class TagConstants {
 
   public static enum InterpolationMethod implements ByteCodeConstant {
     RGB(        (short)0, "rgb"),
-    LINEAR_RGB( (short)1, "linear-rgb"); 
+    LINEAR_RGB( (short)1, "linear-rgb"),
+    RESERVED_1( (short)2, "reserved-1"),
+    RESERVED_2( (short)3, "reserved-2");
 
     private static ByteCodeConstantHelper<InterpolationMethod> helper;
 
@@ -816,7 +819,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -878,7 +881,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -933,7 +936,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -987,7 +990,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }
@@ -1041,7 +1044,7 @@ public class TagConstants {
     public short getCode() {
       return this.code;
     }
-    
+
     public String getNiceName() {
       return helper.getNiceName(this);
     }

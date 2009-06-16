@@ -38,41 +38,41 @@ import com.jswiff.swfrecords.tags.Tag;
  * <code>SWFWriter</code>.
  */
 public class SWFDocument implements Serializable {
-  
+
   private static final long serialVersionUID = 1L;
 
   /** The version of the JSwiff library */
   public static final String JSWIFF_VERSION       = "9-svn";
-  
+
   /**
    * The default value for the compression flag. By default, compression is on
    */
   public static final boolean DEFAULT_COMPRESSION = true;
-  
-  /** The default SWF version (9) */
+
+  /** The default SWF version */
   public static final short DEFAULT_SWF_VERSION   = 9;
-  
+
   /**
    * The default frame size (based on the authoring tool from Macromedia: 11000
    * x 8000 twips)
    */
   public static final Rect DEFAULT_FRAME_SIZE     = new Rect(0, 11000, 0, 8000);
-  
+
   /**
    * The default frame rate of a (newly created) SWF movie (based on the
    * authoring tool from Macromedia: 12 fps)
    */
   public static final short DEFAULT_FRAME_RATE    = 12;
-  
-  /** The latest supported SWF version (9) */
-  public static final short MAX_SWF_VERSION       = 9;
-  
+
+  /** The maximum allowed SWF version */
+  public static final short MAX_SWF_VERSION       = 10;
+
   /** Grants the SWF local file access */
   public static final byte ACCESS_MODE_LOCAL      = 0;
-  
+
   /** Grants the SWF network access (local access is denied) */
   public static final byte ACCESS_MODE_NETWORK    = 1;
-  
+
   private SWFHeader header                        = new SWFHeader();
   private int currentCharId;
   private List<Tag> tags                          = new ArrayList<Tag>();
@@ -259,17 +259,17 @@ public class SWFDocument implements Serializable {
   public List<Tag> getTags() {
     return tags;
   }
-  
+
   public boolean hasSymbolClass() {
     for (Tag t : tags) {
       if (TagType.SYMBOL_CLASS.equals(t.tagType())) return true;
     }
     return false;
   }
-  
+
   public boolean hasABC() {
     for (Tag t : tags) {
-      if (TagType.DO_ABC.equals(t.tagType()) || 
+      if (TagType.DO_ABC.equals(t.tagType()) ||
           TagType.DO_ABC_DEFINE.equals(t.tagType()) ) return true;
     }
     return false;
