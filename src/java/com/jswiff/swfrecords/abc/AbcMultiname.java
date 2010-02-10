@@ -22,6 +22,7 @@ package com.jswiff.swfrecords.abc;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 
 import com.jswiff.constants.AbcConstants.MultiNameKind;
 import com.jswiff.exception.InvalidCodeException;
@@ -35,6 +36,7 @@ public class AbcMultiname implements Serializable {
   private MultiNameKind kind;
   private int nameIndex;
   private int namespaceIndex;
+  private int[] typeNameIndexes;
 
   private AbcMultiname() { } // empty
   
@@ -78,6 +80,7 @@ public class AbcMultiname implements Serializable {
     AbcMultiname mn = new AbcMultiname();
     short kind = stream.readUI8();
     MultiNameKind mnKind = MultiNameKind.lookup(kind);
+    
     switch (mnKind) {
       case Q_NAME:
       case Q_NAME_A:
@@ -100,6 +103,17 @@ public class AbcMultiname implements Serializable {
       case MULTINAME_L:
       case MULTINAME_L_A:
         mn.namespaceIndex = stream.readAbcInt();
+        break;
+      case TYPENAME:
+        // This is a quick and dirty hack, there is no documentation for this
+        // in the public AVM2 spec, and it should really be a different class.
+        mn.nameIndex = stream.readAbcInt();
+        int count = stream.readAbcInt();
+        int[] types = new int[count];
+        for (int i = 0; i < count; i++) {
+          types[i] = stream.readAbcInt();
+        }
+        mn.typeNameIndexes = types;
         break;
     }
     mn.kind = mnKind;
@@ -155,6 +169,16 @@ public class AbcMultiname implements Serializable {
     return namespaceIndex;
   }
   
+  /**
+   * Gets the type-name indexes for a TypeName
+   * @return the type-name indexes if this is a TypeName, null otherwise.
+   */
+  public int[] getTypeNameIndexes() {
+    if (this.typeNameIndexes != null)
+      return Arrays.copyOf(this.typeNameIndexes, this.typeNameIndexes.length);
+    return null;
+  }
+  
   @Override
   public String toString() {
     String str = this.kind.toString();
@@ -174,6 +198,17 @@ public class AbcMultiname implements Serializable {
     case MULTINAME_L_A:
       str = str + ": nameSpaceIndex = " + namespaceIndex;
       break;
+    case TYPENAME:
+      String typesString = "";
+      int i = 0;
+      for (int ti : this.typeNameIndexes) {
+        typesString += ti;
+        if (i < (this.typeNameIndexes.length - 1))
+          typesString += ", ";
+        i++;
+      }
+      str = str + ": nameIndex = " + this.nameIndex
+        + ", types = " + typesString;
     }
     return str;
   }

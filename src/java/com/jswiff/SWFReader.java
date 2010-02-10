@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.listeners.SWFListener;
 import com.jswiff.swfrecords.SWFHeader;
@@ -159,8 +160,13 @@ public final class SWFReader {
       } catch (Exception e) {
         // invoke error processing
         if (processTagReadError(tagHeader, tagData, e)) {
+          TagType tt = null;
+          try {
+            tt = TagType.lookup(tagHeader.getCode());
+          } catch (InvalidCodeException ive) { }
           IOException ioe = new IOException(
-              "Error while reading Tag (code:" + tagHeader.getCode()
+              "Error while reading Tag (" + (tt != null ? tt.getNiceName() : "UNKOWN")
+              + ", code:" + tagHeader.getCode()
               + ", length:" + tagHeader.getLength() + ")");
           ioe.initCause(e);
           throw ioe;

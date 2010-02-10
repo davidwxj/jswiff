@@ -155,6 +155,7 @@ public class AbcConstants {
     CALL                  (OpCodeType.ARGS, (short)0x41, "call"),
     CONSTRUCT             (OpCodeType.ARGS, (short)0x42, "construct"),
     CONSTRUCT_SUPER       (OpCodeType.ARGS, (short)0x49, "constructsuper"),
+    APPLY_TYPE            (OpCodeType.ARGS, (short)0x53, "applytype"),
     NEW_OBJECT            (OpCodeType.ARGS, (short)0x55, "newobject"),
     NEW_ARRAY             (OpCodeType.ARGS, (short)0x56, "newarray"),
 
@@ -494,7 +495,8 @@ public class AbcConstants {
     MULTINAME     ((short)0x09, "multiname"),
     MULTINAME_A   ((short)0x0E, "multiname_a"),
     MULTINAME_L   ((short)0x1B, "multiname_l"),
-    MULTINAME_L_A ((short)0x1C, "multiname_l_a");
+    MULTINAME_L_A ((short)0x1C, "multiname_l_a"),
+    TYPENAME      ((short)0x1D, "typename");
     
     private static ByteCodeConstantHelper<MultiNameKind> helper;
     
