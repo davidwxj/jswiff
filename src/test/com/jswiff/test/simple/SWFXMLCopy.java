@@ -20,19 +20,18 @@
 
 package com.jswiff.test.simple;
 
+import com.jswiff.SWFDocument;
+import com.jswiff.SWFReader;
+import com.jswiff.SWFWriter;
+import com.jswiff.exception.DocumentException;
+import com.jswiff.xml.XMLReader;
+import com.jswiff.xml.XMLWriter;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import org.dom4j.DocumentException;
-
-import com.jswiff.SWFDocument;
-import com.jswiff.SWFReader;
-import com.jswiff.SWFWriter;
-import com.jswiff.xml.XMLReader;
-import com.jswiff.xml.XMLWriter;
 
 
 /**

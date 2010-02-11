@@ -25,7 +25,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.ElementHandler;
 import org.dom4j.ElementPath;
@@ -33,6 +32,7 @@ import org.dom4j.io.SAXReader;
 
 import com.jswiff.SWFDocument;
 import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.exception.DocumentException;
 import com.jswiff.exception.InvalidNameException;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.util.Base64;
@@ -57,7 +57,11 @@ public class XMLReader {
    * @throws DocumentException if the XML could not be parsed
    */
   public XMLReader(InputStream stream) throws DocumentException {
-    saxReader.read(stream);
+    try {
+      saxReader.read(stream);
+    } catch (org.dom4j.DocumentException e) {
+      throw new DocumentException(e.getMessage());
+    }
   }
 
   /**
@@ -68,7 +72,11 @@ public class XMLReader {
    * @throws DocumentException if the XML could not be parsed
    */
   public XMLReader(Reader reader) throws DocumentException {
-    saxReader.read(reader);
+    try {
+      saxReader.read(reader);
+    } catch (org.dom4j.DocumentException e) {
+      throw new DocumentException(e.getMessage());
+    }
   }
 
   /**
