@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -112,7 +111,7 @@ public final class DoInitAction extends Tag {
     initActions.write(outStream, true);
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {

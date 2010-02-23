@@ -20,17 +20,16 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.LineStyle2;
 import com.jswiff.swfrecords.LineStyleArray;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.ShapeWithStyle;
+
+import java.io.IOException;
 
 /**
  * Used to define shapes, similar to <code>DefineShape</code>,
@@ -152,7 +151,7 @@ public final class DefineShape4 extends DefinitionTag {
     shapes.write(outStream);
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     characterId = inStream.readUI16();
     shapeBounds = new Rect(inStream);

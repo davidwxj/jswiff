@@ -20,12 +20,12 @@
 
 package com.jswiff.constants;
 
+import com.jswiff.exception.InvalidCodeException;
+import com.jswiff.exception.InvalidNameException;
+
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.exception.InvalidNameException;
 
 interface ByteCodeConstant {
   /**
@@ -52,13 +52,13 @@ class ByteCodeConstantHelper<E extends Enum<E> & ByteCodeConstant> {
     }
   };
   
-  E codeLookup(short code) throws InvalidCodeException {
+  E codeLookup(short code) {
     E val = codeLookupMap.get(code);
     if (val == null) throw new InvalidCodeException(this.typeName, code);
     return val;
   }
   
-  E nameLookup(String name) throws InvalidNameException {
+  E nameLookup(String name) {
     E val = nameLookupMap.get(name);
     if (val == null) throw new InvalidNameException(this.typeName, name);
     return val;

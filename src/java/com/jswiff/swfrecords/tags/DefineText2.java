@@ -20,9 +20,6 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-import java.util.Vector;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
@@ -30,6 +27,9 @@ import com.jswiff.swfrecords.GlyphEntry;
 import com.jswiff.swfrecords.Matrix;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.TextRecord;
+
+import java.io.IOException;
+import java.util.Vector;
 
 /**
  * This tag defines a block of static text, just like <code>DefineText</code>.

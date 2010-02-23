@@ -20,17 +20,16 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.constants.TagConstants.ValueType;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.constants.TagConstants.ActionType;
-import com.jswiff.constants.TagConstants.ValueType;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -65,7 +64,7 @@ public final class Push extends Action {
   /*
    * Reads a Push action from a bit stream.
    */
-  Push(InputBitStream stream) throws IOException, InvalidCodeException {
+  Push(InputBitStream stream) throws IOException {
     super(ActionType.PUSH);
     while (stream.available() > 0) {
       StackValue value = new StackValue(stream);
@@ -233,7 +232,7 @@ public final class Push extends Action {
     /*
      * Reads a PushEntry instance from a bit stream.
      */
-    StackValue(InputBitStream stream) throws IOException, InvalidCodeException {
+    StackValue(InputBitStream stream) throws IOException {
       type = ValueType.lookup(stream.readUI8());
       switch (type) {
         case STRING:

@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords.abc;
 
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 public class AbcInstance implements Serializable {
 
@@ -67,7 +66,7 @@ public class AbcInstance implements Serializable {
     flags = 0;
   }
 
-  public static AbcInstance read(InputBitStream stream) throws IOException, InvalidCodeException {
+  public static AbcInstance read(InputBitStream stream) throws IOException {
     AbcInstance inst = new AbcInstance();
     inst.nameIndex = stream.readAbcInt();
     inst.supernameIndex = stream.readAbcInt();

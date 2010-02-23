@@ -20,12 +20,8 @@
 
 package com.jswiff.xml;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.dom4j.Element;
-
 import com.jswiff.constants.TagConstants.LangCode;
+import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.CXform;
@@ -36,6 +32,7 @@ import com.jswiff.swfrecords.MorphLineStyles;
 import com.jswiff.swfrecords.SceneData;
 import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.TextRecord;
+import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.tags.DebugId;
 import com.jswiff.swfrecords.tags.DefineBinaryData;
 import com.jswiff.swfrecords.tags.DefineBits;
@@ -103,6 +100,12 @@ import com.jswiff.swfrecords.tags.VideoFrame;
 import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
+
+import org.dom4j.Element;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 
 /*
@@ -968,15 +971,38 @@ class TagXMLWriter {
     }
   }
 
-  private static void writeDoAbc(Element parentElement, DoAbc tag) {
-    Element element = parentElement.addElement("doabc");
-    RecordXMLWriter.writeAbcFile(element, tag.getAbcFile());
+  private static String abcFileToBase64EncodedString(AbcFile abcFile) {
+    String encodedData = "";
+    if (!XMLWriter.isOmitBinaryData()) {
+      try {
+        OutputBitStream out = new OutputBitStream();
+        abcFile.write(out);
+        encodedData = Base64.encode(out.getData());
+      } catch (IOException e) {
+        // Should never get this far, but just in case ...
+        throw new RuntimeException("Failed trying write abcFile to temporary byte array: " + e.getMessage(), e);
+      }
+    }
+    return encodedData;
   }
   
-  private static void writeDoAbcDefine(Element parentElement, DoAbcDefine tag) {
+  private static void writeDoAbc(Element parentElement, DoAbc tag) {
+    Element element = parentElement.addElement("doabc");
+//    RecordXMLWriter.writeAbcFile(element, tag.getAbcFile());
+    
+    // Dump out the contents of the ABCfile as a Base64 encoded string so we can
+    // rebuild the Swf from the Xml later.
+    element.addText( abcFileToBase64EncodedString(tag.getAbcFile()) );
+  }
+  
+  private static void writeDoAbcDefine(Element parentElement, DoAbcDefine tag) { 
     Element element = parentElement.addElement("doabcdefine");
     RecordXMLWriter.addAttributeWithCharCheck(element, "abcname", tag.getAbcName());
-    RecordXMLWriter.writeAbcFile(element, tag.getAbcFile());
+//    RecordXMLWriter.writeAbcFile(element, tag.getAbcFile());
+    
+    // Dump out the contents of the ABCfile as a Base64 encoded string so we can
+    // rebuild the Swf from the Xml later.
+    element.addText( abcFileToBase64EncodedString(tag.getAbcFile()) );
   }
   
   private static void writeDoAction(Element parentElement, DoAction tag) {

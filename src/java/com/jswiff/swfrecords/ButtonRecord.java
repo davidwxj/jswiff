@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
+import com.jswiff.constants.TagConstants.BlendMode;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-
-import com.jswiff.constants.TagConstants.BlendMode;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -109,11 +108,10 @@ public final class ButtonRecord implements Serializable {
    * @param hasColorTransform indicates whether a color transform is present
    *
    * @throws IOException if an I/O error has occured
-   * @throws InvalidCodeException if the tag header contains an invalid code.
    * This normally means invalid or corrupted data.
    */
   public ButtonRecord(InputBitStream stream, boolean hasColorTransform)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     stream.readUnsignedBits(2);
     hasBlendMode   = stream.readBooleanBit();
     hasFilters     = stream.readBooleanBit();

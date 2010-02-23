@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords.abc.opcode;
 
-import java.io.IOException;
-
 import com.jswiff.constants.AbcConstants.OpCode;
 import com.jswiff.constants.AbcConstants.OpCodeType;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 public class AbcOpValueByte extends AbcOp {
 

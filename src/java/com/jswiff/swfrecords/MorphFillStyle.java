@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import com.jswiff.constants.TagConstants;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 
 /**
@@ -152,7 +151,7 @@ public final class MorphFillStyle implements Serializable {
     this.type                = type;
   }
 
-  MorphFillStyle(InputBitStream stream) throws InvalidCodeException, IOException {
+  MorphFillStyle(InputBitStream stream) throws IOException {
     short code = stream.readUI8();
     type = TagConstants.FillType.lookup(code);
     switch (type.getGroup()) {

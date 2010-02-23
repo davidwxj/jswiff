@@ -20,12 +20,11 @@
 
 package com.jswiff.swfrecords.actions;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.ActionType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 
 /**
@@ -63,7 +62,7 @@ public final class With extends Action {
    * Creates a new With instance.
    */
   With(InputBitStream stream, InputBitStream mainStream)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     super(ActionType.WITH);
     int blockSize              = stream.readUI16();
     byte[] blockBuffer         = mainStream.readBytes(blockSize);

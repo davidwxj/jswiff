@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.abc.opcode;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import com.jswiff.constants.AbcConstants.OpCode;
 import com.jswiff.constants.AbcConstants.OpCodeType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 public abstract class AbcOp implements Serializable {
 
@@ -42,7 +41,7 @@ public abstract class AbcOp implements Serializable {
     this.opCode = opCode;
   }
 
-  public static AbcOp read(InputBitStream stream) throws InvalidCodeException, IOException {
+  public static AbcOp read(InputBitStream stream) throws IOException {
     short code = stream.readUI8();
     OpCode opCode = OpCode.lookup(code);
     AbcOp op;

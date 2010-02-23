@@ -20,12 +20,12 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.RGB;
+
+import java.io.IOException;
 
 /**
  * This tag contains the background color of the SWF. Do NOT add this tag to

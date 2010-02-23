@@ -20,12 +20,12 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-import java.util.Date;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * <p>

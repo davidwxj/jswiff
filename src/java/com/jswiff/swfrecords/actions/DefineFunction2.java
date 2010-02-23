@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.actions;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import com.jswiff.constants.TagConstants.ActionType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.RegisterParam;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -133,7 +132,7 @@ public final class DefineFunction2 extends Action {
    * @throws IOException if an I/O error has occured
    */
   DefineFunction2(InputBitStream stream, InputBitStream mainStream)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     super(ActionType.DEFINE_FUNCTION_2);
     name                = stream.readString();
     int numParams       = stream.readUI16();

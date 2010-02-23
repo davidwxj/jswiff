@@ -20,9 +20,9 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 public interface LineStyleTag {
 

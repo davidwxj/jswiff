@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.abc.AbcFile;
+
+import java.io.IOException;
 
 /**
  * Defines ActionScript 3 code in ABC (ActionScript byte code) format.
@@ -46,7 +45,6 @@ public final class DoAbcDefine extends Tag {
   public DoAbcDefine(String abcName) {
     super(TagType.DO_ABC_DEFINE);
     this.abcName = abcName;
-    abcFile = new AbcFile();
   }
 
   DoAbcDefine() {
@@ -54,24 +52,40 @@ public final class DoAbcDefine extends Tag {
   }
 
   protected void writeData(OutputBitStream outStream) throws IOException {
+    if (abcName == null) {
+      throw new IllegalStateException("abcName not set");
+    }
+    if (abcFile == null) {
+      throw new IllegalStateException("abcFile not set");
+    }
+    
     this.setForceLongHeader(true);
     outStream.writeBytes(new byte[] { 1, 0, 0, 0 });
     outStream.writeString(abcName);
     abcFile.write(outStream);
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     inStream.readBytes(4);
     abcName = inStream.readString();
-    abcFile = AbcFile.read(inStream);
+    abcFile = new AbcFile();
+    abcFile.read(inStream);
   }
 
   public String getAbcName() {
     return abcName;
   }
+  
+  public void setAbcName(String abcName) {
+    this.abcName = abcName;
+  }
 
   public AbcFile getAbcFile() {
     return abcFile;
+  }
+  
+  public void setAbcFile(AbcFile abcFile) {
+    this.abcFile = abcFile;
   }
 }

@@ -20,22 +20,23 @@
 
 package com.jswiff.xml;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.EnumSet;
-
-import org.dom4j.Element;
-import org.dom4j.ElementHandler;
-import org.dom4j.ElementPath;
-import org.dom4j.io.SAXReader;
-
 import com.jswiff.SWFDocument;
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.exception.DocumentException;
 import com.jswiff.exception.InvalidNameException;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.util.Base64;
+
+import org.dom4j.Element;
+import org.dom4j.ElementHandler;
+import org.dom4j.ElementPath;
+import org.dom4j.io.SAXReader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 
 /**
@@ -155,6 +156,9 @@ public class XMLReader {
       } catch (InvalidNameException e) {
         //FIXME: Handle exception properly
         e.printStackTrace();
+      } catch (IOException ioe) {
+        //FIXME: Handle exception properly
+        ioe.printStackTrace();
       }
       tagElement.detach(); // prune element from tree
       tagElement = null;

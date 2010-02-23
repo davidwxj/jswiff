@@ -20,10 +20,10 @@
 
 package com.jswiff.swfrecords.tags;
 
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.util.List;
-
-import com.jswiff.io.OutputBitStream;
 
 /**
  * This class contains methods used for writing tag headers and tags.

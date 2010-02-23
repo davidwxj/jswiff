@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-import java.util.Vector;
-
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.ButtonCondAction;
 import com.jswiff.swfrecords.ButtonRecord;
+
+import java.io.IOException;
+import java.util.Vector;
 
 /**
  * <p>
@@ -183,7 +182,7 @@ public final class DefineButton2 extends DefinitionTag {
     }
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     if (getSWFVersion() < 6) {
       if (isJapanese()) {

@@ -20,18 +20,17 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.jswiff.constants.TagConstants.BlendMode;
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.CXformWithAlpha;
 import com.jswiff.swfrecords.ClipActions;
 import com.jswiff.swfrecords.Filter;
 import com.jswiff.swfrecords.Matrix;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * TODO: Comments
@@ -539,7 +538,7 @@ public final class PlaceObject3 extends Tag {
     }
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     hasClipActions = inStream.readBooleanBit();
     hasClipDepth = inStream.readBooleanBit();

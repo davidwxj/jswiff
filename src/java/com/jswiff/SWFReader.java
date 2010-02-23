@@ -20,11 +20,6 @@
 
 package com.jswiff;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
@@ -37,6 +32,11 @@ import com.jswiff.swfrecords.tags.SetBackgroundColor;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagHeader;
 import com.jswiff.swfrecords.tags.TagReader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class reads a SWF file from a stream and builds a {@link SWFDocument}.

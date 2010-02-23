@@ -20,13 +20,13 @@
 
 package com.jswiff;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.SWFHeader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class SWFCompressor {
   private static final int BUFFER_SIZE = 1024;

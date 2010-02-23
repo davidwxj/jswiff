@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.Shape;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -99,7 +98,7 @@ public final class DefineFont extends DefinitionTag {
     outStream.writeBytes(glyphShapeTableStream.getData());
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     characterId = inStream.readUI16();
     int shapeTableOffset = inStream.readUI16();

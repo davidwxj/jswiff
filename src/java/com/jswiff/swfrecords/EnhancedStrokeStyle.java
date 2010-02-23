@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.Serializable;
-
 import com.jswiff.constants.TagConstants.CapStyle;
 import com.jswiff.constants.TagConstants.JointStyle;
 import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
+
+import java.io.Serializable;
 
 /**
  * Base class for the new enhanced stroke line styles introduced in SWF 8.

@@ -20,16 +20,15 @@
 
 package com.jswiff.swfrecords.tags;
 
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.OutputBitStream;
 
 /**
  * Base class for SWF tags.
@@ -116,7 +115,7 @@ public abstract class Tag implements Serializable {
    */
   abstract protected void writeData(OutputBitStream outStream) throws IOException;
 
-  abstract void setData(byte[] data) throws IOException, InvalidCodeException;
+  abstract void setData(byte[] data) throws IOException;
 
   void setSWFVersion(short swfVersion) {
     this.swfVersion = swfVersion;

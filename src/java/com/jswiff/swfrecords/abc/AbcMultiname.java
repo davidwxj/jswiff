@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.abc;
 
+import com.jswiff.constants.AbcConstants.MultiNameKind;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
-
-import com.jswiff.constants.AbcConstants.MultiNameKind;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 public class AbcMultiname implements Serializable {
 
@@ -76,7 +75,7 @@ public class AbcMultiname implements Serializable {
     return mn;
   }
   
-  public static AbcMultiname read(InputBitStream stream) throws IOException, InvalidCodeException {
+  public static AbcMultiname read(InputBitStream stream) throws IOException {
     AbcMultiname mn = new AbcMultiname();
     short kind = stream.readUI8();
     MultiNameKind mnKind = MultiNameKind.lookup(kind);

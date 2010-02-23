@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords.actions;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 
 /**

@@ -20,6 +20,8 @@
 
 package com.jswiff.util;
 
+import com.jswiff.swfrecords.RGBA;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -36,8 +38,6 @@ import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
-
-import com.jswiff.swfrecords.RGBA;
 
 
 /**

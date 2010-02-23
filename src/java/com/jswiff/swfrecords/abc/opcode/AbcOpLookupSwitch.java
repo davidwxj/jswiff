@@ -20,14 +20,14 @@
 
 package com.jswiff.swfrecords.abc.opcode;
 
+import com.jswiff.constants.AbcConstants.OpCode;
+import com.jswiff.constants.AbcConstants.OpCodeType;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.jswiff.constants.AbcConstants.OpCode;
-import com.jswiff.constants.AbcConstants.OpCodeType;
-import com.jswiff.io.OutputBitStream;
 
 public class AbcOpLookupSwitch extends AbcOp {
 

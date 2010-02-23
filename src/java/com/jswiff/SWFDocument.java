@@ -20,15 +20,15 @@
 
 package com.jswiff;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.swfrecords.RGB;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.SWFHeader;
 import com.jswiff.swfrecords.tags.Tag;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

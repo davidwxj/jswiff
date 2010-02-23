@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords.abc;
 
-import java.io.IOException;
-import java.util.List;
-
 import com.jswiff.constants.AbcConstants.TraitKind;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.util.List;
 
 public class AbcSlotTrait extends AbcTrait {
 

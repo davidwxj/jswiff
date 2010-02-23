@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
+import com.jswiff.constants.TagConstants.FilterType;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.constants.TagConstants.FilterType;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -38,7 +37,7 @@ public abstract class Filter implements Serializable {
   
   private static final long serialVersionUID = 1L;
   
-  public static List<Filter> readFilters(InputBitStream stream) throws IOException, InvalidCodeException {
+  public static List<Filter> readFilters(InputBitStream stream) throws IOException {
     int count = stream.readUI8();
     List<Filter> filters = new ArrayList<Filter>(count);
     for (int i = 0; i < count; i++) {

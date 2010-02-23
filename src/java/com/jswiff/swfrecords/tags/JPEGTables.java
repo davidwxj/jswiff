@@ -20,10 +20,10 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 /**
  * This tag contains the JPEG encoding table (the Tables/Misc segment) for all

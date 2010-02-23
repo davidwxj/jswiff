@@ -25,7 +25,7 @@ package com.jswiff.exception;
  * @author bstock
  *
  */
-public class InvalidCodeException extends Exception {
+public class InvalidCodeException extends RuntimeException {
   
   private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,7 @@ public class InvalidCodeException extends Exception {
   }
   
   public InvalidCodeException(final String type, short code, Throwable cause) {
-    super("A SWF Tag/flag of type '" + type + "' read with invalid code '" + code + "'.\n" +
+    super("A SWF Tag/flag of type '" + type + "' was read with invalid code '" + code + "'.\n" +
         "This probably means whatever is being read has invalid/corrupt data, " +
         "but if you believe this to instead be a bug in the library then please contact the author.", cause);
     this.code = code;

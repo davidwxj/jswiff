@@ -20,21 +20,21 @@
 
 package com.jswiff.xml;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.util.List;
+import com.jswiff.SWFDocument;
+import com.jswiff.swfrecords.Color;
+import com.jswiff.swfrecords.Rect;
+import com.jswiff.swfrecords.tags.Tag;
+import com.jswiff.util.Base64;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 
-import com.jswiff.SWFDocument;
-import com.jswiff.swfrecords.Color;
-import com.jswiff.swfrecords.Rect;
-import com.jswiff.swfrecords.tags.Tag;
-import com.jswiff.util.Base64;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.List;
 
 
 /**

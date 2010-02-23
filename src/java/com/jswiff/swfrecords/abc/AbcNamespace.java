@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords.abc;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import com.jswiff.constants.AbcConstants.NamespaceKind;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 public class AbcNamespace implements Serializable {
   
@@ -40,7 +39,7 @@ public class AbcNamespace implements Serializable {
     this.nameIndex = nameIndex;
   }
 
-  public static AbcNamespace read(InputBitStream stream) throws IOException, InvalidCodeException {
+  public static AbcNamespace read(InputBitStream stream) throws IOException {
     short code = stream.readUI8();
     NamespaceKind kind = NamespaceKind.lookup( code );
     AbcNamespace ns = new AbcNamespace(kind, stream.readAbcInt());

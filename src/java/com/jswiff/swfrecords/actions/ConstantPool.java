@@ -20,15 +20,15 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.jswiff.constants.TagConstants.ActionType;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**

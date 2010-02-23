@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
+
+import java.io.IOException;
 
 /**
  * This class contains methods used for parsing tag headers and tags.
@@ -54,11 +54,8 @@ public final class TagReader {
    * 
    * @throws IOException
    *           if I/O problems occur
-   * @throws InvalidCodeException if the tag header contains an invalid code.
-   * This normally means invalid or corrupted data.
    */
-  public static Tag readTag(TagHeader header, byte[] tagData, short swfVersion, boolean japanese) throws IOException,
-      InvalidCodeException {
+  public static Tag readTag(TagHeader header, byte[] tagData, short swfVersion, boolean japanese) throws IOException {
     Tag tag;
     TagType tagType;
     try {
@@ -312,8 +309,7 @@ public final class TagReader {
   /*
    * Reads a tag from a bit stream.
    */
-  static Tag readTag(InputBitStream stream, short swfVersion, boolean shiftJIS) throws IOException,
-      InvalidCodeException {
+  static Tag readTag(InputBitStream stream, short swfVersion, boolean shiftJIS) throws IOException {
     TagHeader header = new TagHeader(stream);
     byte[] tagData = stream.readBytes(header.getLength());
     return readTag(header, tagData, swfVersion, shiftJIS);

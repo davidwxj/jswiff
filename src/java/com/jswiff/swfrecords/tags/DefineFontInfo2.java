@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.LangCode;
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -253,7 +252,7 @@ public final class DefineFontInfo2 extends Tag {
     }
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     fontId = inStream.readUI16();
     short fontNameLen = inStream.readUI8(); // not null-terminated!

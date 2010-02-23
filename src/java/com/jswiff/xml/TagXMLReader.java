@@ -20,19 +20,10 @@
 
 package com.jswiff.xml;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-
 import com.jswiff.constants.TagConstants.BlendMode;
 import com.jswiff.constants.TagConstants.LangCode;
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidNameException;
+import com.jswiff.io.InputBitStream;
 import com.jswiff.swfrecords.AlignmentZone;
 import com.jswiff.swfrecords.ButtonRecord;
 import com.jswiff.swfrecords.CXform;
@@ -47,6 +38,7 @@ import com.jswiff.swfrecords.Shape;
 import com.jswiff.swfrecords.ShapeWithStyle;
 import com.jswiff.swfrecords.TextRecord;
 import com.jswiff.swfrecords.ZlibBitmapData;
+import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.tags.DebugId;
 import com.jswiff.swfrecords.tags.DefineBinaryData;
 import com.jswiff.swfrecords.tags.DefineBits;
@@ -115,10 +107,20 @@ import com.jswiff.swfrecords.tags.SymbolClass.SymbolReference;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
 
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
 @SuppressWarnings("unchecked")
 class TagXMLReader {
   
-  static Tag readTag(Element tagElement, TagType tagType) throws InvalidNameException {
+  static Tag readTag(Element tagElement, TagType tagType) throws IOException {
     Tag tag;
     switch (tagType) {
       case DEBUG_ID:
@@ -455,7 +457,7 @@ class TagXMLReader {
     return new DefineBitsLossless2(characterId, format, width, height, data);
   }
 
-  private static Tag readDefineButton(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineButton(Element tagElement) {
     int characterId           = RecordXMLReader.getCharacterId(tagElement);
     ButtonRecord[] characters = RecordXMLReader.readButtonRecords(tagElement);
     DefineButton defineButton = new DefineButton(characterId, characters);
@@ -463,7 +465,7 @@ class TagXMLReader {
     return defineButton;
   }
 
-  private static Tag readDefineButton2(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineButton2(Element tagElement) {
     int characterId             = RecordXMLReader.getCharacterId(tagElement);
     boolean trackAsMenu         = RecordXMLReader.getBooleanAttribute(
         "trackasmenu", tagElement);
@@ -595,7 +597,7 @@ class TagXMLReader {
     return defineEditText;
   }
 
-  private static Tag readDefineFont(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineFont(Element tagElement) {
     int characterId         = RecordXMLReader.getCharacterId(tagElement);
     Element glyphShapeTable = RecordXMLReader.getElement(
         "glyphshapetable", tagElement);
@@ -610,7 +612,7 @@ class TagXMLReader {
     return defineFont;
   }
 
-  private static Tag readDefineFont2(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineFont2(Element tagElement) {
     int characterId                = RecordXMLReader.getCharacterId(tagElement);
     String fontName                = RecordXMLReader.getStringAttributeWithBase64Check("fontname", tagElement);
     Shape[] glyphShapes            = null;
@@ -688,7 +690,7 @@ class TagXMLReader {
     return defineFont2;
   }
 
-  private static Tag readDefineFont3(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineFont3(Element tagElement) {
     int characterId                = RecordXMLReader.getCharacterId(tagElement);
     String fontName                = RecordXMLReader.getStringAttribute("fontname", tagElement);
     Shape[] glyphShapes            = null;
@@ -790,7 +792,7 @@ class TagXMLReader {
     return defineFontInfo;
   }
 
-  private static Tag readDefineFontInfo2(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineFontInfo2(Element tagElement) {
     int fontId        = RecordXMLReader.getIntAttribute("fontid", tagElement);
     String fontName   = RecordXMLReader.getStringAttributeWithBase64Check("fontname", tagElement);
     List charElements = tagElement.elements("char");
@@ -838,7 +840,7 @@ class TagXMLReader {
     return defineFontName;
   }
   
-  private static Tag readDefineMorphShape(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineMorphShape(Element tagElement) {
     int characterId                 = RecordXMLReader.getCharacterId(
         tagElement);
     Element startElement            = RecordXMLReader.getElement(
@@ -867,7 +869,7 @@ class TagXMLReader {
       startShape, endShape);
   }
   
-  private static Tag readDefineMorphShape2(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineMorphShape2(Element tagElement) {
     int characterId                 = RecordXMLReader.getCharacterId(
         tagElement);
     Element startElement            = RecordXMLReader.getElement(
@@ -923,7 +925,7 @@ class TagXMLReader {
     return tag;
   }
   
-  private static Tag readDefineShape(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineShape(Element tagElement) {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("bounds", tagElement));
@@ -931,7 +933,7 @@ class TagXMLReader {
     return new DefineShape(characterId, shapeBounds, shapes);
   }
 
-  private static Tag readDefineShape2(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineShape2(Element tagElement) {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("bounds", tagElement));
@@ -939,7 +941,7 @@ class TagXMLReader {
     return new DefineShape2(characterId, shapeBounds, shapes);
   }
 
-  private static Tag readDefineShape3(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineShape3(Element tagElement) {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("bounds", tagElement));
@@ -947,7 +949,7 @@ class TagXMLReader {
     return new DefineShape3(characterId, shapeBounds, shapes);
   }
 
-  private static Tag readDefineShape4(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineShape4(Element tagElement) {
     int characterId       = RecordXMLReader.getCharacterId(tagElement);
     Rect shapeBounds      = RecordXMLReader.readRect(
         RecordXMLReader.getElement("shapebounds", tagElement));
@@ -974,7 +976,7 @@ class TagXMLReader {
       characterId, format, rate, is16BitSample, isStereo, sampleCount, soundData);
   }
 
-  private static Tag readDefineSprite(Element tagElement) throws InvalidNameException {
+  private static Tag readDefineSprite(Element tagElement) {
     int characterId           = RecordXMLReader.getCharacterId(tagElement);
     List controlTagElements   = tagElement.elements();
     DefineSprite defineSprite = new DefineSprite(characterId);
@@ -1086,19 +1088,29 @@ class TagXMLReader {
     return doAbc;
   }
   
-  private static Tag readDoAbcDefine(Element tagElement) {
+  private static Tag readDoAbcDefine(Element tagElement) throws IOException {
     DoAbcDefine doAbcDefine = new DoAbcDefine(RecordXMLReader.getStringAttributeWithBase64Check("abcname", tagElement));
-    RecordXMLReader.readAbcFile(doAbcDefine.getAbcFile(), tagElement);
+    
+    String eleContent = tagElement.getText();
+    if (eleContent != null && eleContent.length() > 0) {
+      byte[] data = Base64.decode(eleContent);
+      InputBitStream in = new InputBitStream(data);
+      AbcFile abcFile = new AbcFile();
+      abcFile.read(in);
+      doAbcDefine.setAbcFile(abcFile);
+    }
+
+    //    RecordXMLReader.readAbcFile(doAbcDefine.getAbcFile(), tagElement);
     return doAbcDefine;
   }
   
-  private static Tag readDoAction(Element tagElement) throws InvalidNameException {
+  private static Tag readDoAction(Element tagElement) {
     DoAction doAction = new DoAction();
     RecordXMLReader.readActionBlock(doAction.getActions(), tagElement);
     return doAction;
   }
 
-  private static Tag readDoInitAction(Element tagElement) throws InvalidNameException {
+  private static Tag readDoInitAction(Element tagElement) {
     int spriteId              = RecordXMLReader.getIntAttribute(
         "spriteid", tagElement);
     DoInitAction doInitAction = new DoInitAction(spriteId);
@@ -1194,7 +1206,7 @@ class TagXMLReader {
     return new JPEGTables(jpegData);
   }
 
-  private static LangCode readLangCode(Element parentElement) throws InvalidNameException {
+  private static LangCode readLangCode(Element parentElement) {
     String language = RecordXMLReader.getStringAttribute("language", parentElement);
     return LangCode.lookup(language);
   }
@@ -1222,7 +1234,7 @@ class TagXMLReader {
     return new PlaceObject(characterId, depth, matrix, colorTransform);
   }
 
-  private static Tag readPlaceObject2(Element tagElement) throws InvalidNameException {
+  private static Tag readPlaceObject2(Element tagElement) {
     int depth                 = RecordXMLReader.getIntAttribute(
         "depth", tagElement);
     PlaceObject2 placeObject2 = new PlaceObject2(depth);
@@ -1258,7 +1270,7 @@ class TagXMLReader {
     return placeObject2;
   }
 
-  private static Tag readPlaceObject3(Element tagElement) throws InvalidNameException {
+  private static Tag readPlaceObject3(Element tagElement) {
     int depth                 = RecordXMLReader.getIntAttribute(
         "depth", tagElement);
     PlaceObject3 placeObject3 = new PlaceObject3(depth);

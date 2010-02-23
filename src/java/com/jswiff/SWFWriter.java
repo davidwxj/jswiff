@@ -20,9 +20,6 @@
 
 package com.jswiff;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.tags.FileAttributes;
@@ -30,6 +27,9 @@ import com.jswiff.swfrecords.tags.Metadata;
 import com.jswiff.swfrecords.tags.SetBackgroundColor;
 import com.jswiff.swfrecords.tags.Tag;
 import com.jswiff.swfrecords.tags.TagWriter;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 /**

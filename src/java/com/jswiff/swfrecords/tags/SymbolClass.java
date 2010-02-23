@@ -20,14 +20,14 @@
 
 package com.jswiff.swfrecords.tags;
 
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 /**
  * <p>

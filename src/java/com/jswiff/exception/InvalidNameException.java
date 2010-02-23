@@ -25,7 +25,7 @@ package com.jswiff.exception;
  * @author bstock
  *
  */
-public class InvalidNameException extends Exception {
+public class InvalidNameException extends RuntimeException {
   
   private static final long serialVersionUID = 1L;
 

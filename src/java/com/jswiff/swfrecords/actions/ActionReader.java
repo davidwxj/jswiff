@@ -20,11 +20,11 @@
 
 package com.jswiff.swfrecords.actions;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
+
+import java.io.IOException;
 
 
 /*
@@ -38,7 +38,7 @@ final class ActionReader {
   /*
    * Reads an action record from a bit stream.
    */
-  static Action readRecord(InputBitStream stream) throws IOException, InvalidCodeException {
+  static Action readRecord(InputBitStream stream) throws IOException {
     Action action;
     InputBitStream actionStream = null; // contains action record data
     int offset                  = (int) stream.getOffset();

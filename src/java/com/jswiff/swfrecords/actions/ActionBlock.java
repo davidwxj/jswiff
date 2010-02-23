@@ -20,17 +20,16 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.constants.TagConstants.ActionType;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.jswiff.constants.TagConstants.ActionType;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -78,10 +77,8 @@ public final class ActionBlock implements Serializable {
    * @param stream the source bit stream
    *
    * @throws IOException if an I/O error has occured
-   * @throws InvalidCodeException if the tag header contains an invalid code.
-   * This normally means invalid or corrupted data.
    */
-  public ActionBlock(InputBitStream stream) throws IOException, InvalidCodeException {
+  public ActionBlock(InputBitStream stream) throws IOException {
     int startOffset      = (int) stream.getOffset();
     boolean hasEndAction = false;
     while (stream.available() > 0) {

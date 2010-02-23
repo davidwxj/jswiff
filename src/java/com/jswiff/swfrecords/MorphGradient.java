@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import com.jswiff.constants.TagConstants.InterpolationMethod;
 import com.jswiff.constants.TagConstants.SpreadMethod;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 
 /**
@@ -64,7 +63,7 @@ public class MorphGradient implements Serializable {
     this.gradientRecords = gradientRecords;
   }
 
-  MorphGradient(InputBitStream stream) throws IOException, InvalidCodeException {
+  MorphGradient(InputBitStream stream) throws IOException {
     spreadMethod          = SpreadMethod.lookup((short) stream.readUnsignedBits(2));
     interpolationMethod   = InterpolationMethod.lookup((short) stream.readUnsignedBits(2));
     short count           = (short) stream.readUnsignedBits(4);

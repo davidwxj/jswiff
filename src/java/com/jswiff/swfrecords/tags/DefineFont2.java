@@ -20,16 +20,15 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.LangCode;
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.KerningRecord;
 import com.jswiff.swfrecords.Rect;
 import com.jswiff.swfrecords.Shape;
+
+import java.io.IOException;
 
 /**
  * This tag is used to supply font information. Unlike with
@@ -552,7 +551,7 @@ public class DefineFont2 extends DefinitionTag {
     }
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     characterId = inStream.readUI16();
     hasLayout = inStream.readBooleanBit();

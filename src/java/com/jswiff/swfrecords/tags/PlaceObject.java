@@ -20,13 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.CXform;
 import com.jswiff.swfrecords.Matrix;
+
+import java.io.IOException;
 
 /**
  * This tag adds a character instance to the display list. When a

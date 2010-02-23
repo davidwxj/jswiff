@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -63,7 +62,7 @@ public class Shape implements Serializable {
 
   /*
    */
-  public Shape(InputBitStream stream) throws IOException, InvalidCodeException {
+  public Shape(InputBitStream stream) throws IOException {
     read(stream, false, false);
   }
 
@@ -113,7 +112,7 @@ public class Shape implements Serializable {
   }
 
   protected void read(InputBitStream stream, boolean useNewLineStyle, boolean hasAlpha)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     numFillBits   = (byte) stream.readUnsignedBits(4);
     numLineBits   = (byte) stream.readUnsignedBits(4);
     // use values from Shape/ShapeWithStyle as initial values for parsing

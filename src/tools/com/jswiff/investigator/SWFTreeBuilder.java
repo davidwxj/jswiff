@@ -522,7 +522,9 @@ final class SWFTreeBuilder {
     try {
       t = TagType.lookup(tag.getTagHeader().getCode());
       addLeaf(tagNode, "code: " + t.getCode() + " (" + t.toString() + ")");
-    } catch (InvalidCodeException e) { };
+    } catch (InvalidCodeException e) {
+      addLeaf(tagNode, "INVALID CODE: " + tag.getTagHeader().getCode());
+    };
     addLeaf(tagNode, "data size: " + tag.getTagHeader().getLength() + " bytes");
     addLeaf(tagNode, "error: " + tag.getException().getMessage());
   }

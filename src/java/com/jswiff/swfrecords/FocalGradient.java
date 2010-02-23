@@ -20,11 +20,10 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 
 /**
@@ -47,7 +46,7 @@ public class FocalGradient extends Gradient {
     this.focalPointRatio = focalPointRatio;
   }
 
-  FocalGradient(InputBitStream stream) throws IOException, InvalidCodeException {
+  FocalGradient(InputBitStream stream) throws IOException {
     super(stream, true);
     focalPointRatio = stream.readFP16();
   }

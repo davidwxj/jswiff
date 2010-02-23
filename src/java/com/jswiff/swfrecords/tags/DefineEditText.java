@@ -20,13 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.RGBA;
 import com.jswiff.swfrecords.Rect;
+
+import java.io.IOException;
 
 /**
  * <p>

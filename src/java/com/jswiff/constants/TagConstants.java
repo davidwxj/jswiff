@@ -242,7 +242,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static ActionType lookup(short code) throws InvalidCodeException {
+    public static ActionType lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -252,7 +252,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static ActionType lookup(String name) throws InvalidNameException {
+    public static ActionType lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -429,7 +429,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static TagType lookup(short code) throws InvalidCodeException {
+    public static TagType lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -439,7 +439,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static TagType lookup(String name) throws InvalidNameException {
+    public static TagType lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -503,7 +503,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static ValueType lookup(short code) throws InvalidCodeException {
+    public static ValueType lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -513,7 +513,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static ValueType lookup(String name) throws InvalidNameException {
+    public static ValueType lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -566,7 +566,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static FillType lookup(short code) throws InvalidCodeException {
+    public static FillType lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -576,7 +576,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static FillType lookup(String name) throws InvalidNameException {
+    public static FillType lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -630,7 +630,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static FilterType lookup(short code) throws InvalidCodeException {
+    public static FilterType lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -640,7 +640,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static FilterType lookup(String name) throws InvalidNameException {
+    public static FilterType lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -684,7 +684,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static BlendMode lookup(short code) throws InvalidCodeException {
+    public static BlendMode lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -694,7 +694,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static BlendMode lookup(String name) throws InvalidNameException {
+    public static BlendMode lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -739,7 +739,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static SpreadMethod lookup(short code) throws InvalidCodeException {
+    public static SpreadMethod lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -749,7 +749,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static SpreadMethod lookup(String name) throws InvalidNameException {
+    public static SpreadMethod lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -794,7 +794,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static InterpolationMethod lookup(short code) throws InvalidCodeException {
+    public static InterpolationMethod lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -804,7 +804,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static InterpolationMethod lookup(String name) throws InvalidNameException {
+    public static InterpolationMethod lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -856,7 +856,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static LangCode lookup(short code) throws InvalidCodeException {
+    public static LangCode lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -866,7 +866,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static LangCode lookup(String name) throws InvalidNameException {
+    public static LangCode lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -911,7 +911,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static ScaleStrokeMethod lookup(short code) throws InvalidCodeException {
+    public static ScaleStrokeMethod lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -921,7 +921,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static ScaleStrokeMethod lookup(String name) throws InvalidNameException {
+    public static ScaleStrokeMethod lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -965,7 +965,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static CapStyle lookup(short code) throws InvalidCodeException {
+    public static CapStyle lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -975,7 +975,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static CapStyle lookup(String name) throws InvalidNameException {
+    public static CapStyle lookup(String name) {
       return helper.nameLookup(name);
     }
 
@@ -1019,7 +1019,7 @@ public class TagConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static JointStyle lookup(short code) throws InvalidCodeException {
+    public static JointStyle lookup(short code) {
       return helper.codeLookup(code);
     }
 
@@ -1029,7 +1029,7 @@ public class TagConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static JointStyle lookup(String name) throws InvalidNameException {
+    public static JointStyle lookup(String name) {
       return helper.nameLookup(name);
     }
 

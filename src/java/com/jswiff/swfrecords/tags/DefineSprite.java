@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.tags;
 
+import com.jswiff.constants.TagConstants.TagType;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 /**
  * <p>
@@ -110,7 +109,7 @@ public final class DefineSprite extends DefinitionTag {
     TagWriter.writeTags(outStream, controlTags, getSWFVersion());
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
     InputBitStream inStream = new InputBitStream(data);
     characterId = inStream.readUI16();
     inStream.readUI16(); // frameCount

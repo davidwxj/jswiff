@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords.abc;
 
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 public class AbcFile implements Serializable {
 
@@ -49,39 +48,37 @@ public class AbcFile implements Serializable {
     constantPool = new AbcConstantPool();
   }
   
-  public static AbcFile read(InputBitStream stream) throws IOException, InvalidCodeException {
-    AbcFile abcFile = new AbcFile();
-    abcFile.minorVersion = stream.readUI16();
-    abcFile.majorVersion = stream.readUI16();
-    if (abcFile.majorVersion != 46 || abcFile.minorVersion > 16) {
+  public void read(InputBitStream stream) throws IOException {
+    minorVersion = stream.readUI16();
+    majorVersion = stream.readUI16();
+    if (majorVersion != 46 || minorVersion > 16) {
       throw new IOException("Unsupported abc format, version > 46.16");
     }
-    abcFile.constantPool = AbcConstantPool.read(stream);
+    constantPool = AbcConstantPool.read(stream);
     int methodCount = stream.readAbcInt();
     for (int i = 0; i < methodCount; i++) {
-      abcFile.methods.add(AbcMethodSignature.read(stream));
+      methods.add(AbcMethodSignature.read(stream));
     }
     int metadataCount = stream.readAbcInt();
     for (int i = 0; i < metadataCount; i++) {
-      abcFile.metadataEntries.add(AbcMetadata.read(stream));
+      metadataEntries.add(AbcMetadata.read(stream));
     }
     int classCount = stream.readAbcInt();
     for (int i = 0; i < classCount; i++) {
-      abcFile.instances.add(AbcInstance.read(stream));
+      instances.add(AbcInstance.read(stream));
     }
     for (int i = 0; i < classCount; i++) {
-      abcFile.classes.add(AbcClass.read(stream));
+      classes.add(AbcClass.read(stream));
     }
     int scriptCount = stream.readAbcInt();
     for (int i = 0; i < scriptCount; i++) {
-      abcFile.scripts.add(AbcScript.read(stream));
+      scripts.add(AbcScript.read(stream));
     }
     int methodBodyCount = stream.readAbcInt();
     for (int i = 0; i < methodBodyCount; i++) {
-      abcFile.methodBodies.add(AbcMethodBody.read(stream));
+      methodBodies.add(AbcMethodBody.read(stream));
     }
     //stream.readBytes(1); // have we read everything?
-    return abcFile;
   }
   
   public void write(OutputBitStream stream) throws IOException {

@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -65,11 +64,9 @@ public final class ClipActions implements Serializable {
    * @param swfVersion swf version used
    *
    * @throws IOException if an I/O error has occured
-   * @throws InvalidCodeException if the tag header contains an invalid code.
-   * This normally means invalid or corrupted data.
    */
   public ClipActions(InputBitStream stream, short swfVersion)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     stream.readUI16(); // reserved, =0
     eventFlags = new ClipEventFlags(stream, swfVersion);
     while (true) {

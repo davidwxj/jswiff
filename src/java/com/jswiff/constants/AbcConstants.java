@@ -20,9 +20,6 @@
 
 package com.jswiff.constants;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.exception.InvalidNameException;
 import com.jswiff.swfrecords.abc.AbcSlotTrait;
@@ -36,6 +33,9 @@ import com.jswiff.swfrecords.abc.opcode.AbcOpLookupSwitch;
 import com.jswiff.swfrecords.abc.opcode.AbcOpSimple;
 import com.jswiff.swfrecords.abc.opcode.AbcOpValueByte;
 import com.jswiff.swfrecords.abc.opcode.AbcOpValueInt;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AbcConstants {
   
@@ -65,7 +65,7 @@ public class AbcConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static ValueTypeKind lookup(short code) throws InvalidCodeException {
+    public static ValueTypeKind lookup(short code) {
       return helper.codeLookup(code);
     }
     
@@ -75,7 +75,7 @@ public class AbcConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static ValueTypeKind lookup(String name) throws InvalidNameException {
+    public static ValueTypeKind lookup(String name) {
       return helper.nameLookup(name);
     }
     
@@ -328,7 +328,7 @@ public class AbcConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static OpCode lookup(short code) throws InvalidCodeException {
+    public static OpCode lookup(short code) {
       return helper.codeLookup(code);
     }
     
@@ -338,7 +338,7 @@ public class AbcConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static OpCode lookup(String name) throws InvalidNameException {
+    public static OpCode lookup(String name) {
       return helper.nameLookup(name);
     }
     
@@ -392,7 +392,7 @@ public class AbcConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static TraitKind lookup(short code) throws InvalidCodeException {
+    public static TraitKind lookup(short code) {
       return helper.codeLookup(code);
     }
     
@@ -402,7 +402,7 @@ public class AbcConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static TraitKind lookup(String name) throws InvalidNameException {
+    public static TraitKind lookup(String name) {
       return helper.nameLookup(name);
     }
     
@@ -449,7 +449,7 @@ public class AbcConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static NamespaceKind lookup(short code) throws InvalidCodeException {
+    public static NamespaceKind lookup(short code) {
       return helper.codeLookup(code);
     }
     
@@ -459,7 +459,7 @@ public class AbcConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static NamespaceKind lookup(String name) throws InvalidNameException {
+    public static NamespaceKind lookup(String name) {
       return helper.nameLookup(name);
     }
     
@@ -510,7 +510,7 @@ public class AbcConstants {
      * @return the enum mapped to the given code
      * @throws InvalidCodeException if no value exists for the given code.
      */
-    public static MultiNameKind lookup(short code) throws InvalidCodeException {
+    public static MultiNameKind lookup(short code) {
       return helper.codeLookup(code);
     }
     
@@ -520,7 +520,7 @@ public class AbcConstants {
      * @return the enum mapped to the given name
      * @throws InvalidNameException if no value exists for the given name
      */
-    public static MultiNameKind lookup(String name) throws InvalidNameException {
+    public static MultiNameKind lookup(String name) {
       return helper.nameLookup(name);
     }
     

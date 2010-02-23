@@ -20,14 +20,13 @@
 
 package com.jswiff.swfrecords;
 
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 
 /**
@@ -65,11 +64,9 @@ public final class MorphLineStyles implements Serializable {
    * @param useNewMorphLineStyle TODO: Comments
    *
    * @throws IOException if an I/O error occured
-   * @throws InvalidCodeException if the tag header contains an invalid code.
-   * This normally means invalid or corrupted data.
    */
   public MorphLineStyles(InputBitStream stream, boolean useNewMorphLineStyle)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     int styleCount = stream.readUI8();
     if (styleCount == 0xFF) {
       styleCount = stream.readUI16();

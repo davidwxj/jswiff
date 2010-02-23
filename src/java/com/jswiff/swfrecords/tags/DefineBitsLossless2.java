@@ -20,14 +20,14 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.AlphaBitmapData;
 import com.jswiff.swfrecords.AlphaColorMapData;
 import com.jswiff.swfrecords.ZlibBitmapData;
+
+import java.io.IOException;
 
 /**
  * <p>

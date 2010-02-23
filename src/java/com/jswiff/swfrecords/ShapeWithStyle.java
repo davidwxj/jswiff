@@ -20,11 +20,10 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 
 /**
@@ -67,18 +66,16 @@ public final class ShapeWithStyle extends Shape {
    * @param hasAlpha whether transparency is supported
    *
    * @throws IOException if an I/O error occured
-   * @throws InvalidCodeException if the tag header contains an invalid code.
-   * This normally means invalid or corrupted data.
    */
   public ShapeWithStyle(InputBitStream stream, boolean hasAlpha)
-    throws IOException, InvalidCodeException {
+    throws IOException {
     fillStyles   = new FillStyleArray(stream, hasAlpha);
     lineStyles   = new LineStyleArray(stream, hasAlpha);
     read(stream, false, hasAlpha);
   }
   
   public ShapeWithStyle(InputBitStream stream)
-  throws IOException, InvalidCodeException {
+  throws IOException {
   fillStyles   = new FillStyleArray(stream, true);
   lineStyles   = new LineStyleArray(stream);
   read(stream, true, true);

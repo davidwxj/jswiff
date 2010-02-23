@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-import java.util.EnumSet;
-
 import com.jswiff.constants.TagConstants.CapStyle;
 import com.jswiff.constants.TagConstants.JointStyle;
 import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.util.EnumSet;
 
 
 /**
@@ -79,7 +78,7 @@ public final class MorphLineStyle2 extends EnhancedStrokeStyle implements MorphL
     this.fillStyle    = fillStyle;
   }
 
-  MorphLineStyle2(InputBitStream stream) throws IOException, InvalidCodeException {
+  MorphLineStyle2(InputBitStream stream) throws IOException {
     startWidth      = stream.readUI16();
     endWidth        = stream.readUI16();
     setStartCapStyle(CapStyle.lookup((short)stream.readUnsignedBits(2)));

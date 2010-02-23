@@ -20,10 +20,6 @@
 
 package com.jswiff.xml;
 
-import java.util.List;
-
-import org.dom4j.Element;
-
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
@@ -48,6 +44,10 @@ import com.jswiff.swfrecords.actions.With;
 import com.jswiff.swfrecords.actions.Push.StackValue;
 import com.jswiff.util.Base64;
 import com.jswiff.util.StringUtilities;
+
+import org.dom4j.Element;
+
+import java.util.List;
 
 
 /*

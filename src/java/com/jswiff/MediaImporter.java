@@ -20,15 +20,15 @@
 
 package com.jswiff;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.jswiff.hl.factories.ImageDocumentFactory;
 import com.jswiff.hl.factories.MP3DocumentFactory;
 import com.jswiff.hl.factories.WAVDocumentFactory;
 import com.jswiff.util.ImageUtilities;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 /**

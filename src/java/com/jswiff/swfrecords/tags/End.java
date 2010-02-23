@@ -20,11 +20,10 @@
 
 package com.jswiff.swfrecords.tags;
 
-import java.io.IOException;
-
 import com.jswiff.constants.TagConstants.TagType;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 /**
  * Defines an End tag used to mark the end of the Swf and DefineSprites.
@@ -45,7 +44,7 @@ public final class End extends Tag {
   protected void writeData(OutputBitStream outStream) throws IOException {
   }
 
-  void setData(byte[] data) throws IOException, InvalidCodeException {
+  void setData(byte[] data) throws IOException {
   }
   
 }

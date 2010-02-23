@@ -20,13 +20,12 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
 import com.jswiff.swfrecords.actions.ActionBlock;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 
 /**
@@ -117,11 +116,9 @@ public final class ButtonCondAction implements Serializable {
    *
    * @param stream the input bit stream
    *
-   * @throws IOException if an I/O error has occured
-   * @throws InvalidCodeException if the tag header contains an invalid code.
-   * This normally means invalid or corrupted data.
+   * @throws IOException if an I/O error has occurred.
    */
-  public ButtonCondAction(InputBitStream stream) throws IOException, InvalidCodeException {
+  public ButtonCondAction(InputBitStream stream) throws IOException {
     idleToOverDown      = stream.readBooleanBit();
     outDownToIdle       = stream.readBooleanBit();
     outDownToOverDown   = stream.readBooleanBit();

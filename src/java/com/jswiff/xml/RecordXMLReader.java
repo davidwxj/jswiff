@@ -20,13 +20,6 @@
 
 package com.jswiff.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-
 import com.jswiff.constants.TagConstants.BlendMode;
 import com.jswiff.constants.TagConstants.CapStyle;
 import com.jswiff.constants.TagConstants.FillType;
@@ -34,7 +27,6 @@ import com.jswiff.constants.TagConstants.InterpolationMethod;
 import com.jswiff.constants.TagConstants.JointStyle;
 import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
 import com.jswiff.constants.TagConstants.SpreadMethod;
-import com.jswiff.exception.InvalidNameException;
 import com.jswiff.exception.MalformedElementException;
 import com.jswiff.exception.MissingAttributeException;
 import com.jswiff.exception.MissingElementException;
@@ -99,6 +91,13 @@ import com.jswiff.swfrecords.abc.AbcFile;
 import com.jswiff.swfrecords.actions.Action;
 import com.jswiff.swfrecords.actions.ActionBlock;
 import com.jswiff.util.Base64;
+
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 class RecordXMLReader {
@@ -208,7 +207,7 @@ class RecordXMLReader {
     // TODO
   }
   
-  static void readActionBlock(ActionBlock actionBlock, Element parentElement) throws InvalidNameException {
+  static void readActionBlock(ActionBlock actionBlock, Element parentElement) {
     Element blockElement = getElement("actionblock", parentElement);
     List<Element> actionElements = blockElement.elements();
     for (Element actionElement : actionElements) {
@@ -242,7 +241,7 @@ class RecordXMLReader {
     return zones;
   }
 
-  static ButtonCondAction[] readButtonCondActions(Element parentElement) throws InvalidNameException {
+  static ButtonCondAction[] readButtonCondActions(Element parentElement) {
     Element actionsElement = parentElement.element("actions");
     if (actionsElement != null) {
       List actions                   = actionsElement.elements();
@@ -290,7 +289,7 @@ class RecordXMLReader {
     return null;
   }
 
-  static ButtonRecord[] readButtonRecords(Element parentElement) throws InvalidNameException {
+  static ButtonRecord[] readButtonRecords(Element parentElement) {
     Element charsElement   = getElement("chars", parentElement);
     List recordElements    = charsElement.elements("buttonrecord");
     int arrayLength        = recordElements.size();
@@ -364,7 +363,7 @@ class RecordXMLReader {
     return colorTransform;
   }
 
-  static ClipActions readClipActions(Element element) throws InvalidNameException {
+  static ClipActions readClipActions(Element element) {
     ClipEventFlags eventFlags = readClipEventFlags(element);
     List recordElements       = element.elements("clipactionrecord");
     List<ClipActionRecord> records = new ArrayList<ClipActionRecord>();
@@ -567,7 +566,7 @@ class RecordXMLReader {
     return readMatrix(matrixElement);
   }
 
-  static MorphFillStyle readMorphFillStyle(Element element) throws InvalidNameException {
+  static MorphFillStyle readMorphFillStyle(Element element) {
     Element startElement = getElement("start", element);
     Element endElement   = getElement("end", element);
     String type          = getStringAttribute("type", element);
@@ -591,7 +590,7 @@ class RecordXMLReader {
     }
   }
 
-  static MorphFillStyles readMorphFillStyles(Element parentElement) throws InvalidNameException {
+  static MorphFillStyles readMorphFillStyles(Element parentElement) {
     Element element        = getElement("morphfillstyles", parentElement);
     List styleElements     = element.elements();
     MorphFillStyles styles = new MorphFillStyles();
@@ -602,7 +601,7 @@ class RecordXMLReader {
     return styles;
   }
 
-  static MorphLineStyles readMorphLineStyles(Element parentElement) throws InvalidNameException {
+  static MorphLineStyles readMorphLineStyles(Element parentElement) {
     Element element        = getElement("morphlinestyles", parentElement);
     MorphLineStyles styles = new MorphLineStyles();
     List styleElements     = element.elements();
@@ -640,7 +639,7 @@ class RecordXMLReader {
     return new Rect(xMin, xMax, yMin, yMax);
   }
 
-  static Shape readShape(Element element) throws InvalidNameException {
+  static Shape readShape(Element element) {
     List shapeRecordElements   = element.elements();
     int arrayLength            = shapeRecordElements.size();
     ShapeRecord[] shapeRecords = new ShapeRecord[arrayLength];
@@ -657,7 +656,7 @@ class RecordXMLReader {
     return new Shape(shapeRecords);
   }
 
-  static ShapeWithStyle readShapeWithStyle(Element parentElement) throws InvalidNameException {
+  static ShapeWithStyle readShapeWithStyle(Element parentElement) {
     Element element            = getElement("shapewithstyle", parentElement);
     Element shape              = getElement("shape", element);
     List shapeRecordElements   = shape.elements();
@@ -876,7 +875,7 @@ class RecordXMLReader {
       controlDeltaX, controlDeltaY, anchorDeltaX, anchorDeltaY);
   }
 
-  private static FillStyle readFillStyle(Element element) throws InvalidNameException {
+  private static FillStyle readFillStyle(Element element) {
     String typeStr = getStringAttribute("type", element);
     FillType type = FillType.lookup(typeStr);
     switch (type.getGroup()) {
@@ -894,7 +893,7 @@ class RecordXMLReader {
     }
   }
 
-  private static FillStyleArray readFillStyles(Element element) throws InvalidNameException {
+  private static FillStyleArray readFillStyles(Element element) {
     List styleElements        = element.elements();
     FillStyleArray styleArray = new FillStyleArray();
     for (Iterator it = styleElements.iterator(); it.hasNext();) {
@@ -918,7 +917,7 @@ class RecordXMLReader {
     return entries;
   }
 
-  private static Gradient readGradient(Element parentElement) throws InvalidNameException {
+  private static Gradient readGradient(Element parentElement) {
     Element element = parentElement.element("gradient");
     boolean focal   = false;
     if (element == null) {
@@ -946,19 +945,19 @@ class RecordXMLReader {
     return gradient;
   }
   
-  private static CapStyle readStartCapStyle(Element element) throws InvalidNameException {
+  private static CapStyle readStartCapStyle(Element element) {
     return CapStyle.lookup(getStringAttribute("start", element));
   }
   
-  private static CapStyle readEndCapStyle(Element element) throws InvalidNameException {
+  private static CapStyle readEndCapStyle(Element element) {
     return CapStyle.lookup(getStringAttribute("end", element));
   }
   
-  private static InterpolationMethod readInterpolationMethod(Element element) throws InvalidNameException {
+  private static InterpolationMethod readInterpolationMethod(Element element) {
     return InterpolationMethod.lookup(getStringAttribute("interpolation", element));
   }
 
-  private static JointStyle readJointStyle(Element element) throws InvalidNameException {
+  private static JointStyle readJointStyle(Element element) {
     return JointStyle.lookup(getStringAttribute("joint", element));
   }
 
@@ -968,7 +967,7 @@ class RecordXMLReader {
     return new LineStyle(width, color);
   }
 
-  private static LineStyle2 readLineStyle2(Element element) throws InvalidNameException {
+  private static LineStyle2 readLineStyle2(Element element) {
     LineStyle2 lineStyle2 = new LineStyle2(getIntAttribute("width", element));
     JointStyle jointStyle = readJointStyle(element);
     lineStyle2.setJointStyle(jointStyle);
@@ -991,7 +990,7 @@ class RecordXMLReader {
     return lineStyle2;
   }
 
-  private static LineStyleArray readLineStyles(Element element) throws InvalidNameException {
+  private static LineStyleArray readLineStyles(Element element) {
     LineStyleArray styleArray = new LineStyleArray();
     List styleElements        = element.elements();
     for (Iterator it = styleElements.iterator(); it.hasNext();) {
@@ -1005,7 +1004,7 @@ class RecordXMLReader {
     return styleArray;
   }
 
-  private static MorphGradient readMorphGradient(Element parentElement) throws InvalidNameException {
+  private static MorphGradient readMorphGradient(Element parentElement) {
     Element element = parentElement.element("morphgradient");
     boolean focal   = false;
     if (element == null) {
@@ -1052,7 +1051,7 @@ class RecordXMLReader {
     return new MorphLineStyle(startWidth, startColor, endWidth, endColor);
   }
 
-  private static MorphLineStyle2 readMorphLineStyle2(Element element) throws InvalidNameException {
+  private static MorphLineStyle2 readMorphLineStyle2(Element element) {
     Element startElement       = getElement("start", element);
     int startWidth             = getIntAttribute("width", startElement);
     Element endElement         = getElement("end", element);
@@ -1108,7 +1107,7 @@ class RecordXMLReader {
     return rgbArray;
   }
 
-  private static ScaleStrokeMethod readScaleStroke(Element element) throws InvalidNameException {
+  private static ScaleStrokeMethod readScaleStroke(Element element) {
     return ScaleStrokeMethod.lookup(getStringAttribute("scalestroke", element));
   }
 
@@ -1128,7 +1127,7 @@ class RecordXMLReader {
     return records;
   }
 
-  private static SpreadMethod readSpreadMethod(Element element) throws InvalidNameException {
+  private static SpreadMethod readSpreadMethod(Element element) {
     return SpreadMethod.lookup(getStringAttribute("spread", element));
   }
 
@@ -1138,7 +1137,7 @@ class RecordXMLReader {
     return new StraightEdgeRecord(deltaX, deltaY);
   }
 
-  private static ShapeRecord readStyleChangeRecord(Element element) throws InvalidNameException {
+  private static ShapeRecord readStyleChangeRecord(Element element) {
     StyleChangeRecord record = new StyleChangeRecord();
     Element moveTo           = element.element("moveto");
     if (moveTo != null) {

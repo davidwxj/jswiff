@@ -20,25 +20,24 @@
 
 package com.jswiff.xml;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.dom4j.Attribute;
-import org.dom4j.Element;
-
 import com.jswiff.constants.TagConstants.ActionType;
 import com.jswiff.constants.TagConstants.ValueType;
-import com.jswiff.exception.InvalidNameException;
 import com.jswiff.exception.MissingNodeException;
 import com.jswiff.swfrecords.RegisterParam;
 import com.jswiff.swfrecords.actions.*;
 import com.jswiff.swfrecords.actions.Push.StackValue;
 import com.jswiff.util.Base64;
 
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+
+import java.util.Iterator;
+import java.util.List;
+
 
 class ActionXMLReader {
   
-  static Action readAction(Element element) throws InvalidNameException {
+  static Action readAction(Element element) {
     ActionType actionType = ActionType.lookup(element.getName());
     Action action;
     switch (actionType) {
@@ -370,7 +369,7 @@ class ActionXMLReader {
   }
 
   @SuppressWarnings("unchecked")
-  private static DefineFunction readDefineFunction(Element element) throws InvalidNameException {
+  private static DefineFunction readDefineFunction(Element element) {
     String name            = RecordXMLReader.getStringAttributeWithBase64Check(
         "name", element);
     List parameterElements = RecordXMLReader.getElement("parameters", element)
@@ -388,7 +387,7 @@ class ActionXMLReader {
   }
 
   @SuppressWarnings("unchecked")
-  private static DefineFunction2 readDefineFunction2(Element element) throws InvalidNameException {
+  private static DefineFunction2 readDefineFunction2(Element element) {
     String name                = RecordXMLReader.getStringAttributeWithBase64Check(
         "name", element);
     short registerCount        = RecordXMLReader.getShortAttribute(
@@ -502,7 +501,7 @@ class ActionXMLReader {
   }
 
   @SuppressWarnings("unchecked")
-  private static Push readPush(Element element) throws InvalidNameException {
+  private static Push readPush(Element element) {
     List valueElements = element.elements();
     Push push          = new Push();
     for (Iterator it = valueElements.iterator(); it.hasNext();) {
@@ -565,7 +564,7 @@ class ActionXMLReader {
       RecordXMLReader.getShortAttribute("number", element));
   }
 
-  private static Try readTry(Element element) throws InvalidNameException {
+  private static Try readTry(Element element) {
     Try tryAction;
     Attribute catchRegister = element.attribute("catchregister");
     if (catchRegister != null) {
@@ -610,7 +609,7 @@ class ActionXMLReader {
       RecordXMLReader.getShortAttribute("skipcount", element));
   }
 
-  private static With readWith(Element element) throws InvalidNameException {
+  private static With readWith(Element element) {
     With with = new With();
     RecordXMLReader.readActionBlock(with.getWithBlock(), element);
     return with;

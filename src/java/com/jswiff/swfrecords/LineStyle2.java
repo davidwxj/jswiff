@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-import java.util.EnumSet;
-
 import com.jswiff.constants.TagConstants.CapStyle;
 import com.jswiff.constants.TagConstants.JointStyle;
 import com.jswiff.constants.TagConstants.ScaleStrokeMethod;
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
+import java.util.EnumSet;
 
 
 /**
@@ -52,7 +51,7 @@ public final class LineStyle2 extends EnhancedStrokeStyle implements LineStyleTa
     this.width = width;
   }
 
-  LineStyle2(InputBitStream stream) throws IOException, InvalidCodeException {
+  LineStyle2(InputBitStream stream) throws IOException {
     width           = stream.readUI16();
     setStartCapStyle(CapStyle.lookup((short)stream.readUnsignedBits(2)));
     setJointStyle(JointStyle.lookup((short) stream.readUnsignedBits(2)));

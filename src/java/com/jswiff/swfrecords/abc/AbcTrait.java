@@ -20,15 +20,14 @@
 
 package com.jswiff.swfrecords.abc;
 
+import com.jswiff.constants.AbcConstants.TraitKind;
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.jswiff.constants.AbcConstants.TraitKind;
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
 
 public abstract class AbcTrait implements Serializable {
   
@@ -47,7 +46,7 @@ public abstract class AbcTrait implements Serializable {
     this.type = type;
   }
   
-  public static AbcTrait read(InputBitStream stream) throws IOException, InvalidCodeException {
+  public static AbcTrait read(InputBitStream stream) throws IOException {
     int nameIndex = stream.readAbcInt();
     short flagsAndKind = stream.readUI8();
     int flags = flagsAndKind >> 4;

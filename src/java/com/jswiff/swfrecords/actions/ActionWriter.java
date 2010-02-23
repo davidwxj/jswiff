@@ -20,10 +20,10 @@
 
 package com.jswiff.swfrecords.actions;
 
+import com.jswiff.io.OutputBitStream;
+
 import java.io.IOException;
 import java.util.List;
-
-import com.jswiff.io.OutputBitStream;
 
 
 /*

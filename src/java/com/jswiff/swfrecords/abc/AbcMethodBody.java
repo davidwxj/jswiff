@@ -20,16 +20,15 @@
 
 package com.jswiff.swfrecords.abc;
 
+import com.jswiff.io.InputBitStream;
+import com.jswiff.io.OutputBitStream;
+import com.jswiff.swfrecords.abc.opcode.AbcOp;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.jswiff.exception.InvalidCodeException;
-import com.jswiff.io.InputBitStream;
-import com.jswiff.io.OutputBitStream;
-import com.jswiff.swfrecords.abc.opcode.AbcOp;
 
 public class AbcMethodBody implements Serializable {
 
@@ -55,7 +54,7 @@ public class AbcMethodBody implements Serializable {
     this.maxScopeDepth = maxScopeDepth;
   }
 
-  public static AbcMethodBody read(InputBitStream stream) throws IOException, InvalidCodeException {
+  public static AbcMethodBody read(InputBitStream stream) throws IOException {
     AbcMethodBody method = new AbcMethodBody();
     method.signatureIndex = stream.readAbcInt();
     method.maxStack = stream.readAbcInt();

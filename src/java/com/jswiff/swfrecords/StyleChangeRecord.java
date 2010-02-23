@@ -20,11 +20,10 @@
 
 package com.jswiff.swfrecords;
 
-import java.io.IOException;
-
-import com.jswiff.exception.InvalidCodeException;
 import com.jswiff.io.InputBitStream;
 import com.jswiff.io.OutputBitStream;
+
+import java.io.IOException;
 
 
 /**
@@ -72,7 +71,7 @@ public final class StyleChangeRecord extends ShapeRecord {
 
   StyleChangeRecord(
     InputBitStream stream, byte flags, byte numFillBits, byte numLineBits,
-    boolean useNewLineStyle, boolean hasAlpha) throws IOException, InvalidCodeException {
+    boolean useNewLineStyle, boolean hasAlpha) throws IOException {
     hasNewStyles    = ((flags & 16) != 0);
     hasLineStyle    = ((flags & 8) != 0);
     hasFillStyle1   = ((flags & 4) != 0);
