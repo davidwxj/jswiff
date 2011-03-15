@@ -565,7 +565,18 @@ public final class PlaceObject3 extends Tag {
     hasBlendMode = inStream.readBooleanBit();
     hasFilters = inStream.readBooleanBit();
     depth = inStream.readUI16();
-    if (hasClassName || hasImage && hasCharacter) {
+    /**
+     * For the PlaceObject3 tag, the ClassName field is listed (as per the SWF spec) as being
+     * populated with a string if either the PlaceFlagHasClassName property or both
+     * PlaceFlagHasImage and PlaceFlagHasCharacter properties are true.
+     * Yet sometimes this appears not to be the case and we get a SWF for which the HasImage
+     * and HasCharacter fields are true - but then attempting to interpret the next sequence
+     * of bytes as the class name results in both a garbled string and insufficient bytes to
+     * read the rest of the tag data.
+     * The (temporary) fix is to not try and read the class name for the latter case.
+     */
+//  if (hasClassName || hasImage && hasCharacter) {
+    if (hasClassName) {
       className = inStream.readString();
     }
     if (hasCharacter) {
