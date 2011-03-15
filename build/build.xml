@@ -36,7 +36,8 @@
     <mkdir dir="${classDir}" />
     <javac debug="${debug}"
            destdir="${classDir}"
-           classpathref="src.classpath">
+           classpathref="src.classpath"
+           encoding="UTF-8">
       <src path="${srcDir}" />
       <src path="${toolsDir}" />
     </javac>
@@ -77,6 +78,8 @@
     <delete dir="${javadocDir}" includeEmptyDirs="true" />
     <javadoc sourcepath="${srcDir}"
              destdir="${javadocDir}"
+             encoding="UTF-8"
+             charset="UTF-8"
              packagenames="com.jswiff.*"
              excludepackagenames="com.jswiff.tests.*,com.jswiff.investigator.*"
              access="public"
