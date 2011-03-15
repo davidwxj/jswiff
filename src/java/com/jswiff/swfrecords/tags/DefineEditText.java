@@ -744,8 +744,8 @@ public final class DefineEditText extends DefinitionTag {
       align = inStream.readUI8();
       leftMargin = inStream.readUI16();
       rightMargin = inStream.readUI16();
-      indent = inStream.readUI16();
-      leading = inStream.readUI16();
+      indent = inStream.readSI16();
+      leading = inStream.readSI16();
     }
     variableName = inStream.readString();
     if (hasText) {
